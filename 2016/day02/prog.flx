@@ -1,0 +1,250 @@
+// prog.flx
+// Copyright (c) 2014 - 2016, zhiayang@gmail.com
+// Licensed under the Apache License Version 2.0.
+
+import Foundation
+
+func move(d: char, pos: (int, int)) -> (int, int)
+{
+	var ret = pos
+
+	// down is positive, right is positive
+	if(d == ("U" as char) && pos.1 > -1)
+	{
+		ret.1 -= 1
+	}
+	else if(d == ("D" as char) && pos.1 < 1)
+	{
+		ret.1 += 1
+	}
+	else if(d == ("L" as char) && pos.0 > -1)
+	{
+		ret.0 -= 1
+	}
+	else if(d == ("R" as char) && pos.0 < 1)
+	{
+		ret.0 += 1
+	}
+
+	return ret
+}
+
+func posToNum(p: (int, int)) -> int
+{
+	if(p.1 == -1)
+	{
+		if(p.0 == -1)		{ return 1 }
+		else if(p.0 == 0)	{ return 2 }
+		else if(p.0 == 1)	{ return 3 }
+	}
+	else if(p.1 == 0)
+	{
+		if(p.0 == -1)		{ return 4 }
+		else if(p.0 == 0)	{ return 5 }
+		else if(p.0 == 1)	{ return 6 }
+	}
+	else if(p.1 == 1)
+	{
+		if(p.0 == -1)		{ return 7 }
+		else if(p.0 == 0)	{ return 8 }
+		else if(p.0 == 1)	{ return 9 }
+	}
+
+	return 0
+}
+
+
+
+
+/*
+	part 2 layout:
+
+		1
+	  2 3 4
+	5 6 7 8 9
+	  A B C
+	    D
+*/
+
+func move2(d: char, pos: int) -> int
+{
+	// fuck
+	// down is positive, right is positive
+	if(d == char("U"))
+	{
+		if(pos == 0x1)		{ return 0x1 }
+		else if(pos == 0x2)	{ return 0x2 }
+		else if(pos == 0x3)	{ return 0x1 }
+		else if(pos == 0x4)	{ return 0x4 }
+		else if(pos == 0x5)	{ return 0x5 }
+		else if(pos == 0x6)	{ return 0x2 }
+		else if(pos == 0x7)	{ return 0x3 }
+		else if(pos == 0x8)	{ return 0x4 }
+		else if(pos == 0x9)	{ return 0x9 }
+		else if(pos == 0xA)	{ return 0x6 }
+		else if(pos == 0xB)	{ return 0x7 }
+		else if(pos == 0xC)	{ return 0x8 }
+		else if(pos == 0xD)	{ return 0xB }
+	}
+	else if(d == char("D"))
+	{
+		if(pos == 0x1)		{ return 0x3 }
+		else if(pos == 0x2)	{ return 0x6 }
+		else if(pos == 0x3)	{ return 0x7 }
+		else if(pos == 0x4)	{ return 0x8 }
+		else if(pos == 0x5)	{ return 0x5 }
+		else if(pos == 0x6)	{ return 0xA }
+		else if(pos == 0x7)	{ return 0xB }
+		else if(pos == 0x8)	{ return 0xC }
+		else if(pos == 0x9)	{ return 0x9 }
+		else if(pos == 0xA)	{ return 0xA }
+		else if(pos == 0xB)	{ return 0xD }
+		else if(pos == 0xC)	{ return 0xC }
+		else if(pos == 0xD)	{ return 0xD }
+	}
+	else if(d == char("L"))
+	{
+		if(pos == 0x1)		{ return 0x1 }
+		else if(pos == 0x2)	{ return 0x2 }
+		else if(pos == 0x3)	{ return 0x2 }
+		else if(pos == 0x4)	{ return 0x3 }
+		else if(pos == 0x5)	{ return 0x5 }
+		else if(pos == 0x6)	{ return 0x5 }
+		else if(pos == 0x7)	{ return 0x6 }
+		else if(pos == 0x8)	{ return 0x7 }
+		else if(pos == 0x9)	{ return 0x8 }
+		else if(pos == 0xA)	{ return 0xA }
+		else if(pos == 0xB)	{ return 0xA }
+		else if(pos == 0xC)	{ return 0xB }
+		else if(pos == 0xD)	{ return 0xD }
+	}
+	else if(d == char("R"))
+	{
+		if(pos == 0x1)		{ return 0x1 }
+		else if(pos == 0x2)	{ return 0x3 }
+		else if(pos == 0x3)	{ return 0x4 }
+		else if(pos == 0x4)	{ return 0x4 }
+		else if(pos == 0x5)	{ return 0x6 }
+		else if(pos == 0x6)	{ return 0x7 }
+		else if(pos == 0x7)	{ return 0x8 }
+		else if(pos == 0x8)	{ return 0x9 }
+		else if(pos == 0x9)	{ return 0x9 }
+		else if(pos == 0xA)	{ return 0xB }
+		else if(pos == 0xB)	{ return 0xC }
+		else if(pos == 0xC)	{ return 0xC }
+		else if(pos == 0xD)	{ return 0xD }
+	}
+
+	return 0
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public func main()
+{
+	let part = 2
+
+
+
+	let input =
+		[
+			"UDRLRRRUULUUDULRULUDRDRURLLDUUDURLUUUDRRRLUUDRUUDDDRRRLRURLLLDDDRDDRUDDULUULDDUDRUUUDLRLLRLDUDUUUUDLDULLLDRLRLRULDDDDDLULURUDURDDLLRDLUDRRULDURDDLUDLLRRUDRUDDDLLURULRDDDRDRRLLUUDDLLLLRLRUULRDRURRRLLLLDULDDLRRRRUDRDULLLDDRRRDLRLRRRLDRULDUDDLDLUULRDDULRDRURRURLDULRUUDUUURDRLDDDURLDURLDUDURRLLLLRDDLDRUURURRRRDRRDLUULLURRDLLLDLDUUUDRDRULULRULUUDDULDUURRLRLRRDULDULDRUUDLLUDLLLLUDDULDLLDLLURLLLRUDRDLRUDLULDLLLUDRLRLUDLDRDURDDULDURLLRRRDUUDLRDDRUUDLUURLDRRRRRLDDUUDRURUDLLLRRULLRLDRUURRRRRLRLLUDDRLUDRRDUDUUUDRUDULRRULRDRRRDDRLUUUDRLLURURRLLDUDRUURDLRURLLRDUDUUDLLLUULLRULRLDLRDDDU",
+
+			"DRRRDRUDRLDUUDLLLRLULLLUURLLRLDRLURDRDRDRLDUUULDRDDLDDDURURUDRUUURDRDURLRLUDRRRDURDRRRDULLRDRRLUUUURLRUULRRDUDDDDUURLDULUDLLLRULUDUURRDUULRRDDURLURRUDRDRLDLRLLULULURLRDLRRRUUURDDUUURDRDRUURUDLULDRDDULLLLLRLRLLUDDLULLUDDLRLRDLDULURDUDULRDDRLUDUUDUDRLLDRRLLDULLRLDURUDRLRRRDULUUUULRRLUDDDLDUUDULLUUURDRLLULRLDLLUUDLLUULUULUDLRRDDRLUUULDDRULDRLURUURDLURDDRULLLLDUDULUDURRDRLDDRRLRURLLRLLLLDURDLUULDLDDLULLLRDRRRDLLLUUDDDLDRRLUUUUUULDRULLLDUDLDLURLDUDULRRRULDLRRDRUUUUUURRDRUURLDDURDUURURULULLURLLLLUURDUDRRLRRLRLRRRRRULLDLLLRURRDULLDLLULLRDUULDUDUDULDURLRDLDRUUURLLDLLUUDURURUD",
+
+			"UDUUUUURUDLLLRRRDRDRUDDRLLDRRLDRLLUURRULUULULRLLRUDDRLDRLUURDUDLURUULLLULLRRRULRLURRDDULLULULRUDDDUURDRLUDUURRRRUUULLRULLLDLURUDLDDLLRRRULDLLUURDRRRDRDURURLRUDLDLURDDRLLLUUDRUULLDLLLLUUDRRURLDDUDULUDLDURDLURUURDUUUURDLLLRUUURDUUUDLDUDDLUDDUDUDUDLDUDUUULDULUURDDLRRRULLUDRRDLUDULDURUURULLLLUDDDLURURLRLRDLRULRLULURRLLRDUDUDRULLRULRUDLURUDLLDUDLRDRLRDURURRULLDDLRLDDRLRDRRDLRDDLLLLDUURRULLRLLDDLDLURLRLLDULRURRRRDULRLRURURRULULDUURRDLURRDDLDLLLRULRLLURLRLLDDLRUDDDULDLDLRLURRULRRLULUDLDUDUDDLLUURDDDLULURRULDRRDDDUUURLLDRDURUDRUDLLDRUD",
+
+			"ULRDULURRDDLULLDDLDDDRLDUURDLLDRRRDLLURDRUDDLDURUDRULRULRULULUULLLLDRLRLDRLLLLLRLRRLRLRRRDDULRRLUDLURLLRLLURDDRRDRUUUDLDLDRRRUDLRUDDRURRDUUUDUUULRLDDRDRDRULRLLDLDDLLRLUDLLLLUURLDLRUDRLRDRDRLRULRDDURRLRUDLRLRLDRUDURLRDLDULLUUULDRLRDDRDUDLLRUDDUDURRRRDLDURRUURDUULLDLRDUDDLUDDDRRRULRLULDRLDDRUURURLRRRURDURDRULLUUDURUDRDRLDLURDDDUDDURUDLRULULURRUULDRLDULRRRRDUULLRRRRLUDLRDDRLRUDLURRRDRDRLLLULLUULRDULRDLDUURRDULLRULRLRRURDDLDLLRUUDLRLDLRUUDLDDLLULDLUURRRLRDULRLRLDRLDUDURRRLLRUUDLUURRDLDDULDLULUUUUDRRULLLLLLUULDRULDLRUDDDRDRDDURUURLURRDLDDRUURULLULUUUDDLRDULDDLULDUDRU",
+
+			"LRLRLRLLLRRLUULDDUUUURDULLLRURLDLDRURRRUUDDDULURDRRDURLRLUDLLULDRULLRRRDUUDDRDRULLDDULLLUURDLRLRUURRRLRDLDUDLLRLLURLRLLLDDDULUDUDRDLRRLUDDLRDDURRDRDUUULLUURURLRRDUURLRDLLUDURLRDRLURUURDRLULLUUUURRDDULDDDRULURUULLUDDDDLRURDLLDRURDUDRRLRLDLRRDDRRDDRUDRDLUDDDLUDLUDLRUDDUDRUDLLRURDLRUULRUURULUURLRDULDLDLLRDRDUDDDULRLDDDRDUDDRRRLRRLLRRRUUURRLDLLDRRDLULUUURUDLULDULLLDLULRLRDLDDDDDDDLRDRDUDLDLRLUDRRDRRDRUURDUDLDDLUDDDDDDRUURURUURLURLDULUDDLDDLRUUUULRDRLUDLDDLLLRLLDRRULULRLRDURRRLDDRDDRLU"
+		]
+
+	// well.
+
+	var code: int[]
+
+	if(part == 1)
+	{
+		var pos = (0, 0)
+
+		var line = 0
+		while(line < input.length)
+		{
+			var i = 0
+			while(i < input[line].length)
+			{
+				pos = move(input[line][i], pos)
+
+				i += 1
+			}
+
+			code += posToNum(pos)
+
+			line += 1
+		}
+	}
+	else
+	{
+		var pos = 5
+
+		var line = 0
+		while(line < input.length)
+		{
+			var i = 0
+			while(i < input[line].length)
+			{
+				pos = move2(input[line][i], pos)
+
+				i += 1
+			}
+
+			code += pos
+
+			line += 1
+		}
+	}
+
+
+	var i = 0
+	printf("code: ")
+	while i < code.length
+	{
+		printf("%x", code[i])
+
+		i += 1
+	}
+
+	printf("\n\n")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
