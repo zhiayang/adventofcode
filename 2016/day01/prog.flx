@@ -60,71 +60,41 @@ func find<T>(arr: T[], x: T) -> int
 
 public func main() -> int
 {
-	let part = 2
+	let part = 1
 
-
-
-	// var input: string[]
-
-	// input.append("R2")		input.append("L1")		input.append("R2")		input.append("R1")		input.append("R1")		input.append("L3")
-	// input.append("R3")		input.append("L5")		input.append("L5")		input.append("L2")		input.append("L1")		input.append("R4")
-	// input.append("R1")		input.append("R3")		input.append("L5")		input.append("L5")		input.append("R3")		input.append("L4")
-	// input.append("L4")		input.append("R5")		input.append("R4")		input.append("R3")		input.append("L1")		input.append("L2")
-	// input.append("R5")		input.append("R4")		input.append("L2")		input.append("R1")		input.append("R4")		input.append("R4")
-	// input.append("L2")		input.append("L1")		input.append("L1")		input.append("R190")	input.append("R3")		input.append("L4")
-	// input.append("R52")		input.append("R5")		input.append("R3")		input.append("L5")		input.append("R3")		input.append("R2")
-	// input.append("R1")		input.append("L5")		input.append("L5")		input.append("L4")		input.append("R2")		input.append("L3")
-	// input.append("R3")		input.append("L1")		input.append("L3")		input.append("R5")		input.append("L3")		input.append("L4")
-	// input.append("R3")		input.append("R77")		input.append("R3")		input.append("L2")		input.append("R189")	input.append("R4")
-	// input.append("R2")		input.append("L2")		input.append("R2")		input.append("L1")		input.append("R5")		input.append("R4")
-	// input.append("R4")		input.append("R2")		input.append("L2")		input.append("L2")		input.append("L5")		input.append("L1")
-	// input.append("R1")		input.append("R2")		input.append("L3")		input.append("L4")		input.append("L5")		input.append("R1")
-	// input.append("L1")		input.append("L2")		input.append("L2")		input.append("R2")		input.append("L3")		input.append("R3")
-	// input.append("L4")		input.append("L1")		input.append("L5")		input.append("L4")		input.append("L4")		input.append("R3")
-	// input.append("R5")		input.append("L2")		input.append("R4")		input.append("R5")		input.append("R3")		input.append("L2")
-	// input.append("L2")		input.append("L4")		input.append("L2")		input.append("R2")		input.append("L5")		input.append("L4")
-	// input.append("R3")		input.append("R1")		input.append("L2")		input.append("R2")		input.append("R4")		input.append("L1")
-	// input.append("L4")		input.append("L4")		input.append("L2")		input.append("R2")		input.append("L4")		input.append("L1")
-	// input.append("L1")		input.append("R4")		input.append("L1")		input.append("L3")		input.append("L2")		input.append("L2")
-	// input.append("L5")		input.append("R5")		input.append("R2")		input.append("R5")		input.append("L1")		input.append("L5")
-	// input.append("R2")		input.append("R4")		input.append("R4")		input.append("L2")		input.append("R5")		input.append("L5")
-	// input.append("R5")		input.append("R5")		input.append("L4")		input.append("R2")		input.append("R1")		input.append("R1")
-	// input.append("R3")		input.append("L3")		input.append("L3")		input.append("L4")		input.append("L3")		input.append("L2")
-	// input.append("L2")		input.append("L2")		input.append("R2")		input.append("L1")		input.append("L3")		input.append("R2")
-	// input.append("R5")		input.append("R5")		input.append("L4")		input.append("R3")		input.append("L3")		input.append("L4")
-	// input.append("R2")		input.append("L5")		input.append("R5")
-
+	// let input = [
+	// 				"R2", "L1", "R2", "R1", "R1", "L3",
+	// 				"R3", "L5", "L5", "L2", "L1", "R4",
+	// 				"R1", "R3", "L5", "L5", "R3", "L4",
+	// 				"L4", "R5", "R4", "R3", "L1", "L2",
+	// 				"R5", "R4", "L2", "R1", "R4", "R4",
+	// 				"L2", "L1", "L1", "R190", "R3", "L4",
+	// 				"R52", "R5", "R3", "L5", "R3", "R2",
+	// 				"R1", "L5", "L5", "L4", "R2", "L3",
+	// 				"R3", "L1", "L3", "R5", "L3", "L4",
+	// 				"R3", "R77", "R3", "L2", "R189", "R4",
+	// 				"R2", "L2", "R2", "L1", "R5", "R4",
+	// 				"R4", "R2", "L2", "L2", "L5", "L1",
+	// 				"R1", "R2", "L3", "L4", "L5", "R1",
+	// 				"L1", "L2", "L2", "R2", "L3", "R3",
+	// 				"L4", "L1", "L5", "L4", "L4", "R3",
+	// 				"R5", "L2", "R4", "R5", "R3", "L2",
+	// 				"L2", "L4", "L2", "R2", "L5", "L4",
+	// 				"R3", "R1", "L2", "R2", "R4", "L1",
+	// 				"L4", "L4", "L2", "R2", "L4", "L1",
+	// 				"L1", "R4", "L1", "L3", "L2", "L2",
+	// 				"L5", "R5", "R2", "R5", "L1", "L5",
+	// 				"R2", "R4", "R4", "L2", "R5", "L5",
+	// 				"R5", "R5", "L4", "R2", "R1", "R1",
+	// 				"R3", "L3", "L3", "L4", "L3", "L2",
+	// 				"L2", "L2", "R2", "L1", "L3", "R2",
+	// 				"R5", "R5", "L4", "R3", "L3", "L4",
+	// 				"R2", "L5", "R5"
+	// 			]
 
 	let input = [
-					"R2", "L1", "R2", "R1", "R1", "L3",
-					"R3", "L5", "L5", "L2", "L1", "R4",
-					"R1", "R3", "L5", "L5", "R3", "L4",
-					"L4", "R5", "R4", "R3", "L1", "L2",
-					"R5", "R4", "L2", "R1", "R4", "R4",
-					"L2", "L1", "L1", "R190", "R3", "L4",
-					"R52", "R5", "R3", "L5", "R3", "R2",
-					"R1", "L5", "L5", "L4", "R2", "L3",
-					"R3", "L1", "L3", "R5", "L3", "L4",
-					"R3", "R77", "R3", "L2", "R189", "R4",
-					"R2", "L2", "R2", "L1", "R5", "R4",
-					"R4", "R2", "L2", "L2", "L5", "L1",
-					"R1", "R2", "L3", "L4", "L5", "R1",
-					"L1", "L2", "L2", "R2", "L3", "R3",
-					"L4", "L1", "L5", "L4", "L4", "R3",
-					"R5", "L2", "R4", "R5", "R3", "L2",
-					"L2", "L4", "L2", "R2", "L5", "L4",
-					"R3", "R1", "L2", "R2", "R4", "L1",
-					"L4", "L4", "L2", "R2", "L4", "L1",
-					"L1", "R4", "L1", "L3", "L2", "L2",
-					"L5", "R5", "R2", "R5", "L1", "L5",
-					"R2", "R4", "R4", "L2", "R5", "L5",
-					"R5", "R5", "L4", "R2", "R1", "R1",
-					"R3", "L3", "L3", "L4", "L3", "L2",
-					"L2", "L2", "R2", "L1", "L3", "R2",
-					"R5", "R5", "L4", "R3", "L3", "L4",
-					"R2", "L5", "R5"
-				]
-
+	"L2", "L5", "L5", "R5", "L2", "L4", "R1", "R1", "L4", "R2", "R1", "L1", "L4", "R1", "L4", "L4", "R5", "R3", "R1", "L1", "R1", "L5", "L1", "R5", "L4", "R2", "L5", "L3", "L3", "R3", "L3", "R4", "R4", "L2", "L5", "R1", "R2", "L2", "L1", "R3", "R4", "L193", "R3", "L5", "R45", "L1", "R4", "R79", "L5", "L5", "R5", "R1", "L4", "R3", "R3", "L4", "R185", "L5", "L3", "L1", "R5", "L2", "R1", "R3", "R2", "L3", "L4", "L2", "R2", "L3", "L2", "L2", "L3", "L5", "R3", "R4", "L5", "R1", "R2", "L2", "R4", "R3", "L4", "L3", "L1", "R3", "R2", "R1", "R1", "L3", "R4", "L5", "R2", "R1", "R3", "L3", "L2", "L2", "R2", "R1", "R2", "R3", "L3", "L3", "R4", "L4", "R4", "R4", "R4", "L3", "L1", "L2", "R5", "R2", "R2", "R2", "L4", "L3", "L4", "R4", "L5", "L4", "R2", "L4", "L4", "R4", "R1", "R5", "L2", "L4", "L5", "L3", "L2", "L4", "L4", "R3", "L3", "L4", "R1", "L2", "R3", "L2", "R1", "R2", "R5", "L4", "L2", "L1", "L3", "R2", "R3", "L2", "L1", "L5", "L2", "L1", "R4"
+	]
 
 	var facing: Direction = Direction.UP
 	var pos = (0, 0)
@@ -141,7 +111,7 @@ public func main() -> int
 	var i = 0
 	while i < input.length
 	{
-		if input[i][0] == "R" as char
+		if input[i][0] == char("R")
 		{
 			if facing == Direction.UP
 			{

@@ -1,0 +1,1365 @@
+// prog.flx
+// Copyright (c) 2014 - 2016, zhiayang@gmail.com
+// Licensed under the Apache License Version 2.0.
+
+import Foundation
+
+public func main()
+{
+	let input = [
+		("bkwzkqsxqtovvilokxnozvyiwoxd", 172, "fstek"),
+		("wifilzofwbiwifunyyhachyylcha", 526, "qrazx"),
+		("jvyyvzpcljhukfshivyhavyf", 487, "zhtsi"),
+		("kwvacumzozilmkivlgkwvbiqvumvb", 694, "gknyw"),
+		("mvhkvbdibkmjezxodgzmvwwdoomvdidib", 837, "dmvbi"),
+		("nzydfxpcrclopqwzhpclnbftdtetzy", 171, "cptzd"),
+		("vhehkyneunggrinkvatlbgz", 813, "gnehk"),
+		("tcorcikpihnqygtoctmgvkpi", 570, "nzewo"),
+		("xmtjbzidxwvnfzojkzmvodjin", 447, "uyzlp"),
+		("willimcpymwupyhaylbohnmufym", 734, "stjoc"),
+		("sbejpbdujwfcvoozxpsltipq", 961, "azfnd"),
+		("jchipqatqphztirjhidbtghtgkxrt", 271, "thigj"),
+		("npmhcargjczsllwpcqcypaf", 158, "mzwnx"),
+		("luxciuwncpyjfumncwalummqilembij", 318, "mucil"),
+		("bxaxipgnvgpstrpcsnrdpixcvhtgkxrth", 427, "ywazt"),
+		("zekvierkzferctyftfcrkvivtvzmzex", 295, "evzfk"),
+		("enzcntvatqlrhfregrfgvat", 143, "rtaef"),
+		("mvkccspsonbkllsdnofovyzwoxd", 224, "oscdk"),
+		("enzcntvatzvyvgneltenqrpnaqlpbngvatratvarrevat", 429, "zymbs"),
+		("nwzekwyperaxwogappnwejejc", 992, "lkiwn"),
+		("ajmrxjlcrenajkkrclxwcjrwvnwc", 667, "ezynd"),
+		("bxaxipgnvgpsthrpktcvtgwjciadvxhixrh", 661, "lytku"),
+		("owshgfarwvvqwkzahhafy", 190, "ahwfv"),
+		("jqwpihizlwcamootwoqabqka", 512, "ncdyv"),
+		("apwmeclgapyzzgrrcaflmjmew", 886, "amceg"),
+		("tyepcyletzylwojpwzrtdetnd", 951, "mxqsy"),
+		("dlhwvupglkkflhjxbpzpapvu", 773, "nrotd"),
+		("fabeqodqfdmnnufbgdotmeuzs", 612, "dchyk"),
+		("qjopwxhabhksanskngodkl", 940, "kahno"),
+		("lsyrkjkbnyecdyzcombodcmkfoxqobrexdbomosfsxq", 718, "lktzs"),
+		("zixppfcfbabddjxohbqfkd", 939, "sqtor"),
+		("vxupkizorkkmmktmotkkxotm", 852, "dsqjh"),
+		("excdklvomkxnimykdsxqnozkbdwoxd", 952, "zspmc"),
+		("bnqqnrhudeknvdqsqzhmhmf", 391, "qhndm"),
+		("gzefmnxqotaoaxmfqogefayqdeqdhuoq", 716, "zinwb"),
+		("qzoggwtwsrqobrmghcfous", 428, "goqrs"),
+		("gpbepvxcvltpedcxotsqphztisteadnbtci", 193, "ignjy"),
+		("hvbizodxnxvqzibzmcpiohvmfzodib", 265, "hixfe"),
+		("wkqxodsmlexxikxkvicsc", 926, "xkcis"),
+		("bknsykmdsfomyxcewobqbknooqqzebmrkcsxq", 380, "utqrz"),
+		("lejkrscvwcfnvikirzezex", 711, "ecikr"),
+		("htwwtxnajidjbtwpxmtu", 255, "itgmd"),
+		("zsxyfgqjjllijufwyrjsy", 931, "wrpgt"),
+		("iuxxuyobkyigbktmkxnatzgtgreyoy", 384, "ygktx"),
+		("qjopwxhaxqjjuzalhkuiajp", 628, "esmxk"),
+		("lxaaxbrenljwmhanbnjalq", 745, "stjqy"),
+		("gokzyxsjonzvkcdsmqbkccdbksxsxq", 380, "tsyqk"),
+		("qzoggwtwsrqobrmqcohwbursdofhasbh", 168, "obhqr"),
+		("pelbtravppnaqlfgbentr", 325, "pabel"),
+		("xzwrmkbqtmakidmvomzpcvbmvoqvmmzqvo", 122, "mvoqz"),
+		("sbnqbhjohezffohjoffsjoh", 233, "xskyb"),
+		("jyddcyrwxefpifewoixhiwmkr", 412, "pdekg"),
+		("fabeqodqfrxaiqdxmnadmfadk", 690, "sicjl"),
+		("xcitgcpixdcparpcsnhtgkxrth", 427, "stznv"),
+		("rflsjynhrnqnyfwdlwfijjllxytwflj", 229, "lfjnw"),
+		("zottswlsiayhcwvumeynfuvilunils", 500, "ilsun"),
+		("odiihyujbcrlpajbbdbnacnbcrwp", 147, "bcadi"),
+		("udskkaxawvtmffqklgjsyw", 996, "tmnfc"),
+		("emixwvqhmlkpwkwtibmwxmzibqwva", 278, "zomvn"),
+		("dfcxsqhwzsdzoghwqufoggzcuwghwqg", 116, "kmijn"),
+		("dwbcjkunouxfnamnbrpw", 745, "nbuwa"),
+		("jchipqatrwdrdapitpcpanhxh", 973, "hglvu"),
+		("fkqbokxqflkxiavbzlkqxfkjbkq", 861, "wdnor"),
+		("wbhsfbohwcbozfoppwhqighcasfgsfjwqs", 480, "fhswb"),
+		("dzczkripxiruvszfyrqriufljtreupkvtyefcfxp", 451, "rfipu"),
+		("fmsledevhsywfyrrceguymwmxmsr", 698, "yzoxu"),
+		("udskkaxawvjsttalwfyafwwjafy", 840, "nlkda"),
+		("snordbqdsidkkxadzmsqzhmhmf", 287, "lngzc"),
+		("crwwvyxphbqrpboqbpqfkd", 341, "bpqrw"),
+		("odiihmhnanjlzdrbrcrxw", 563, "xadcy"),
+		("jyddcikkwlmttmrk", 698, "lmstk"),
+		("buzahislwshzapjnyhzzklzpnu", 149, "pjxor"),
+		("odkasqzuoeomhqzsqdtgzfymzmsqyqzf", 560, "frqmp"),
+		("gokzyxsjonbkllsdyzobkdsyxc", 874, "nbtmv"),
+		("excdklvopvygobbocokbmr", 952, "tyzxa"),
+		("jvsvymbsjovjvshalaljouvsvnf", 253, "zgtdm"),
+		("hafgnoyrqlrerfrnepu", 637, "refna"),
+		("pelbtravpsybjrefnyrf", 299, "tjoim"),
+		("fodvvlilhggbhvwrudjh", 621, "hvdgl"),
+		("kgjgrypwepybcbwcbcnjmwkclr", 678, "smijy"),
+		("myxcewobqbknomrymyvkdodbksxsxq", 458, "bkmox"),
+		("joufsobujpobmfhhdpoubjonfou", 311, "uvksy"),
+		("rflsjynhojqqdgjfsijajqturjsy", 697, "jqsfr"),
+		("vetllbybxwvtgwrkxtvjnblbmbhg", 709, "athym"),
+		("ajvyjprwpajmrxjlcrenkdwwhlxwcjrwvnwc", 433, "qsaxt"),
+		("zbytomdsvomkxnimykdsxqmyxdksxwoxd", 952, "xdmko"),
+		("esyfwlaubwddqtwsfsuimakalagf", 684, "stvip"),
+		("jefiushujfhezusjybufbqijyswhqiihuiuqhsx", 582, "uhijs"),
+		("tpspahyfnyhkljovjvshalbzlyalzapun", 565, "sdprn"),
+		("apwmeclgahcjjwzcylumpiqfmn", 132, "shfrg"),
+		("kwtwznctjcvvglmxizbumvb", 148, "vbcmt"),
+		("rmnqcapcraylbwumpiqfmn", 366, "juftv"),
+		("sorozgxemxgjkhgyqkzyzuxgmk", 748, "xuvst"),
+		("bkwzkqsxqwsvsdkbiqbknomkxnimykdsxqyzobkdsyxc", 822, "ksbqx"),
+		("ryexqpqhtekivbemuhskijecuhiuhlysu", 842, "tszmj"),
+		("ikhcxvmbexwrxwxlbzg", 501, "zhqis"),
+		("lsyrkjkbnyecmrymyvkdonozvyiwoxd", 978, "enkfi"),
+		("wdjcvuvmyjpnmvhkvbdibagjrzmnojmvbz", 395, "tcxne"),
+		("uwtojhynqjgfxpjyfhvznxnynts", 567, "kqpvs"),
+		("iqmbazulqppkqdqoquhuzs", 534, "ntpuq"),
+		("gntmfefwitzxojqqdgjfsijajqturjsy", 385, "jfqtg"),
+		("sebehvkbfhezusjybuzubboruqdhusuylydw", 972, "ytsim"),
+		("nzcczdtgpnsznzwlephzcvdsza", 405, "yotgu"),
+		("joufsobujpobmfhhufdiopmphz", 675, "tsymn"),
+		("cxybnlancsnuuhknjwanbnjalq", 823, "nabcj"),
+		("shoewudysrkddohuiuqhsx", 374, "dhsuo"),
+		("vagreangvbanyrttjbexfubc", 403, "ynepo"),
+		("aoubshwqdzoghwqufoggaobousasbh", 714, "oabgh"),
+		("njmjubszhsbefdipdpmbufqvsdibtjoh", 805, "bdjsf"),
+		("zovldbkfzgbiivybxklmboxqflkp", 653, "nyajo"),
+		("yknnkoeraxwogaphkceopeyo", 628, "ybmzc"),
+		("nijmywlynwbiwifunyguleyncha", 396, "nyiwl"),
+		("ocipgvkeecpfaeqcvkpivgejpqnqia", 258, "jsiqz"),
+		("encuukhkgfhnqygtvgejpqnqia", 882, "dxzer"),
+		("odiihljwmhanbnjalq", 927, "ahijl"),
+		("fkqbokxqflkxizxkavixyloxqlov", 861, "nxgja"),
+		("udskkaxawvxmrrquzgugdslwsfsdqkak", 216, "msfyx"),
+		("owshgfarwvbwddqtwsfkzahhafy", 216, "wafhd"),
+		("oaxadrgxdmnnufruzmzouzs", 794, "uqhse"),
+		("ziuxioqvoakidmvomzpcvbzmikycqaqbqwv", 616, "iqvmo"),
+		("bqvvuxqjjuopknwca", 550, "yzhum"),
+		("xgjougizobklruckxgtgreyoy", 670, "nbfmk"),
+		("bxaxipgnvgpstuadltgbpgztixcv", 323, "gptxa"),
+		("vcibutulxiomjfumncwalummnluchcha", 448, "ucmla"),
+		("irgyyolokjxghhozuvkxgzouty", 930, "ogyhk"),
+		("kyelcrgaaylbwamyrgleumpiqfmn", 782, "almye"),
+		("jsvagsulanwxdgowjkzahhafy", 138, "dblcm"),
+		("ixccbfkrfrodwhuhdftxlvlwlrq", 881, "mblzw"),
+		("chnylhuncihufmwupyhaylbohnguleyncha", 422, "hnuyc"),
+		("irdgrxzextreuptfrkzexuvgrikdvek", 165, "sjbnk"),
+		("xzwrmkbqtmakidmvomzpcvbzmikycqaqbqwv", 434, "sanut"),
+		("ykhknbqhzuaiwjwcaiajp", 524, "kjlio"),
+		("jlidywncfymwupyhaylbohnuwkocmcncih", 916, "cyhnw"),
+		("nuatmlmdpageomzpkeqdhuoqe", 326, "ljtsm"),
+		("xmrrqkusnwfywjzmflsuimakalagf", 684, "afmkl"),
+		("foadouwbuqvcqczohsrsgwub", 116, "oubcq"),
+		("etyyxbgnbnkzsdkzanqzsnqx", 391, "pnmlv"),
+		("pinovwgzwvnfzohvmfzodib", 291, "ovzfi"),
+		("qekrixmggsrwyqivkvehifewoixywivxiwxmrk", 828, "iwxek"),
+		("jqwpihizlwcaxtiabqkoziaakcabwumzamzdqkm", 928, "aizkm"),
+		("qekrixmgjpsaivstivexmsrw", 672, "etmsq"),
+		("excdklvogokzyxsjonmrymyvkdobomosfsxq", 562, "okmsx"),
+		("qczcftizpibbmaobousasbh", 532, "zynvo"),
+		("wbhsfbohwcbozsuugsfjwqsg", 506, "bdhxv"),
+		("lxwbdvnapajmnajkkrcanlnrerwp", 563, "anrjk"),
+		("lsyrkjkbnyecpvygobcobfsmoc", 900, "uyrgf"),
+		("cqwdujyssxesebqjuixyffydw", 374, "nyjvi"),
+		("odiihouxfnaanlnrerwp", 433, "naior"),
+		("rzvkjiduzyxviytxjvodibvxlpdndodji", 993, "aousd"),
+		("ltpedcxotsqphztirjhidbtghtgkxrt", 453, "rjlkn"),
+		("krxqjijamxdbkdwwhfxatbqxy", 823, "wctav"),
+		("froruixoedvnhwvwrudjh", 829, "rdhou"),
+		("jvyyvzpcljhukfaljouvsvnf", 201, "uwkic"),
+		("nijmywlynvumeynzchuhwcha", 266, "hnycm"),
+		("ydjuhdqjyedqbzubboruqdtufbeocudj", 244, "vmkln"),
+		("qlmpbzobqmixpqfzdoxppmrozexpfkd", 575, "zswni"),
+		("qvbmzvibqwvitmootijwzibwzg", 330, "ibvwz"),
+		("pbeebfvirfpniratreuhagfreivprf", 949, "gvxlm"),
+		("wfummczcyxjfumncwalummuwkocmcncih", 890, "vturj"),
+		("dwbcjkunnppcajrwrwp", 355, "kstqo"),
+		("dpssptjwfcbtlfuvtfsuftujoh", 441, "ftsuj"),
+		("vrurcjahpajmnnppanbnjalq", 303, "tozvd"),
+		("wfruflnslojqqdgjfsxfqjx", 775, "fjqls"),
+		("pbafhzretenqrqlrqrirybczrag", 897, "yszub"),
+		("sehheiylurkddoudwyduuhydw", 322, "qbyad"),
+		("upqtfdsfucbtlfunbobhfnfou", 103, "vpxyh"),
+		("ajvyjprwpnppdbnacnbcrwp", 901, "stevo"),
+		("bkzrrhehdcbzmcxbnzshmfqdrdzqbg", 833, "msuya"),
+		("amlqskcpepybcaylbwrcaflmjmew", 730, "arbyn"),
+		("wbhsfbohwcbozdzoghwqufogggozsg", 272, "gobhw"),
+		("ksodcbwnsrdfcxsqhwzsgqojsbusfvibhobozmgwg", 194, "rwimn"),
+		("mfklstdwusfvqhmjuzskafy", 424, "ulgym"),
+		("wfruflnslojqqdgjfsqfgtwfytwd", 177, "xbofz"),
+		("sedikcuhwhqtuisqludwuhxkdjjhqydydw", 218, "dhuqw"),
+		("ltpedcxotsraphhxuxtsqphztiadvxhixrh", 765, "jahpi"),
+		("zgmfyxypbmsqdjmucprcaflmjmew", 548, "aeoiv"),
+		("qspkfdujmfezfnbobhfnfou", 207, "lnkrt"),
+		("fbebmtkrzktwxpxtihgbsxwietlmbvzktllkxlxtkva", 943, "hajmb"),
+		("apwmeclgahcjjwzcylbctcjmnkclr", 548, "yxnzl"),
+		("rflsjynhkqtbjwbtwpxmtu", 177, "tbjwf"),
+		("kfgjvtivktreupuvgcfpdvek", 373, "vkefg"),
+		("upqtfdsfukfmmzcfbonbobhfnfou", 285, "vsglz"),
+		("chnylhuncihufmwupyhaylbohnxypyfijgyhn", 266, "pwahm"),
+		("apwmeclgazyqicrdglylagle", 886, "lagce"),
+		("jlidywncfyxsyqilembij", 188, "uxjts"),
+		("jqwpihizlwcalgmlmaqov", 954, "laimq"),
+		("qcffcgwjsfoppwhgozsg", 246, "fgcop"),
+		("bqxnfdmhbrbzudmfdqgtmscdrhfm", 287, "dmbfh"),
+		("gifavtkzcvwcfnvirthlzjzkzfe", 763, "tmniq"),
+		("uqtqbizgozilmkivlgkwibqvotijwzibwzg", 720, "qndzg"),
+		("sxdobxkdsyxkvmkxnibomosfsxq", 848, "zyubw"),
+		("qfmcusbwqfoppwhkcfygvcd", 662, "cfpqw"),
+		("sehheiylufbqijyswhqiiskijecuhiuhlysu", 660, "kdjyq"),
+		("sedikcuhwhqtuuwwbqrehqjeho", 660, "dtawl"),
+		("veqtekmrkwgezirkivlyrxeguymwmxmsr", 464, "emrkg"),
+		("lqwhuqdwlrqdoexqqbuhdftxlvlwlrq", 231, "ydznk"),
+		("snordbqdsbzmcxotqbgzrhmf", 183, "gomah"),
+		("ujqgywfaujsttalhmjuzskafy", 476, "lghae"),
+		("yrwxefpijpsaivgsrxemrqirx", 100, "yazxo"),
+		("udglrdfwlyhexqqbsxufkdvlqj", 569, "dlqfu"),
+		("ugjjgkanwuzgugdslwesjcwlafy", 736, "rnxjs"),
+		("pdjqhwlfsodvwlfjudvvorjlvwlfv", 673, "vldfj"),
+		("xekdwvwnzkqofahhuxawjajcejaanejc", 524, "ajewc"),
+		("pwcvonofrcigpibbmfsqswjwbu", 766, "myazu"),
+		("tcrjjzwzvuwcfnviglityrjzex", 893, "bkuyx"),
+		("lugjuachawbiwifunyomylnymncha", 448, "mosph"),
+		("ckgvutofkjinuiurgzkjkvgxzsktz", 228, "kguzi"),
+		("ydjuhdqjyedqbsqdtoijehqwu", 868, "ozqsj"),
+		("sxdobxkdsyxkvzvkcdsmqbkccmyxdksxwoxd", 640, "xdksc"),
+		("odkasqzuodmnnufdqmocgueufuaz", 482, "wfbke"),
+		("wpuvcdngtcddkvwugtvguvkpi", 414, "hayjs"),
+		("lqwhuqdwlrqdoedvnhwuhfhlylqj", 439, "bjzye"),
+		("wpuvcdngdwppaceswkukvkqp", 674, "mxnkj"),
+		("qzlozfhmfbkzrrhehdcokzrshbfqzrrzbpthrhshnm", 365, "hrzbf"),
+		("raphhxuxtsrpcsnrdpixcvrjhidbtghtgkxrt", 635, "yozvr"),
+		("tfejldvixiruvgcrjkztxirjjtljkfdvijvimztv", 321, "veyxs"),
+		("ryexqpqhtekisxesebqjuiqbui", 868, "qebar"),
+		("eqpuwogtitcfghnqygttgegkxkpi", 648, "ywzjl"),
+		("uzfqdzmfuazmxpkqbgdotmeuzs", 482, "zmudf"),
+		("sbnqbhjohcbtlfubdrvjtjujpo", 441, "taquv"),
+		("gokzyxsjonbkwzkqsxqlexxibomosfsxq", 354, "xoskq"),
+		("oazegyqdsdmpqiqmbazulqpdmnnufgeqdfqefuzs", 456, "qdefm"),
+		("dwbcjkunljwmhlxjcrwpanbnjalq", 875, "hoynm"),
+		("udskkaxawveadalsjqyjsvwxdgowjklgjsyw", 216, "cnwyi"),
+		("surmhfwlohexqqbsxufkdvlqj", 439, "tspmq"),
+		("ksodcbwnsrfoppwhzcuwghwqg", 402, "vopuk"),
+		("zsxyfgqjhmthtqfyjfhvznxnynts", 697, "fhnty"),
+		("yflexwxoalrpyxphbqbkdfkbbofkd", 653, "jzvpm"),
+		("ltpedcxotstvvrdcipxcbtci", 557, "ctdip"),
+		("slqryzjcdjmucpqyjcq", 756, "cjqyd"),
+		("rgndvtcxrqphztibpcpvtbtci", 817, "tcpbi"),
+		("ftzgxmbvfbebmtkrzktwxvtgwrvhtmbgzlmhktzx", 371, "wzxvl"),
+		("htqtwkzqhfsidyjhmstqtld", 463, "rxszy"),
+		("rwcnawjcrxwjuyujbcrlpajbbmnenuxyvnwc", 979, "gkutb"),
+		("gokzyxsjontovvilokxkmaescsdsyx", 562, "dwlah"),
+		("iutyaskxmxgjklruckxiayzuskxykxboik", 826, "kxiuy"),
+		("vhglnfxkzktwxyehpxkhixktmbhgl", 891, "diznt"),
+		("sedikcuhwhqtukdijqrbusqdtoseqjydwiuhlysui", 790, "lksjh"),
+		("jyfvnlupjzjhclunlyobuavwlyhapvuz", 617, "pirsw"),
+		("iuruxlarsgmtkzoihgyqkzzkinturume", 670, "qatsn"),
+		("wkqxodsmmrymyvkdomecdywobcobfsmo", 250, "hgarm"),
+		("odiihkjbtncnwprwnnarwp", 381, "qpodn"),
+		("kfgjvtivktyftfcrkvkirzezex", 373, "srcvd"),
+		("gcfcnulsaluxyzottswuhxsomylnymncha", 552, "clnsu"),
+		("xmtjbzidxzbbxpnojhzmnzmqdxz", 421, "mnkio"),
+		("qjopwxhaacciwngapejc", 160, "jimst"),
+		("emixwvqhmlkivlgkwibqvoaitma", 564, "qspyb"),
+		("nvrgfezqvuavccpsvrecfxzjkztj", 529, "lmnsh"),
+		("emixwvqhmlktiaaqnqmlxtiabqkoziaaikycqaqbqwv", 746, "ozadu"),
+		("zhdsrqlchghjjorjlvwlfv", 751, "hjlrv"),
+		("cybyjqhowhqtuuwwqsgkyiyjyed", 478, "szxuo"),
+		("clxalrtyrnsznzwlepwzrtdetnd", 405, "lnrtz"),
+		("sgmtkzoiyigbktmkxnatzrghuxgzuxe", 722, "gktxz"),
+		("hjgbwuladwtskcwlsfsdqkak", 502, "txdsw"),
+		("yrwxefpihcivigimzmrk", 646, "hdmzy"),
+		("hqcfqwydwhqrryjjusxdebewo", 946, "qwdeh"),
+		("wsvsdkbiqbknocmkfoxqobrexdyzobkdsyxc", 276, "wptxs"),
+		("qfmcusbwqqvcqczohszcuwghwqg", 870, "mnybx"),
+		("clxalrtyrnsznzwlepcpdplcns", 743, "rtycz"),
+		("fbebmtkrzktwxktuubmybgtgvbgz", 553, "osmdy"),
+		("jvuzbtlynyhklyhtwhnpunjovjvshalylzlhyjo", 773, "hlyjn"),
+		("slqryzjcaylbwpcacgtgle", 782, "nxkri"),
+		("tfcfiwlcwcfnviwzeretzex", 971, "smobe"),
+		("jefiushujuwwqsgkyiyjyed", 556, "xzrwq"),
+		("crwwvyxphbqxkxivpfp", 653, "pxvwb"),
+		("hqcfqwydwzubboruqdhusuylydw", 244, "lqeho"),
+		("oxmeeuruqpqsseqdhuoqe", 534, "equos"),
+		("qxdwpopgsdjhrgndvtcxrgpqqxigthtpgrw", 687, "gpdqr"),
+		("mybbycsfomrymyvkdobocokbmr", 692, "pymza"),
+		("myvybpevoqqyzobkdsyxc", 250, "sxytw"),
+		("fnjyxwrinmkdwwhuxprbcrlb", 329, "natqu"),
+		("aietsrmdihnippcfiergsrxemrqirx", 958, "iremp"),
+		("xmrrqtmffqvwhdgqewfl", 138, "fqmrw"),
+		("oqnidbshkdbzmcxsdbgmnknfx", 599, "nzdyx"),
+		("eqttqukxgecpfaeqcvkpiewuvqogtugtxkeg", 128, "mytkp"),
+		("nchhgntwemzamzdqkma", 252, "kmbop"),
+		("bjfutsnejijllzxjwyjxynsl", 775, "ndbsw"),
+		("ktwbhtvmboxlvtoxgzxkangmmxvaghehzr", 319, "ijqxb"),
+		("kyelcrgaafmamjyrcpcqcypaf", 210, "acyfm"),
+		("myxcewobqbknomkxnioxqsxoobsxq", 484, "oxbqk"),
+		("esyfwlauvqwkzahhafy", 788, "jikae"),
+		("oqnidbshkdeknvdqbtrsnldqrdquhbd", 391, "njzml"),
+		("qjopwxhabhksanopknwca", 888, "ahkno"),
+		("udskkaxawvjsttalvwhdgqewfl", 190, "hqmnt"),
+		("excdklvolexxicrszzsxq", 458, "uavnl"),
+		("frqvxphujudghfdqgbfrdwlqjwudlqlqj", 179, "bimaq"),
+		("iuruxlarkmmykxboiky", 852, "tijpz"),
+		("tyepcyletzylwmldvpelylwjdtd", 509, "lydet"),
+		("frqvxphujudghgbhwhfkqrorjb", 101, "mhbes"),
+		("xqvwdeohedvnhwzrunvkrs", 699, "zmudw"),
+		("irdgrxzextreupfgvirkzfej", 893, "fbsyn"),
+		("cxybnlancljwmhorwjwlrwp", 771, "ngpmz"),
+		("eqpuwogtitcfggiiucngu", 388, "hzgae"),
+		("ikhcxvmbexcxeeruxtgwxlbzg", 553, "mvnfs"),
+		("mrxivrexmsrepfyrrcasvowlst", 854, "codsq"),
+		("npmhcargjcaylbwqcptgacq", 366, "ditsg"),
+		("ftzgxmbvietlmbvzktllphkdlahi", 241, "ltbhi"),
+		("hqcfqwydwtoubewyijysi", 270, "hnvux"),
+		("emixwvqhmlkivlgabwziom", 590, "imlvw"),
+		("pejjiniomecdywobcobfsmo", 926, "wrjmp"),
+		("bknsykmdsfooqqdbksxsxq", 640, "naysz"),
+		("gifavtkzcvvxxtfekrzedvek", 789, "cnwtp"),
+		("kmjezxodgzdiozmivodjivgagjrzmxjiovdihzio", 915, "yqktj"),
+		("shoewudysvbemuhqsgkyiyjyed", 946, "nqsjd"),
+		("htqtwkzqojqqdgjfsrfwpjynsl", 749, "hryqo"),
+		("rmnqcapcrzyqicrpcacgtgle", 340, "znstw"),
+		("bnqqnrhudbzmcxbnmszhmldms", 729, "yfetv"),
+		("surmhfwlohgbhrshudwlrqv", 725, "dsaym"),
+		("jchipqattvvitrwcdadvn", 505, "povhu"),
+		("zgmfyxypbmsqnjyqrgaepyqqrcaflmjmew", 340, "mqyae"),
+		("froruixoexqqbpdunhwlqj", 283, "nmuqd"),
+		("lnkfaypehaxwogapodellejc", 784, "ytrsz"),
+		("jlidywncfyxsyfuvilunils", 864, "ilyfn"),
+		("joufsobujpobmdipdpmbufsftfbsdi", 545, "rwjnm"),
+		("tvsnigxmpigerhcgsexmrkeguymwmxmsr", 932, "pivem"),
+		("tfejldvixiruvsrjbvkivjvrity", 815, "vijrt"),
+		("zuvykixkzyigbktmkxnatzzkinturume", 410, "kzitu"),
+		("enzcntvatpubpbyngrqrcyblzrag", 117, "oywbs"),
+		("wsvsdkbiqbknolkcuodnofovyzwoxd", 744, "xnuqc"),
+		("wbhsfbohwcbozfoppwhaobousasbh", 246, "nfsml"),
+		("uiovmbqkjcvvgabwziom", 720, "nbqaz"),
+		("etaqigpkefagfgrnqaogpv", 674, "gaefp"),
+		("ejpanjwpekjwhnwxxephkceopeyo", 238, "bmscu"),
+		("qjopwxhabhksanwjwhuoeo", 940, "xenwh"),
+		("etyyxbzmcxbnzshmfqdzbpthrhshnm", 729, "hbmzn"),
+		("uqtqbizgozilmlgmabwziom", 356, "tspmz"),
+		("excdklvomybbycsfotovvilokxpsxkxmsxq", 874, "axwon"),
+		("mvydjvxodqzxviytxjvodibpnzmoznodib", 187, "nflym"),
+		("ixccbzhdsrqlchgedvnhwxvhuwhvwlqj", 465, "hcvwd"),
+		("qspkfdujmfvotubcmftdbwfohfsivoubdrvjtjujpo", 181, "esuzg"),
+		("fkqbokxqflkxiqlmpbzobqbddjxohbqfkd", 601, "dcgym"),
+		("mtzslklcozfdprrnfdezxpcdpcgtnp", 301, "tmnrk"),
+		("xekdwvwnzkqolhwopeycnwoowymqeoepekj", 290, "rzsnk"),
+		("fubrjhqlfsodvwlfjudvvpdqdjhphqw", 725, "dfhjq"),
+		("shoewudyszubboruqdskijecuhiuhlysu", 608, "ushbd"),
+		("zlkprjbodoxabzxkavrpboqbpqfkd", 679, "bkopa"),
+		("nzcczdtgpmldvpeopawzjxpye", 587, "tkbms"),
+		("apuutnxvqzibzmcpioyzkvmohzio", 655, "rsozd"),
+		("rgllkngzzkymdwqfuzs", 300, "yhzxu"),
+		("cvabijtmjcvvguiviomumvb", 538, "ixajz"),
+		("oazegyqdsdmpqotaoaxmfqpqbmdfyqzf", 248, "qadfm"),
+		("rtqlgevkngfagnqikuvkeu", 960, "nqdom"),
+		("bnknqetkcxdcdrhfm", 183, "mfpwa"),
+		("ohmnuvfywuhxswiunchalyuwkocmcncih", 552, "chunw"),
+		("hqtyeqsjylujefiushujtoufkhsxqiydw", 296, "isfmy"),
+		("kwtwznctkwvacumzozilmjiasmbuiviomumvb", 746, "qmjyz"),
+		("qfmcusbwqfoppwhtwbobqwbu", 298, "bwqfo"),
+		("ykhknbqhxqjjuowhao", 472, "hjtck"),
+		("dszphfojdtdbwfohfsivoumbcpsbupsz", 103, "sbdfo"),
+		("lahxpnwrlljwmhnwprwnnarwp", 641, "srtpm"),
+		("ckgvutofkjlruckxjkvruesktz", 878, "zjlyk"),
+		("dyzcombodzvkcdsmqbkccnocsqx", 926, "yvute"),
+		("ktwbhtvmboxwrxnlxkmxlmbgz", 345, "lsuwt"),
+		("nwilwcejcnwxxepzalhkuiajp", 186, "bznxr"),
+		("uzfqdzmfuazmxotaoaxmfqbgdotmeuzs", 846, "mzafo"),
+		("oxmeeuruqpomzpkoamfuzsoazfmuzyqzf", 352, "ypdzg"),
+		("zhdsrqlchgfdqgbghsduwphqw", 361, "hdgqs"),
+		("nchhgjiasmbamzdqkma", 278, "qklti"),
+		("tfiifjzmvupvwzeretzex", 295, "itvos"),
+		("eqttqukxgecpfaujkrrkpi", 830, "kepqr"),
+		("clotzlnetgpmldvpenzyeltyxpye", 145, "xfpsy"),
+		("mbiyqoxsmmyvybpevmkxnimykdsxqyzobkdsyxc", 900, "ymxbk"),
+		("plolwdubjudghvfdyhqjhukxqwvhuylfhv", 621, "zqwmy"),
+		("atyzghrkvxupkizorkjekgiwaoyozout", 228, "abrmv"),
+		("zottsxsymufym", 162, "mstyf"),
+		("vhehkynektuubmmktbgbgz", 293, "qmytr"),
+		("kwvacumzozilmzijjqbivitgaqa", 616, "fkoxt"),
+		("yaxsnlcrunajvyjprwpsnuuhknjwanlnrerwp", 771, "zpyld"),
+		("raphhxuxtsbpvctixreaphixrvgphhbpcpvtbtci", 115, "phtxb"),
+		("nuatmlmdpageodkasqzuoqssdqmocgueufuaz", 768, "umnqw"),
+		("yknnkoeralhwopeycnwoonawymqeoepekj", 680, "eonkw"),
+		("pybgmyargtcaylbwqyjcq", 886, "buzfp"),
+		("gzefmnxqngzzkiadwetab", 638, "zaegn"),
+		("sbnqbhjohkfmmzcfbousbjojoh", 129, "acdkb"),
+		("lxaaxbrenlujbbrornmljwmhlxjcrwpmnyjacvnwc", 355, "yzsuk"),
+		("nchhglgmnqvivkqvo", 200, "dystz"),
+		("plolwdubjudghudeelwrshudwlrqv", 335, "sihdt"),
+		("wlsiayhcwvumeynlymyulwb", 292, "zbrux"),
+		("ytuxjhwjyhfsidhtfynslqtlnxynhx", 411, "adxmu"),
+		("wkqxodsmtovvilokxckvoc", 822, "uhgov"),
+		("chnylhuncihufvumeynnluchcha", 500, "rcbmn"),
+		("tfiifjzmvlejkrscvtyftfcrkvjyzggzex", 243, "fjtvz"),
+		("eqpuwogtitcfgtcddkvtgugctej", 310, "pyemh"),
+		("iuruxlarxgsvgmotmpkrrehkgtxkykgxin", 956, "btwqp"),
+		("shoewudyssxesebqjuqdqboiyi", 894, "seqbd"),
+		("zlkprjbodoxabgbiivybxkpxibp", 861, "azyjx"),
+		("ckgvutofkjinuiurgzklotgtiotm", 982, "qszly"),
+		("thnulapjjshzzpmplkjhukfvwlyhapvuz", 747, "hpjlu"),
+		("pybgmyargtchcjjwzcylqcptgacq", 782, "bxsuc"),
+		("xgsvgmotmvrgyzoimxgyyiutzgotsktz", 150, "gtmoy"),
+		("laffeyigbktmkxnatzjkyomt", 696, "ktafm"),
+		("zvyvgneltenqrpubpbyngrznexrgvat", 507, "wfjhu"),
+		("pelbtravppnaqlznantrzrag", 403, "cbyja"),
+		("jqwpihizlwcaakidmvomzpcvbapqxxqvo", 850, "oxymv"),
+		("cvabijtmntwemztwoqabqka", 954, "atbmq"),
+		("zixppfcfbaavbzlkqxfkjbkq", 809, "zlmjc"),
+		("sebehvkbzubboruqdtufqhjcudj", 556, "budeh"),
+		("lqwhuqdwlrqdofdqgbghvljq", 621, "qdlgh"),
+		("qlmpbzobqcrwwvzxkavzlxqfkdrpboqbpqfkd", 731, "ciyxw"),
+		("pwcvonofrciggqojsbusfvibhqighcasfgsfjwqs", 740, "csebm"),
+		("mvydjvxodqzkmjezxodgzkgvnodxbmvnnyzqzgjkhzio", 239, "zdovg"),
+		("kzgwomvqkxtiabqkoziaatijwzibwzg", 564, "menyj"),
+		("ksodcbwnsrxszzmpsobkcfygvcd", 454, "mbaod"),
+		("ejpanjwpekjwhxwogaphwxknwpknu", 472, "wpjkn"),
+		("mvydjvxodqzhvbizodxwpiithvivbzhzio", 967, "ivzdh"),
+		("mvydjvxodqzmvwwdonzmqdxzn", 681, "jryzk"),
+		("enqvbnpgvirrttfreivprf", 871, "lgqrc"),
+		("hvbizodxwpiitkpmxcvndib", 291, "dyjmn"),
+		("molgbzqfibmixpqfzdoxppxkxivpfp", 965, "pxfib"),
+		("fbebmtkrzktwxcxeeruxtgnlxkmxlmbgz", 137, "dckut"),
+		("luxciuwncpyluvvcnmbcjjcha", 500, "qsvzt"),
+		("apwmeclgahcjjwzcylqyjcq", 704, "cjalq"),
+		("wpuvcdngeqttqukxguecxgpigtjwpvcpcnauku", 830, "ucgpt"),
+		("iehepwnucnwzafahhuxawjpnwejejc", 940, "ewahj"),
+		("pbybeshypbeebfvirpnaqlpbngvatfreivprf", 715, "uyzwp"),
+		("htsxzrjwlwfijojqqdgjfszxjwyjxynsl", 957, "iyonc"),
+		("sxdobxkdsyxkvwsvsdkbiqbknozvkcdsmqbkccbomosfsxq", 536, "mbyan"),
+		("fruurvlyhfkrfrodwhuhdftxlvlwlrq", 335, "rflhu"),
+		("froruixohjjorjlvwlfv", 387, "uyawn"),
+		("myvybpevlexxivklybkdybi", 978, "ybvei"),
+		("chnylhuncihufvohhsxymcah", 240, "yxnmh"),
+		("tagzsrsjvgmkvqwvwhsjlewfl", 606, "svwgj"),
+		("zbytomdsvolexxidomrxyvyqi", 250, "oxydi"),
+		("qfkkjclmmteopgpwzaxpye", 821, "pekma"),
+		("lghkwujwludskkaxawvjsttalhmjuzskafy", 320, "axyrm"),
+		("irdgrxzexnvrgfezqvuavccpsvrecfxzjkztj", 191, "sclzh"),
+		("mhilxvkxmxzzetuhktmhkr", 319, "rcomn"),
+		("lhkhszqxfqzcddffsdbgmnknfx", 391, "ugevx"),
+		("apwmeclgaaylbwylyjwqgq", 314, "izfye"),
+		("yflexwxoalrpzlkprjbodoxabciltboqbzeklildv", 341, "byclp"),
+		("cvabijtmkwzzwaqdmntwemzabwziom", 252, "rdmvn"),
+		("qfkkjupwwjmplyepnsyzwzrj", 899, "okhgz"),
+		("jxdkbqfzavbzlkqxfkjbkq", 861, "wptxb"),
+		("gpsxdprixktqphztihwxeexcv", 947, "krgwe"),
+		("nijmywlynwuhxswiunchalymyulwb", 968, "wylnu"),
+		("sbnqbhjohkfmmzcfboufdiopmphz", 987, "bfhmo"),
+		("guahyncwjfumncwalummxyjfisgyhn", 500, "htamn"),
+		("ytuxjhwjyjllijxnls", 879, "duthg"),
+		("lghkwujwlusfvqugslafyesfsywewfl", 944, "ilszy"),
+		("tvsnigxmpitpewxmgkvewwxiglrspskc", 152, "gipsw"),
+		("joufsobujpobmcbtlfudvtupnfstfswjdf", 129, "fubjo"),
+		("rwcnawjcrxwjubljenwpnaqdwcmnyuxhvnwc", 225, "wncja"),
+		("qzchnzbshudokzrshbfqzrrrzkdr", 989, "rzhbd"),
+		("qzoggwtwsrpogyshrsjszcdasbh", 896, "sghor"),
+		("gzefmnxqdmnnufxmnadmfadk", 326, "tvuiw"),
+		("qzoggwtwsrpibbmzopcfohcfm", 792, "jsmfu"),
+		("mvydjvxodqzxviytxjvodibhvivbzhzio", 369, "iceny"),
+		("wkqxodsmlkcuodcdybkqo", 224, "dkocq"),
+		("veqtekmrkikkwxsveki", 542, "keivm"),
+		("zlkprjbodoxabyxphbqpqloxdb", 419, "ckdtm"),
+		("buzahislibuufklzpnu", 721, "stjnm"),
+		("hwdtljsnhkqtbjwijajqturjsy", 515, "plnqy"),
+		("luxciuwncpyjfumncwalummlyuwkocmcncih", 474, "lqpco"),
+		("tinnmibghopzsrmsaobousasbh", 506, "sboah"),
+		("pbeebfvirrttratvarrevat", 403, "tdokj"),
+		("dmybmsuzspkqefadmsq", 300, "msdqa"),
+		("ujqgywfautmffqdgyaklauk", 970, "yxmid"),
+		("ovbunmneqbhfenoovghfregrfgvat", 481, "efgno"),
+		("hqfxxnknjikzeeduqfxynhlwfxxwjhjnansl", 957, "nxfhj"),
+		("plolwdubjudghedvnhwpdqdjhphqw", 985, "dsxhg"),
+		("nwlddtqtpoawldetnrclddnfdezxpcdpcgtnp", 353, "dnptc"),
+		("bwxamkzmbxzwrmkbqtmntwemzamzdqkma", 668, "swmnl"),
+		("bqxnfdmhbqzaahsrdquhbdr", 443, "bdhqa"),
+		("egdytrixatidehtrgtiuadltgsteadnbtci", 297, "zampy"),
+		("gsrwyqivkvehigerhcgsexmrkerepcwmw", 880, "bkwts"),
+		("nsyjwsfyntsfqgfxpjyjslnsjjwnsl", 749, "lvzus"),
+		("dfcxsqhwzspibbmgvwddwbu", 246, "dqbem"),
+		("mtzslklcozfdojpfdpcepdetyr", 613, "dpcef"),
+		("gbcfrpergohaalerfrnepu", 351, "reafg"),
+		("gvaazcbtlfuefqbsunfou", 311, "dvnmz"),
+		("ugdgjxmdtskcwlumklgewjkwjnauw", 892, "wgjku"),
+		("iruzfrtkzmvavccpsvrenfibjyfg", 243, "jzoyc"),
+		("shoewudyshqrryjbqrehqjeho", 296, "heqrj"),
+		("hwdtljsnhkqtbjwhtsyfnsrjsy", 827, "dntpc"),
+		("zilqwikbqdmkivlguiviomumvb", 902, "imvbk"),
+		("rsvxltspisfnigxwxsveki", 984, "sixve"),
+		("surmhfwlohgbhxvhuwhvwlqj", 387, "hwluv"),
+		("ubhatstkwhnlyehpxkwxlbzg", 137, "raqjb"),
+		("oknkvctaitcfguecxgpigtjwpvocpcigogpv", 596, "cgpio"),
+		("amjmpdsjdjmucpnspafyqgle", 470, "ztpqn"),
+		("zixppfcfbaavbabpfdk", 471, "abfpc"),
+		("owshgfarwvjsttalvwkayf", 944, "smcyx"),
+		("vjpwncrlljwmhlxjcrwplxwcjrwvnwc", 589, "irbxq"),
+		("qvbmzvibqwvitziuxioqvolgmamzdqkma", 928, "hgfln"),
+		("lxuxaodukjbtncjwjuhbrb", 147, "bjuxa"),
+		("etaqigpkefagyqtmujqr", 440, "qaegt"),
+		("zekvierkzfercirdgrxzexjtrmvexviylekrthlzjzkzfe", 633, "gkyzp"),
+		("mfklstdwhdsklauyjskkkwjnauwk", 762, "vnfzg"),
+		("pkloaynapfahhuxawjoanreyao", 706, "mdfpn"),
+		("hwdtljsnhhmthtqfyjrfsfljrjsy", 359, "sxziu"),
+		("fabeqodqfngzzkbgdotmeuzs", 144, "kxags"),
+		("tagzsrsjvgmktskcwlvwhsjlewfl", 424, "ejuah"),
+		("kzgwomvqkjiasmbuizsmbqvo", 590, "mbiko"),
+		("qjopwxhaxqjjuoanreyao", 758, "ubmon"),
+		("hvbizodxxmtjbzidxnxvqzibzmcpioyzkgjthzio", 889, "rmyqo"),
+		("iuruxlarkmmjkvruesktz", 644, "kruma"),
+		("ujqgywfaujsttalvwhdgqewfl", 710, "hbdlx"),
+		("jlidywncfywuhxswiunchayhachyylcha", 630, "hycaw"),
+		("lugjuachawlsiayhcwdyffsvyuhuhufsmcm", 890, "juefh"),
+		("hjgbwuladwxdgowjhmjuzskafy", 398, "wqigl"),
+		("yuxufmdksdmpqpkqetubbuzs", 456, "wldkg"),
+		("vcibutulxiomdyffsvyuhqilembij", 110, "jdnmz"),
+		("nzwzcqfwclmmtedpcgtnpd", 509, "cdmnp"),
+		("aczupnetwpnlyojnzletyrzapcletzyd", 665, "zelnp"),
+		("htsxzrjwlwfijwfintfhynajkqtbjwknsfshnsl", 983, "kytzm"),
+		("enqvbnpgvironfxrgqrirybczrag", 611, "rgnbi"),
+		("molgbzqfibciltboxkxivpfp", 159, "biflo"),
+		("plolwdubjudghfkrfrodwhghyhorsphqw", 517, "hdorw"),
+		("gzefmnxqomzpkoazfmuzyqzf", 872, "zkycu"),
+		("qjopwxhalhwopeycnwoonaoawnyd", 186, "cvyno"),
+		("jyfvnlupjipvohghykvbzjovjvshalylzlhyjo", 435, "xlenk"),
+		("ajmrxjlcrenkjbtncjwjuhbrb", 329, "klcuz"),
+		("wdjcvuvmyjpnezggtwzvijkzmvodjin", 603, "gmveh"),
+		("muqfedyputfbqijyswhqiibqrehqjeho", 192, "vdlge"),
+		("ktfitzbgzxzzftgtzxfxgm", 605, "izfql"),
+		("bknsykmdsfooqqwkbuodsxq", 458, "stifb"),
+		("slqryzjchcjjwzcylyaosgqgrgml", 314, "qymir"),
+		("gpewwmjmihveffmxxvemrmrk", 126, "itcvu"),
+		("rdadgujagpqqxildgzhwde", 297, "hnvso"),
+		("lxaaxbrenmhncnlqwxuxph", 251, "xvjuz"),
+		("xstwigvixfewoixgsrxemrqirx", 698, "xireg"),
+		("iehepwnucnwzazuawymqeoepekj", 108, "sdnmj"),
+		("oknkvctaitcfgrncuvkeitcuuhkpcpekpi", 908, "pgfbe"),
+		("enqvbnpgvirohaalhfregrfgvat", 351, "hsgdf"),
+		("ixccbiorzhuhqjlqhhulqj", 647, "hqcij"),
+		("apuutagjrzmjkzmvodjin", 915, "jamuz"),
+		("hqcfqwydwrqiaujijehqwu", 530, "qwhij"),
+		("vhehkynektwbhtvmboxlvtoxgzxkangmkxvxbobgz", 683, "tsurp"),
+		("gntmfefwitzxidjknsfshnsl", 723, "fnsit"),
+		("ajvyjprwpbljenwpnaqdwcujkxajcxah", 563, "yskxv"),
+		("joufsobujpobmdboezdpbujohmbcpsbupsz", 259, "bopuj"),
+		("xlrypetnprrnzyeltyxpye", 847, "yeprl"),
+		("zuvykixkzxgsvgmotmlruckxjkvgxzsktz", 696, "ijlfz"),
+		("jqwpihizlwcamoolmxtwgumvb", 798, "nkzsr"),
+		("jsvagsulanwkusnwfywjzmflklgjsyw", 736, "ectrq"),
+		("ykhknbqhnwxxepnawymqeoepekj", 758, "cfvdy"),
+		("kzeedgfxpjytujwfyntsx", 385, "aunmy"),
+		("slqryzjcqaytclecpfslrdglylagle", 184, "lcyae"),
+		("laffevrgyzoimxgyyiutzgotsktz", 410, "gtyzf"),
+		("gpbepvxcvhrpktcvtgwjcistktadebtci", 141, "zoqhx"),
+		("yaxsnlcrunlqxlxujcnmnyuxhvnwc", 641, "nxclu"),
+		("tagzsrsjvgmkkusnwfywjzmfldstgjslgjq", 294, "gayon"),
+		("kwzzwaqdmzijjqbxczkpiaqvo", 902, "mkgjt"),
+		("mfklstdwusfvqugslafyxafsfuafy", 684, "fsaul"),
+		("zvyvgneltenqrovbunmneqbhfsybjrefgbentr", 117, "shfce"),
+		("emixwvqhmlakidmvomzpcvbamzdqkma", 720, "relbk"),
+		("rdggdhxkteaphixrvgphhhwxeexcv", 973, "xozyv"),
+		("bqvvuzuaiwngapejc", 992, "nmdax"),
+		("bjfutsnejikqtbjwwjxjfwhm", 203, "irjmx"),
+		("bdavqofuxqnmewqfabqdmfuaze", 976, "vgzhc"),
+		("vdzonmhydcokzrshbfqzrrrzkdr", 313, "rzdhk"),
+		("sawlkjevazoywrajcandqjpwjwhuoeo", 836, "ajwoe"),
+		("fruurvlyhgbhsxufkdvlqj", 413, "kftmo"),
+		("fruurvlyhsodvwlfjudvvghsorbphqw", 569, "tadzk"),
+		("sbejpbdujwftdbwfohfsivoudpoubjonfou", 103, "rbqio"),
+		("oxmeeuruqpotaoaxmfqxasuefuoe", 222, "ozipy"),
+		("rdggdhxktqphztiejgrwphxcv", 921, "tusrb"),
+		("dkqjcbctfqwufagyqtmujqr", 882, "kzvuf"),
+		("gzefmnxqdmnnufmzmxkeue", 248, "menfu"),
+		("kgjgrypwepybcaylbwkylyeckclr", 314, "mlvhs"),
+		("bwxamkzmbakidmvomzpcvbabwziom", 148, "nmtyw"),
+		("ckgvutofkjsorozgxemxgjkxghhozxkykgxin", 670, "gkxoh"),
+		("zhdsrqlchgfkrfrodwhghsorbphqw", 803, "cjybd"),
+		("hvbizodxwvnfzoadivixdib", 603, "xwstz"),
+		("tvsnigxmpigerhchitpscqirx", 204, "icghp"),
+		("jrncbavmrqcynfgvptenffnpdhvfvgvba", 741, "ybszn"),
+		("mbiyqoxsmpvygobpsxkxmsxq", 952, "mjfnc"),
+		("gsrwyqivkvehiveffmxgywxsqivwivzmgi", 282, "bdrgj"),
+		("clxalrtyrxtwtelcjrclopawldetnrclddcpdplcns", 847, "lcdrt"),
+		("ahngzyzqcntrbzmcxsdbgmnknfx", 287, "fmyqt"),
+		("zgmfyxypbmsqaylbwamyrglebctcjmnkclr", 340, "mybcl"),
+		("fydelmwpprrnzyeltyxpye", 717, "gfjxa"),
+		("rnqnyfwdlwfijrflsjynhwfggnyxfqjx", 931, "fnjwy"),
+		("zilqwikbqdmxtiabqkoziaatwoqabqka", 278, "ftonr"),
+		("bjfutsnejigzssduzwhmfxnsl", 827, "sfjnu"),
+		("ojknzxmzopinovwgzagjrzmjkzmvodjin", 733, "zjomn"),
+		("ygcrqpkbgfdcumgvfgukip", 570, "vmhxn"),
+		("dzczkripxiruvsrjbvkjyzggzex", 945, "uzneh"),
+		("bkzrrhehdcbzmcxlzmzfdldms", 287, "eclvd"),
+		("ziuxioqvokpwkwtibmlmxizbumvb", 564, "txsru"),
+		("kzgwomvqklgmlmxizbumvb", 122, "mbgkl"),
+		("htsxzrjwlwfijidjxjwanhjx", 463, "obdze"),
+		("gntmfefwitzxkqtbjwwjxjfwhm", 749, "qzutv"),
+		("htsxzrjwlwfijjlltujwfyntsx", 671, "xugan"),
+		("ymszqfuorxaiqdetubbuzs", 118, "ubqsz"),
+		("vdzonmhydcazrjdslzqjdshmf", 989, "dzhjm"),
+		("dyzcombodbkllsdoxqsxoobsxq", 354, "nrmkx"),
+		("pyknyegleafmamjyrcyaosgqgrgml", 626, "zdlfg"),
+		("oxmeeuruqpvqxxknqmzoazfmuzyqzf", 352, "rnsyt"),
+		("qjopwxhaxqjjupnwejejc", 654, "jepqw"),
+		("wifilzofjfumncwalummxypyfijgyhn", 604, "fjerw"),
+		("vagreangvbanyenoovgfuvccvat", 533, "gncot"),
+		("avwzljylazjhclunlyobuathuhnltlua", 669, "wathd"),
+		("ynssrlvtoxgzxkangmmxvaghehzr", 345, "vopnm"),
+		("cvabijtmuqtqbizgozilmxtiabqkoziaalmdmtwxumvb", 928, "imabt"),
+		("frqvxphujudghsodvwlfjudvvpdqdjhphqw", 751, "azovy"),
+		("qmpmxevckvehijyddcfyrrcqerekiqirx", 282, "ygmhv"),
+		("fodvvlilhgudeelwpdunhwlqj", 153, "sndmo"),
+		("gpsxdprixktytaanqtpcgthtpgrw", 765, "tpgar"),
+		("cvabijtmkpwkwtibmbmkpvwtwog", 174, "wbkmt"),
+		("vetllbybxwyehpxkwxlbzg", 891, "yekxl"),
+		("nzwzcqfwnlyojdezclrp", 275, "zclnw"),
+		("qmpmxevckvehiglsgspexigsrxemrqirx", 828, "exgim"),
+		("xtwtelcjrclopdnlgpyrpcsfyehzcvdsza", 873, "xmpon"),
+		("jrncbavmrqpnaqljbexfubc", 793, "bacjn"),
+		("ohmnuvfyyaalymyulwb", 266, "yalmu"),
+		("nzwzcqfwaczupnetwpawldetnrclddpyrtyppctyr", 613, "pctwd"),
+		("vqrugetgvuecxgpigtjwpvrwtejcukpi", 752, "geptu"),
+		("tfcfiwlclejkrscvupvrthlzjzkzfe", 607, "tcfns"),
+		("hwdtljsnhuqfxynhlwfxxknsfshnsl", 229, "xtngb"),
+		("iuruxlarigtjeiayzuskxykxboik", 930, "kmghr"),
+		("xjgjmapgezggtwzvihvivbzhzio", 421, "gzivh"),
+		("gpbepvxcvhrpktcvtgwjcihwxeexcv", 349, "xswrp"),
+		("tcorcikpieqttqukxggiihkpcpekpi", 622, "ruxyk"),
+		("ygcrqpkbgfejqeqncvgucngu", 440, "gcqen"),
+		("etyyxdffqdbdhuhmf", 729, "wskto"),
+		("tfiifjzmvupvvexzevvizex", 399, "veizf"),
+		("houngfgxjuaysorozgxemxgjkjekaykxzkyzotm", 566, "aimhd"),
+		("hcdgsqfshdzoghwqufoggaobousasbh", 714, "ynfie"),
+		("foadouwbuqobrmqcohwbuzopcfohcfm", 792, "obcfu"),
+		("ynukcajeyoywrajcandqjpwjwhuoeo", 680, "jaowy"),
+		("rflsjynhjllrfsfljrjsy", 489, "jlfrs"),
+		("vkrhzxgbvpxtihgbsxwyehpxkmktbgbgz", 917, "igtvy"),
+		("hjgbwuladwtskcwldgyaklauk", 294, "aklwd"),
+		("cvabijtmjcvvgzmikycqaqbqwv", 772, "vcqab"),
+		("odiihyujbcrlpajbbvjwjpnvnwc", 849, "jbcin"),
+		("tinnmtzcksfigsfhsghwbu", 220, "bnamt"),
+		("pbeebfvirwryylornajbexfubc", 637, "egouk"),
+		("xmtjbzidxxviytyzqzgjkhzio", 265, "vxsry"),
+		("avwzljylazjhclunlyobuaklwhyatlua", 201, "sjayl"),
+		("dfcxsqhwzsqvcqczohsfsgsofqv", 246, "dosrp"),
+		("rzvkjiduzyxviytxjvodibkpmxcvndib", 291, "cwzla"),
+		("gcfcnulsaluxymwupyhaylbohnwihnuchgyhn", 968, "hnuyc"),
+		("dyzcombodlsyrkjkbnyecbkllsddomrxyvyqi", 328, "vtxzd"),
+		("fruurvlyhmhoobehdqdftxlvlwlrq", 907, "jlves"),
+		("mrxivrexmsrepgerhcgsexmrktyvglewmrk", 152, "wzuly"),
+		("votubcmfgmpxfspqfsbujpot", 883, "fpbmo"),
+		("bljenwpnaqdwcanbnjalq", 329, "lcwmy"),
+		("xekdwvwnzkqoydkykhwpawjwhuoeo", 550, "toavy"),
+		("yhkpvhjapclyhiipajbzavtlyzlycpjl", 201, "lpyah"),
+		("xjinphzmbmvyzwvnfzonzmqdxzn", 681, "ykfxe"),
+		("pbeebfvirrttybtvfgvpf", 507, "bftve"),
+		("gvcskirmgikkhizipstqirx", 750, "iyquj"),
+		("yhwooebeazlhwopeycnwoooanreyao", 108, "tmuag"),
+		("wlqqpjtrmvexviyleknfibjyfg", 581, "tnrhf"),
+		("tfiifjzmvavccpsvrejyzggzex", 477, "mvnjr"),
+		("xjmmjndqzzbbyzndbi", 811, "bzdjm"),
+		("qjopwxhaxwogapnayaerejc", 160, "isjqz"),
+		("qzlozfhmfazrjdsknfhrshbr", 573, "dfmys"),
+		("vhglnfxkzktwxvetllbybxwvtgwrvhtmbgzybgtgvbgz", 761, "gbtvl"),
+		("etaqigpkeecpfaeqcvkpicpcnauku", 336, "eyxtb"),
+		("lqwhuqdwlrqdofdqgbfrdwlqjzrunvkrs", 933, "tvijl"),
+		("gvcskirmgtvsnigxmpigerhcgsexmrkwlmttmrk", 828, "szawg"),
+		("irdgrxzexkfgjvtivkwcfnvijyzggzex", 269, "givxz"),
+		("cqwdujyssqdtoiqbui", 270, "siyeh"),
+		("bnqqnrhudbgnbnkzsdtrdqsdrshmf", 807, "dnbqr"),
+		("rgndvtcxrhrpktcvtgwjciprfjxhxixdc", 193, "yjsht"),
+		("qekrixmghcixvemrmrk", 282, "mreik"),
+		("xcitgcpixdcpasntapqdgpidgn", 349, "mfywv"),
+		("wkqxodsmpvygobwkbuodsxq", 978, "ysamp"),
+		("aoubshwqqvcqczohskcfygvcd", 558, "ytvls"),
+		("tyepcyletzylwqwzhpcopalcexpye", 301, "gamdn"),
+		("tfcfiwlctreupuvjzxe", 607, "nrthm"),
+		("ubhatstkwhnllvtoxgzxkangminkvatlbgz", 865, "tagkl"),
+		("wihmogylaluxyyaaqilembij", 890, "emvct"),
+		("bxaxipgnvgpstltpedcxotsgpqqxihidgpvt", 245, "pgtxi"),
+		("jfifqxovdoxabmixpqfzdoxppobpbxoze", 107, "ghpyi"),
+		("gvaazdpssptjwfsbccjufohjoffsjoh", 675, "pfzwa"),
+		("gzefmnxqeomhqzsqdtgzfefadmsq", 378, "qefmz"),
+		("emixwvqhmlkivlgzmkmqdqvo", 876, "dcfin"),
+		("fodvvlilhgfdqgbfrqwdlqphqw", 725, "qdflg"),
+		("laffepkrrehkgtrumoyzoiy", 670, "dyjut"),
+		("egdytrixatqphztitcvxcttgxcv", 245, "tcxgi"),
+		("htqtwkzqwfintfhynajxhfajsljwmzsyjslnsjjwnsl", 645, "eynzi"),
+		("vrurcjahpajmnnppmnyuxhvnwc", 563, "npach"),
+		("ejpanjwpekjwhaccklanwpekjo", 576, "jaekp"),
+		("kwvacumzozilmkpwkwtibmuizsmbqvo", 876, "mikwz"),
+		("hjgbwuladwxdgowjesfsywewfl", 866, "byzdm"),
+		("pbybeshywryylornanpdhvfvgvba", 351, "stmxy"),
+		("qjopwxhaywjzuhkceopeyo", 654, "tysoa"),
+		("lhkhszqxfqzcddffvnqjrgno", 417, "fqdhn"),
+		("rgllkotaoaxmfqfdmuzuzs", 768, "vkqac"),
+		("ohmnuvfyxsyomylnymncha", 214, "hmtfs"),
+		("enzcntvatcynfgvptenffnanylfvf", 455, "cuimh"),
+		("sedikcuhwhqtusehheiylutoubqrehqjeho", 868, "ydaux"),
+		("tyepcyletzylwojpopalcexpye", 145, "wciks"),
+		("udpsdjlqjhjjfrqwdlqphqw", 309, "gbpcz"),
+		("eqpuwogtitcfglgnnadgcpvtckpkpi", 388, "gpcti"),
+		("rkpqxyibpzxsbkdboerkqzrpqljbopbosfzb", 133, "bpkoq"),
+		("kdijqrbusxesebqjutufqhjcudj", 114, "tdbva"),
+		("gsvvswmziwgezirkivlyrxirkmriivmrk", 412, "twsrk"),
+		("ucynmlgxcbqaytclecpfslramlryglkclr", 704, "lcrya"),
+		("xstwigvixveffmxwxsveki", 100, "ocvmr"),
+		("surmhfwlohvfdyhqjhukxqwfrqwdlqphqw", 829, "hqwfd"),
+		("xmrrqusfvqesfsywewfl", 528, "alidm"),
+		("zhdsrqlchglqwhuqdwlrqdosodvwlfjudvvghsorbphqw", 777, "rtnmj"),
+		("egdytrixatxcitgcpixdcparwdrdapituxcpcrxcv", 245, "cdabn"),
+		("yrwxefpiikkgywxsqivwivzmgi", 152, "iwgkv"),
+		("qcffcgwjsfoppwhobozmgwg", 558, "zotsu"),
+		("veqtekmrkgerhcgsexmrkhitpscqirx", 568, "nczdq"),
+		("gzefmnxqpkqpqbmdfyqzf", 794, "jxrmh"),
+		("eadalsjqyjsvwusfvqugslafyugflsafewfl", 632, "fsalu"),
+		("esyfwlauusfvqugslafyvwhdgqewfl", 684, "flsuw"),
+		("ktfitzbgzfbebmtkrzktwxutldxmwxlbzg", 683, "afwhg"),
+		("wihmogylaluxyvohhsuwkocmcncih", 292, "wzryd"),
+		("bkzrrhehdcidkkxadzmlzmzfdldms", 677, "oxwvn"),
+		("clxalrtyrqwzhpclnbftdtetzy", 249, "zryvn"),
+		("rgllkfabeqodqfvqxxknqmzpqbxakyqzf", 222, "qfkxa"),
+		("xjinphzmbmvyzxviytmzxzdqdib", 603, "xnhfs"),
+		("htsxzrjwlwfijhmthtqfyjwjfhvznxnynts", 385, "zreuy"),
+		("myvybpevgokzyxsjonoqqnozvyiwoxd", 692, "iyzuj"),
+		("hcdgsqfshpogyshgvwddwbu", 480, "mysuk"),
+		("hcdgsqfshfoppwhrsgwub", 428, "kvtfs"),
+		("frqvxphujudghexqqbuhvhdufk", 621, "wtgmn"),
+		("vhglnfxkzktwxvahvhetmxvhgmtbgfxgm", 345, "hnamj"),
+		("tagzsrsjvgmkusfvqugslafyugflsafewfl", 892, "yckbv"),
+		("joufsobujpobmgmpxfsvtfsuftujoh", 233, "foujs"),
+		("zsxyfgqjojqqdgjfszxjwyjxynsl", 593, "jqsxy"),
+		("bnknqetkatmmxqdzbpthrhshnm", 131, "ecnmt"),
+		("hmsdqmzshnmzkdffsqzhmhmf", 859, "dnxcz"),
+		("hqtyeqsjylutouudwyduuhydw", 348, "uydhq"),
+		("ktiaaqnqmlkpwkwtibmzmikycqaqbqwv", 772, "tlrsg"),
+		("nzydfxpcrclopmtzslklcozfdmfyyjnfdezxpcdpcgtnp", 951, "cpdfz"),
+		("ckgvutofkjhattegtgreyoy", 644, "tgeko"),
+		("iwcjapeyzuapaydjkhkcu", 628, "hntmg"),
+		("bnknqetkokzrshbfqzrrtrdqsdrshmf", 729, "tuzoy"),
+		("qmpmxevckvehiyrwxefpiglsgspexiwlmttmrk", 828, "hsyvf"),
+		("amjmpdsjnjyqrgaepyqqqcptgacq", 106, "bhysd"),
+		("dwbcjkunljwmhmnyuxhvnwc", 641, "wuyrz"),
+		("gspsvjypjpsaivhiwmkr", 854, "zthel"),
+		("gsrwyqivkvehigerhcstivexmsrw", 750, "whgse"),
+		("xjgjmapgwpiitozxcijgjbt", 889, "ytsop"),
+		("xgjougizobkkmmrghuxgzuxe", 280, "cwrty"),
+		("zovldbkfzoxjmxdfkdoxyyfqixyloxqlov", 653, "snkwb"),
+		("qczcftizqvcqczohsgsfjwqsg", 142, "cqszf"),
+		("krxqjijamxdbmhnldbcxvnabnaerln", 771, "ravbt"),
+		("pybgmyargtcbwcbcqgel", 860, "bcgya"),
+		("wyvqljapsljovjvshalshivyhavyf", 773, "vahjl"),
+		("pbafhzretenqronfxrgbcrengvbaf", 221, "zyaro"),
+		("glrcplyrgmlyjbwcpcqcypaf", 132, "clpyg"),
+		("dpmpsgvmdboezdpbujohtfswjdft", 545, "bdmzf"),
+		("dkqjcbctfqwurncuvkeitcuucpcnauku", 700, "cuknq"),
+		("ajmrxjlcrenyujbcrlpajbbanbnjalq", 459, "yslvg"),
+		("oazegyqdsdmpqbxmefuosdmeefqotzaxask", 586, "vfmnu"),
+		("ugdgjxmdjsttalksdwk", 632, "hfjix"),
+		("aietsrmdihgvcskirmgtpewxmgkvewwvigimzmrk", 412, "kfcim"),
+		("drxevkztjtrmvexviylekuvgcfpdvek", 685, "vekdr"),
+		("excdklvobkllsdnozvyiwoxd", 250, "dlokv"),
+		("uwtojhynqjhfsidwjxjfwhm", 281, "fqsmx"),
+		("plolwdubjudghudeelwuhfhlylqj", 205, "ludhe"),
+		("oqnidbshkddffzmzkxrhr", 729, "cvlkx"),
+		("bknsykmdsfotovvilokxbomosfsxq", 328, "boqly"),
+		("dpotvnfshsbefqspkfdujmfcvooztijqqjoh", 961, "zmnyi"),
+		("gspsvjypfyrrcgsrxemrqirx", 490, "rsgpx"),
+		("gifavtkzcvszfyrqriufljwcfnviuvmvcfgdvek", 139, "zadfj"),
+		("gsrwyqivkvehiwgezirkivlyrxwxsveki", 490, "alpzb"),
+		("ykhknbqhydkykhwpazalhkuiajp", 862, "khayp"),
+		("dmybmsuzsyuxufmdksdmpqbxmefuosdmeefqotzaxask", 586, "nwikx"),
+		("nwzekwyperabhksannayaerejc", 940, "xnmta"),
+		("wrsvhfuhwhjjzrunvkrs", 283, "hrjsu"),
+		("ajyqqgdgcbpyzzgramlryglkclr", 782, "lozts"),
+		("ohmnuvfyjfumncwalummwomnigylmylpcwy", 110, "mqrgd"),
+		("foadouwbusuuobozmgwg", 792, "hgkuj"),
+		("wdjcvuvmyjpnytzyzkgjthzio", 109, "jyztv"),
+		("ucynmlgxcbpyzzgrqfgnngle", 210, "iftry"),
+		("ymszqfuoomzpkoamfuzspqhqxabyqzf", 872, "qzfmo"),
+		("clotzlnetgpojpopawzjxpye", 769, "pnhtz"),
+		("mhilxvkxmyehpxkftgtzxfxgm", 657, "etajx"),
+		("surmhfwlohfkrfrodwhuhfhlylqj", 699, "rkslj"),
+		("iruzfrtkzmvtyftfcrkvkirzezex", 841, "emztq"),
+		("bdavqofuxqnmewqfogefayqdeqdhuoq", 352, "jpmyv"),
+		("bdavqofuxqotaoaxmfqxasuefuoe", 326, "aofqu"),
+		("gpsxdprixkttvvldgzhwde", 219, "dgptv"),
+		("pbeebfvirrttbcrengvbaf", 897, "enlaq"),
+		("jchipqatgpqqxibpgztixcv", 375, "cnqyt"),
+		("glrcplyrgmlyjqaytclecpfslrpcqcypaf", 574, "clpyr"),
+		("pejjioqqvyqscdsmc", 640, "qcjsd"),
+		("houngfgxjuayyigbktmkxnatzxkykgxin", 774, "mszcw"),
+		("ltpedcxotsjchipqatgpqqxibpcpvtbtci", 219, "isgfv"),
+		("gifavtkzcvtyftfcrkvdrerxvdvek", 659, "vbdyz"),
+		("vjpwncrlmhnorwjwlrwp", 641, "wrjln"),
+		("vjpwncrlouxfnabcxajpn", 511, "ydzfw"),
+		("rzvkjiduzyxviytxjvodibadivixdib", 187, "idvxb"),
+		("tinnmsuutwbobqwbu", 272, "datjf"),
+		("apuutxviytvxlpdndodji", 941, "zrtso"),
+		("jxdkbqfzzixppfcfbamixpqfzdoxppjxohbqfkd", 705, "fpxbd"),
+		("zilqwikbqdmlgmkwvbiqvumvb", 876, "bqpme"),
+		("jyddcwgezirkivlyrxwxsveki", 256, "sjntv"),
+		("ahngzyzqcntrqzaahszbpthrhshnm", 963, "fzvai"),
+		("ksodcbwnsrqfmcusbwqsuuqighcasfgsfjwqs", 350, "wyezk"),
+		("atyzghrkigtjeiugzotmjkyomt", 462, "ksuli"),
+		("dwbcjkunajmrxjlcrenyujbcrlpajbbnwprwnnarwp", 563, "tjsqg"),
+		("aoubshwqdzoghwqufoggaofyshwbu", 896, "hwcmz"),
+		("apwmeclganpmhcargjcnjyqrgaepyqqrpyglgle", 340, "dgtsc"),
+		("apwmeclgaaylbwamyrgledglylagle", 210, "iumzy"),
+		("ydjuhdqjyedqbrkddosedjqydcudj", 738, "ycbmx"),
+		("iuxxuyobkxgjougizobkpkrrehkgtsgtgmksktz", 644, "pzsmw"),
+		("bnmrtldqfqzcdbgnbnkzsdvnqjrgno", 521, "nbdqg"),
+		("wfruflnslgzssdwjhjnansl", 177, "wtmsg"),
+		("yhwooebeazywjzuklanwpekjo", 680, "eowaj"),
+		("pynffvsvrqcynfgvptenffernpdhvfvgvba", 663, "vbduy"),
+		("zilqwikbqdmntwemzuizsmbqvo", 356, "yhenq"),
+		("jvsvymbszjhclunlyobuajvuahputlua", 721, "uajlv"),
+		("fhezusjyburqiaujtufbeocudj", 400, "ecamb"),
+		("ftzgxmbvwrxxgzbgxxkbgz", 293, "xgbzf"),
+		("chnylhuncihufxsyxypyfijgyhn", 578, "jigcy"),
+		("vhkkhlboxpxtihgbsxwcxeeruxtgwxlbzg", 111, "hsuty"),
+		("foadouwbutzcksfgozsg", 246, "ofgsu"),
+		("xzwrmkbqtmmoonqvivkqvo", 434, "moqvk"),
+		("gvaazcvoozdpoubjonfou", 415, "mcnzb"),
+		("pbafhzretenqrenoovggrpuabybtl", 169, "bktjl"),
+		("uwtojhynqjgzssdywfnsnsl", 723, "phguv"),
+		("dlhwvupglkzjhclunlyobuaklwhyatlua", 227, "luahk"),
+		("vhkkhlboxvhehkynevahvhetmxybgtgvbgz", 215, "hvbeg"),
+		("qlmpbzobqgbiivybxklmboxqflkp", 809, "blqik"),
+		("forwcoqhwjsqvcqczohsghcfous", 792, "mtuqn"),
+		("eqpuwogtitcfgdwppafgrnqaogpv", 570, "gpafo"),
+		("lxuxaodubljenwpnaqdwcjwjuhbrb", 121, "rbqfd"),
+		("ykhknbqhxqjjuoanreyao", 680, "ahjkn"),
+		("ugfkmewjyjsvwhdsklauyjskkkzahhafy", 918, "kahjs"),
+		("gbcfrpergfpniratreuhagfnyrf", 897, "dskta"),
+		("myxcewobqbknolexxiwkxkqowoxd", 770, "spdoc"),
+		("cqwdujysfbqijyswhqiihuiuqhsx", 998, "uhebs"),
+		("ckgvutofkjigtjeiugzotmrghuxgzuxe", 774, "gutei"),
+		("excdklvolexxipsxkxmsxq", 302, "ypsmx"),
+		("mbiyqoxsmdyzcombodmkxnimykdsxqzebmrkcsxq", 692, "fnhpz"),
+		("zlkprjbodoxabgbiivybxkxkxivpfp", 809, "ydtxn"),
+		("wdjcvuvmyjpnezggtwzvihvmfzodib", 603, "vzdgi"),
+		("njmjubszhsbeffhhbobmztjt", 649, "mxkjw"),
+		("wsvsdkbiqbknooqqecobdocdsxq", 796, "rglok"),
+		("htsxzrjwlwfijgfxpjyfsfqdxnx", 307, "uyteb"),
+		("wpuvcdngejqeqncvgyqtmujqr", 882, "svamn"),
+		("tagzsrsjvgmkhdsklauyjskkugflsafewfl", 606, "tysrn"),
+		("kwtwznctakidmvomzpcvbzmamizkp", 200, "skpom"),
+		("dpmpsgvmdboezdpbujohfohjoffsjoh", 311, "fknst"),
+		("rnqnyfwdlwfijhmthtqfyjxytwflj", 567, "gzkol"),
+		("zntargvppnaqlhfregrfgvat", 923, "yijbm"),
+		("dzczkripxiruvtreuptfrkzexdrerxvdvek", 347, "vrmsu"),
+		("ajyqqgdgcbafmamjyrcsqcprcqrgle", 522, "cqagr"),
+		("pelbtravpohaalerprvivat", 715, "jnbmz"),
+		("irdgrxzexsleepivrthlzjzkzfe", 113, "bmsnw"),
+		("eqpuwogtitcfgtcddkvfgxgnqrogpv", 804, "gtcdf"),
+		("cvabijtmmooivitgaqa", 226, "darfu"),
+		("ytuxjhwjyxhfajsljwmzsyzxjwyjxynsl", 281, "wzjeb"),
+		("fkqbokxqflkxiyxphbqobxznrfpfqflk", 809, "dcasb"),
+		("gokzyxsjonsxdobxkdsyxkvmkxniecobdocdsxq", 276, "zypso"),
+		("ibghopzssuukcfygvcd", 402, "cgsub"),
+		("tfiifjzmvsrjbvkuvjzxe", 581, "sovtj"),
+		("gntmfefwitzxgfxpjyxmnuunsl", 619, "fnxgm"),
+		("lghkwujwlbwddqtwsfvwhsjlewfl", 788, "tlejf"),
+		("hjgbwuladwwyyghwjslagfk", 164, "wgahj"),
+		("nzwzcqfwojpqtylyntyr", 431, "ynqtw"),
+		("sbejpbdujwfsbccjuvtfsuftujoh", 909, "kujit"),
+		("vhkkhlboxwrxftkdxmbgz", 241, "uwzex"),
+		("lahxpnwrlbljenwpnaqdwccajrwrwp", 381, "yjzno"),
+		("lugjuachajfumncwalummjolwbumcha", 838, "uamcj"),
+		("gvcskirmgglsgspexijmrergmrk", 828, "smeyi"),
+		("thnulapjihzrlathyrlapun", 955, "ahlnp"),
+		("snordbqdsbzmcxbtrsnldqrdquhbd", 937, "dbqrs"),
+		("vdzonmhydceknvdqdmfhmddqhmf", 781, "dmhfn"),
+		("iehepwnucnwzaxqjjuykjpwejiajp", 368, "jepwa"),
+		("dfcxsqhwzsdzoghwqufoggcdsfohwcbg", 974, "gcdfh"),
+		("sbqiiyvyuttoujhqydydw", 608, "okbzs"),
+		("htsxzrjwlwfijgzssduzwhmfxnsl", 801, "nmtjq"),
+		("hvbizodxrzvkjiduzyxviytyzqzgjkhzio", 213, "zivyd"),
+		("ajmrxjlcrenljwmhlxjcrwpbqryyrwp", 745, "kheat"),
+		("vkpposhoewudystouudwyduuhydw", 556, "udowy"),
+		("dpotvnfshsbefdmbttjgjfegmpxfsnbslfujoh", 363, "qapli"),
+		("glrcplyrgmlyjdjmucpqrmpyec", 158, "clmpr"),
+		("emixwvqhmlxtiabqkoziaawxmzibqwva", 642, "rkpba"),
+		("qczcftizdzoghwqufoggaofyshwbu", 298, "lmcuy"),
+		("cvabijtmzilqwikbqdmakidmvomzpcvbnqvivkqvo", 746, "ynxzo"),
+		("pkloaynapaccwjwhuoeo", 134, "jxlai"),
+		("xjmmjndqzkgvnodxbmvnnrjmfncjk", 291, "njmdk"),
+		("ejpanjwpekjwhnwxxepnayaerejc", 550, "lisvd"),
+		("htwwtxnajhtsxzrjwlwfijhfsidhtfynslwjfhvznxnynts", 541, "hntwf"),
+		("mbiyqoxsmmkxnimykdsxqcrszzsxq", 770, "zhowm"),
+		("rmnqcapcrucynmlgxcbceepcqcypaf", 886, "cpaem"),
+		("rtqlgevkngejqeqncvgfgxgnqrogpv", 466, "zktns"),
+		("fydelmwpmfyyjnfdezxpcdpcgtnp", 769, "anfej"),
+		("yuxufmdksdmpqotaoaxmfqpqbxakyqzf", 742, "ohxti"),
+		("vxupkizorkigtjexkgiwaoyozout", 592, "bmwjf"),
+		("veqtekmrktvsnigxmpigerhcgsexmrkgywxsqivwivzmgi", 802, "dglps"),
+		("nsyjwsfyntsfquqfxynhlwfxxijuqtdrjsy", 931, "ymnhu"),
+		("gifavtkzcvavccpsvrefgvirkzfej", 841, "ypigz"),
+		("krxqjijamxdbkdwwhmnyjacvnwc", 641, "krnma"),
+		("dszphfojdezfsftfbsdi", 805, "fdszb"),
+		("xmrrqtmffqlwuzfgdgyq", 372, "fqgmr"),
+		("tagzsrsjvgmkxdgowjvwhsjlewfl", 788, "gjswl"),
+		("lsyrkjkbnyecmkxninofovyzwoxd", 614, "knoyx"),
+		("dwbcjkunmhnbjunb", 173, "mykra"),
+		("vhehkynevtgwrnlxkmxlmbgz", 319, "eghkl"),
+		("bkzrrhehdcbnqqnrhudbzmcxbnzshmfotqbgzrhmf", 677, "xaszn"),
+		("oxmeeuruqpbxmefuosdmeeabqdmfuaze", 248, "udtec"),
+		("jlidywncfymwupyhaylbohnuhufsmcm", 500, "yhmuc"),
+		("xjmmjndqzzbbmzvxlpdndodji", 239, "djmzb"),
+		("yuxufmdksdmpqomzpkqzsuzqqduzs", 534, "ofrpg"),
+		("tfejldvixiruvvxxuvgrikdvek", 659, "cnesm"),
+		("yaxsnlcrunajkkrcanbnjalq", 979, "nmivs"),
+		("tvsnigxmpiikkwivzmgiw", 880, "agunv"),
+		("mrxivrexmsreptpewxmgkvewwviwievgl", 698, "evwim"),
+		("nglmtuexyehpxklabiibgz", 241, "begil"),
+		("zuvykixkzixeumktoiigtjeiugzotmaykxzkyzotm", 670, "pjybl"),
+		("forwcoqhwjsdzoghwqufoggdifqvogwbu", 272, "xkwoz"),
+		("ajyqqgdgcbqaytclecpfslrbcqgel", 886, "mkvsi"),
+		("myxcewobqbknomkxnimykdsxqwkbuodsxq", 770, "zmijb"),
+		("uwtojhynqjkqtbjwyjhmstqtld", 333, "jtqhw"),
+		("wsvsdkbiqbknolkcuoddbksxsxq", 406, "biaoe"),
+		("gpbepvxcvrpcsnrdpixcvadvxhixrh", 895, "dcwgp"),
+		("muqfedyputisqludwuhxkdjmehaixef", 712, "betdq"),
+		("ckgvutofkjinuiurgzkxkgiwaoyozout", 956, "sazyo"),
+		("wfruflnsluqfxynhlwfxxbtwpxmtu", 541, "fxluw"),
+		("qfmcusbwqrmsigsfhsghwbu", 246, "sbfgh"),
+		("ynukcajeynwxxepqoanpaopejc", 602, "htmbv"),
+		("ujqgywfauuzgugdslwjwkwsjuz", 138, "newms"),
+		("yflexwxoalrpzxkavcfkxkzfkd", 705, "ctnsy"),
+		("vjpwncrllqxlxujcnmnyuxhvnwc", 953, "nawmz"),
+		("willimcpywuhxslyuwkocmcncih", 786, "cilwh"),
+		("mtzslklcozfdclmmtecpnptgtyr", 119, "tjkgv"),
+		("xlrypetnawldetnrclddcplnbftdtetzy", 795, "tdlen"),
+		("vkpporqiaujhuqsgkyiyjyed", 452, "yijkp"),
+		("vxupkizorklruckxjkbkruvsktz", 124, "eumyz"),
+		("diozmivodjivgagjrzmnzmqdxzn", 915, "otpfl"),
+		("owshgfarwvhdsklauyjskkklgjsyw", 918, "qcjim"),
+		("zuvykixkzigtjeiugzotmzkinturume", 202, "plvqf"),
+		("zlilocrioxyyfqbkdfkbbofkd", 835, "bswmn"),
+		("ziuxioqvolgmamzdqkma", 798, "maioq"),
+		("xqvwdeohsodvwlfjudvvghyhorsphqw", 517, "hvdow"),
+		("ovbunmneqbhfenqvbnpgvironfxrgqrfvta", 507, "nvbfq"),
+		("gbcfrpergpnaqlgenvavat", 351, "pmzkq"),
+		("eadalsjqyjsvwjsttalsuimakalagf", 580, "zjghy"),
+		("rdadgujarpcsnrdpixcvapqdgpidgn", 245, "dpagr"),
+		("tbxmlkfwbapzxsbkdboerkqabpfdk", 523, "vifrq"),
+		("ocipgvkeuecxgpigtjwpvugtxkegu", 544, "abfsh"),
+		("ovbunmneqbhfzvyvgneltenqrwryylornaybtvfgvpf", 481, "hxymg"),
+		("pinovwgzxjinphzmbmvyzagjrzmozxcijgjbt", 681, "cqlnu"),
+		("tinnmqobrmghcfous", 220, "hyczt"),
+		("iuruxlaryigbktmkxnatzykxboiky", 748, "kixya"),
+		("bkzrrhehdcbzmcxbnzshmfcdrhfm", 209, "hbcmr"),
+		("gpsxdprixkttvvuxcpcrxcv", 973, "xcpvr"),
+		("forwcoqhwjsrmshfowbwbu", 974, "stzrm"),
+		("zovldbkfzfkqbokxqflkximixpqfzdoxppcfkxkzfkd", 705, "tsmfo"),
+		("vetllbybxwlvtoxgzxkangmftgtzxfxgm", 371, "sbemy"),
+		("hwbbaejqeqncvgtgugctej", 232, "iyrqv"),
+		("vqrugetgvlgnnadgcpwugtvguvkpi", 596, "gvunp"),
+		("xgvnndadzywpiityzndbi", 343, "rawyd"),
+		("jxdkbqfzoxyyfqqbzeklildv", 107, "qbdfk"),
+		("wlsiayhcwluvvcnmufym", 656, "jbvne"),
+		("surmhfwlohfdqgbghvljq", 621, "ymnve"),
+		("mvkccspsonbkllsdvklybkdybi", 432, "yscux"),
+		("dszphfojdsbccjudvtupnfstfswjdf", 129, "itbfs"),
+		("lsyrkjkbnyeclexxicrszzsxq", 978, "sxcek"),
+		("qlmpbzobqmixpqfzdoxppzlkqxfkjbkq", 211, "satyb"),
+		("bknsykmdsfoniokmaescsdsyx", 744, "tspif"),
+		("bpvctixrrpcsnrjhidbtghtgkxrt", 713, "rtbcg"),
+		("sebehvkbrqiaujudwyduuhydw", 140, "udbeh"),
+		("zhdsrqlchgfdqgbhqjlqhhulqj", 387, "zptrs"),
+		("qxdwpopgsdjhrpcsnsthxvc", 635, "nbixj"),
+		("pualyuhapvuhsmsvdlyklzpnu", 721, "ulpah"),
+		("sbqiiyvyutshoewudysisqludwuhxkdjjhqydydw", 894, "dysuh"),
+		("wsvsdkbiqbknolexxidbksxsxq", 614, "onzwh"),
+		("ydjuhdqjyedqbrqiaujefuhqjyedi", 894, "ocdpe"),
+		("kwzzwaqdmntwemzwxmzibqwva", 434, "nwzml"),
+		("qspkfdujmffhhnbobhfnfou", 571, "zpyau"),
+		("bxaxipgnvgpsttvvdetgpixdch", 583, "xwiac"),
+		("qfmcusbwqdfcxsqhwzsxszzmpsobfsqswjwbu", 402, "lstrx"),
+		("dpmpsgvmdboezsfdfjwjoh", 337, "dfjmo"),
+		("dzoghwqufoggfsgsofqv", 636, "gfoqs"),
+		("nzwzcqfwdnlgpyrpcsfyeqtylyntyr", 509, "milhd"),
+		("xgsvgmotmpkrrehkgtvaxingyotm", 176, "jubcm"),
+		("xgsvgmotmjekcuxqynuv", 644, "soxwn"),
+		("cxybnlanclahxpnwrlkdwwhfxatbqxy", 485, "zamhj"),
+		("irgyyolokjinuiurgzksgtgmksktz", 982, "vzkrq"),
+		("xgvnndadzyxcjxjgvozxjiovdihzio", 733, "ozhyu"),
+		("gvcskirmgnippcfierxiglrspskc", 334, "bastq"),
+		("zlilocrigbiivybxkobxznrfpfqflk", 367, "ntyda"),
+		("pyknyeglepyzzgrpcqcypaf", 886, "nxvzy"),
+		("zhdsrqlchggbhfrqwdlqphqw", 361, "nqzts"),
+		("kyelcrgaceeyaosgqgrgml", 808, "izdqr"),
+		("hplazytkpoprrcpnptgtyr", 379, "prtya"),
+	]
+
+
+	// 185371
+
+	var valid: (string, int, string)[]
+
+
+	var i = 0
+	var sum = 0
+	while i < input.length
+	{
+		let room = input[i]
+
+		// ok, sort the string
+		let sorted = mergeSort(room.0)
+
+		// run through the string
+		// build a tuple of int/char
+		var chars: (char, int)[]
+
+		var k = 0
+		while k < sorted.length
+		{
+			if chars.length == 0
+			{
+				chars += (sorted[k], 1)
+			}
+			else if chars.back().0 == sorted[k]
+			{
+				chars.back().1 += 1
+			}
+			else
+			{
+				chars += (sorted[k], 1)
+			}
+
+			k += 1
+		}
+
+
+		// sort the chars array
+		let schars = mergeSort(chars, cmpUsingNum)
+
+
+		// get the first 5
+		var final: (char, int)[]
+
+
+		// check if any of them are the same number
+		k = 0
+		var runs: (char, int)[]
+
+		while k < 5
+		{
+			if runs.length == 0
+			{
+				// printf("add %c\n", schars[k].0)
+				runs += schars[k]
+			}
+			else
+			{
+				// same number
+				if runs.back().1 == schars[k].1
+				{
+					// printf("add %c\n", schars[k].0)
+					runs += schars[k]
+				}
+				else
+				{
+					// sort the runs, clear the runs, blah blah.
+					let sruns = mergeSort(runs, cmpUsingChar)
+					runs.clear()
+
+					// var p = 0
+					// while p < final.length { printf("%c", final[p]); p += 1 }
+					// printf(" - ")
+					// p = 0
+					// while p < sruns.length { printf("%c", sruns[p]); p += 1 }
+					// printf(" - ")
+
+					// blah blah:
+					final += sruns
+					// p = 0
+					// while p < final.length { printf("%c", final[p]); p += 1 }
+
+					// printf("\n\n")
+					continue
+				}
+			}
+
+			k += 1
+		}
+
+		final += runs
+
+		do {
+			var checksum: string
+			checksum += final[0].0
+			checksum += final[1].0
+			checksum += final[2].0
+			checksum += final[3].0
+			checksum += final[4].0
+
+
+			if checksum == room.2
+			{
+				// printf("valid room: %s\t\t(checksum: %d[%s])\n", room.0, room.1, checksum)
+				sum += room.1
+				valid += room
+			}
+			else
+			{
+				// printf("fake room:  %s\t\t(checksum: %d[%s]) // (%s)\n", room.0, room.1, room.2, checksum)
+			}
+		}
+
+		i += 1
+	}
+
+	printf("sum = %d\n\n", sum)
+
+
+
+
+	i = 0
+	while i < valid.length
+	{
+		let room = valid[i]
+		let sec = room.1 % 26
+
+		var name: string
+
+		var k = 0
+		while k < room.0.length
+		{
+			var c: int = ((room.0)[k] - char("a")) as int
+			c += sec
+			c %= 26
+
+			let ch = c as i8 as char
+			name += ch + char("a")
+
+			k += 1
+		}
+
+		printf("%d: %s\n", room.1, name)
+
+		i += 1
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+func cmpUsingNum(a: (char, int), b: (char, int)) -> bool
+{
+	return a.1 >= b.1
+}
+
+func cmpUsingChar(a: (char, int), b: (char, int)) -> bool
+{
+	return a.0 <= b.0
+}
+
+
+
+
+
+
+
+func split<T>(s: T[]) -> (T[], T[])
+{
+	let div = s.length / 2
+
+	var a: T[]
+	var b: T[]
+	var i = 0
+
+	while i < div
+	{
+		a += s[i]
+		i += 1
+	}
+
+	while i < s.length
+	{
+		b += s[i]
+		i += 1
+	}
+
+	return (a, b)
+}
+
+func _merge<T>(a: T[], b: T[], cmp: [(T, T) -> bool]) -> T[]
+{
+	var ret: T[]
+
+	var al = a.length
+	var bl = b.length
+
+	while al > 0 && bl > 0
+	{
+		let ai = a.length - al
+		let bi = b.length - bl
+
+		if(cmp(a[ai], b[bi]))
+		{
+			ret += a[ai]
+			al -= 1
+		}
+		else
+		{
+			ret += b[bi]
+			bl -= 1
+		}
+	}
+
+	while al > 0
+	{
+		ret += a[a.length - al]
+		al -= 1
+	}
+
+	while bl > 0
+	{
+		ret += b[b.length - bl]
+		bl -= 1
+	}
+
+	return ret
+}
+
+func mergeSort<T>(arr: T[], cmp: [(T, T) -> bool]) -> T[]
+{
+	if arr.length <= 1
+	{
+		return arr
+	}
+	else
+	{
+		let a = split(arr)
+		let a0 = mergeSort(a.0, cmp)
+		let a1 = mergeSort(a.1, cmp)
+		return _merge(a0, a1, cmp)
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+func split(s: string) -> (string, string)
+{
+	let div = s.length / 2
+
+	var a: string
+	var b: string
+	var i = 0
+
+	while i < div
+	{
+		a += s[i]
+		i += 1
+	}
+
+	while i < s.length
+	{
+		b += s[i]
+		i += 1
+	}
+
+	return (a, b)
+}
+
+func _merge(a: string, b: string) -> string
+{
+	var ret: string
+
+	var al = a.length
+	var bl = b.length
+
+	while al > 0 && bl > 0
+	{
+		let ai = a.length - al
+		let bi = b.length - bl
+
+		if(a[ai] <= b[bi])
+		{
+			ret += a[ai]
+			al -= 1
+		}
+		else
+		{
+			ret += b[bi]
+			bl -= 1
+		}
+	}
+
+	while al > 0
+	{
+		ret += a[a.length - al]
+		al -= 1
+	}
+
+	while bl > 0
+	{
+		ret += b[b.length - bl]
+		bl -= 1
+	}
+
+	return ret
+}
+
+func mergeSort(str: string) -> string
+{
+	if str.length <= 1
+	{
+		return str
+	}
+	else
+	{
+		let s = split(str)
+		let s0 = mergeSort(s.0)
+		let s1 = mergeSort(s.1)
+
+		return _merge(s0, s1)
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
