@@ -2,7 +2,9 @@
 // Copyright (c) 2014 - 2016, zhiayang@gmail.com
 // Licensed under the Apache License Version 2.0.
 
-import Foundation
+// import Foundation
+
+import LibCInterface
 
 public func main()
 {
@@ -987,6 +989,7 @@ public func main()
 		("zhdsrqlchggbhfrqwdlqphqw", 361, "nqzts"),
 		("kyelcrgaceeyaosgqgrgml", 808, "izdqr"),
 		("hplazytkpoprrcpnptgtyr", 379, "prtya"),
+		// ("notarealroom", 404, "oarel"),
 	]
 
 
@@ -1044,7 +1047,6 @@ public func main()
 		{
 			if runs.length == 0
 			{
-				// printf("add %c\n", schars[k].0)
 				runs += schars[k]
 			}
 			else
@@ -1061,19 +1063,8 @@ public func main()
 					let sruns = mergeSort(runs, cmpUsingChar)
 					runs.clear()
 
-					// var p = 0
-					// while p < final.length { printf("%c", final[p]); p += 1 }
-					// printf(" - ")
-					// p = 0
-					// while p < sruns.length { printf("%c", sruns[p]); p += 1 }
-					// printf(" - ")
-
 					// blah blah:
 					final += sruns
-					// p = 0
-					// while p < final.length { printf("%c", final[p]); p += 1 }
-
-					// printf("\n\n")
 					continue
 				}
 			}
@@ -1084,7 +1075,7 @@ public func main()
 		final += runs
 
 		do {
-			var checksum: string
+			var checksum = ""
 			checksum += final[0].0
 			checksum += final[1].0
 			checksum += final[2].0
@@ -1094,6 +1085,7 @@ public func main()
 
 			if checksum == room.2
 			{
+				// printf("%f\n", sine(10))
 				// printf("valid room: %s\t\t(checksum: %d[%s])\n", room.0, room.1, checksum)
 				sum += room.1
 				valid += room
