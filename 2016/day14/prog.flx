@@ -1,0 +1,257 @@
+// prog.flx
+// Copyright (c) 2014 - 2016, zhiayang@gmail.com
+// Licensed under the Apache License Version 2.0.
+
+import Foundation
+
+func findTriplet(s: string) -> string
+{
+	var k = 0
+	while k < s.length - 2
+	{
+		if s[k] == s[k + 1] && s[k + 1] == s[k + 2]
+		{
+			return string(&s[k] as i8*, 1)
+		}
+
+		k += 1
+	}
+
+	return ""
+}
+
+func findQuintuplet(s: string, c: char) -> bool
+{
+	var k = 0
+	while k < s.length - 4
+	{
+		if s[k] == c && s[k + 1] == c && s[k + 2] == c && s[k + 3] == c && s[k + 4] == c
+		{
+			return true
+		}
+
+		k += 1
+	}
+
+	return false
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+func toString(n: int) -> string
+{
+	var ret = ""
+	var num = n
+
+	if num == 0 { return "0" }
+
+	while num > 0
+	{
+		let d = num % 10
+		let c = char(d as i8) + char("0")
+
+		ret += c
+
+		num /= 10
+	}
+
+	return reverse(ret)
+}
+
+func reverse(s: string) -> string
+{
+	var ret = ""
+	var i = s.length - 1
+
+	while i >= 0
+	{
+		ret += s[i]
+
+		i -= 1
+	}
+
+	return ret
+}
+
+
+/*
+	I believe I have the solution to this problem...??
+
+	TOFIX:
+
+	looking at the generated LLVM IR for the inner while loop below: (while i < 2016)
+
+	loopBody.1:                                       ; preds = %loopBody, %loopBody.1
+	  %h.0.0 = phi i8* [ %.elt54, %loopBody.1 ], [ %.elt31, %loopBody ]
+	  %h.1.0 = phi i64 [ %.elt56, %loopBody.1 ], [ %.elt33, %loopBody ]
+	  %i.0 = phi i64 [ %28, %loopBody.1 ], [ 0, %loopBody ]
+	  %25 = insertvalue %_FC9__.string.34 undef, i8* %h.0.0, 0
+	  %26 = insertvalue %_FC9__.string.34 %25, i64 %h.1.0, 1
+	  %27 = tail call %_FC9__.string.34 @_FF3MD518stringHashOfString_FA_SR(%_FC9__.string.34 %26)
+	  %.elt54 = extractvalue %_FC9__.string.34 %27, 0
+	  %.elt56 = extractvalue %_FC9__.string.34 %27, 1
+	  tail call void @__.stringref_incr(%_FC9__.string.34 %27)
+	  tail call void @__.stringref_decr(%_FC9__.string.34 %26)
+	  %28 = add i64 %i.0, 1
+	  tail call void @__.stringref_decr(%_FC9__.string.34 %27)
+	  %29 = icmp slt i64 %28, 2016
+	  %30 = xor i1 %29, true
+	  br i1 %30, label %loopEnd.11, label %loopBody.1
+
+
+	FALSE, NO SOLUTION
+	MISCONCEPTION
+
+	incr and subsequent decr of %27 cancel each other
+	hence the refcount of %27 should be whatever it was at function return, which is... 1.
+	probably.
+
+	so, %27 remains valid until the next iteration, where it becomes %26 to be passed to the MD5 function
+
+
+	fuck
+
+	issue -- assigning to h causes the problem
+	why?
+
+	investigate:
+	1. MD5 function itself -- probably nothing
+	2. IR changes caused by lifting variable AllocAs to the top of the function
+	3. compare changes to h = hash(h) vs g = hash(h)
+*/
+
+func makeCache(salt: string, start: int, num: int) -> string[]
+{
+	// employ caching
+
+	var ret = alloc[num + 1] string
+
+	var k = 0
+	while k < num
+	{
+		var i = 0
+		let s = salt + toString(k + start)
+
+		var h = MD5.stringHashOfString(s)
+
+		while i < 2016
+		{
+			h = MD5.stringHashOfString(h)
+
+			i += 1
+		}
+		printf("cache %d: %s\r", k + start, h)
+
+		ret[k] = h
+		k += 1
+	}
+
+	return ret
+}
+
+
+public func main() -> int
+{
+	let input = "ihaygndm"
+	// let input = "abc"
+
+
+	let part = 2
+
+	if part == 1
+	{
+		var k = 0
+		var keys: string[]
+
+		while keys.length < 64
+		{
+			let key = MD5.hashToString(MD5.hashString(input + toString(k)))
+			let t = findTriplet(key)
+
+			if t != ""
+			{
+				let c = t[0]
+
+				var n = k + 1
+				while n < k + 1000
+				{
+					let s =  MD5.hashToString(MD5.hashString(input + toString(n)))
+					if findQuintuplet(s, c)
+					{
+						// found
+						keys += key
+						printf("key %d (%d / %d): %s // %s\n", keys.length, k, n, key, s)
+						break
+					}
+
+					n += 1
+				}
+			}
+
+			k += 1
+		}
+	}
+	else
+	{
+		// todo: adjust this properly.
+		// lol who am i kidding i'm never gonna fix this
+
+		// 30000 is good enough for most inputs
+		let cacheSize = 30000
+
+		var st = 0
+		var cache = makeCache(input, 1, cacheSize)
+
+		var keys: string[]
+
+
+		var k = 0
+		while keys.length < 64
+		{
+			let key = cache[k % cacheSize]
+			let t = findTriplet(key)
+
+			if t != ""
+			{
+				let c = t[0]
+
+				var n = k + 1
+				while n < k + 1000
+				{
+					let s = cache[n % cacheSize]
+					if findQuintuplet(s, c)
+					{
+						// found
+						keys += key
+						printf("\nkey %d (%d / %d): %s // %s\n", keys.length, k, n, key, s)
+						break
+					}
+
+					n += 1
+				}
+			}
+
+			k += 1
+		}
+	}
+
+	return 0
+}
+
+
+
+
+

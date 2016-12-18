@@ -64,8 +64,11 @@ public func main()
 		// try and be clever.
 		// unlikely we can have a 10 GB string
 
-		let count = getDecompressedLengthRecursively(input)
-		printf("length = %zd\n", count)
+		// let count = getDecompressedLengthRecursively(input)
+		// printf("length = %zd\n", count)
+
+		let str = getDecompressedStringRecursively(input)
+		printf("str = %s\n", str)
 	}
 }
 
@@ -106,6 +109,50 @@ func getDecompressedLengthRecursively(input: string) -> int
 	return len
 }
 
+
+
+func getDecompressedStringRecursively(input: string) -> string
+{
+	var ret = ""
+	var k = 0
+	while k < input.length
+	{
+		if input[k] == char("(")
+		{
+			let p = input.substring(k, -1).find(")")
+
+			// get the inside
+			let instr = input.substring(k + 1, p - 1)
+
+			let x = instr.find("x")
+
+			let num = parseNum(instr.substring(0, x))
+			let rep = parseNum(instr.substring(x + 1, -1))
+
+			// read the next num characters
+			let torep = input.substring(k + 1 + p, num)
+
+			// recurse. don't actually build a string, just calculate the length.
+			var i = 0
+			while i < rep
+			{
+				let s = getDecompressedStringRecursively(torep)
+				printf("recurse: %s\n", s)
+				ret += s
+				i += 1
+			}
+			k = k + p + num
+		}
+		else
+		{
+			ret += input[k]
+		}
+
+		k += 1
+	}
+
+	return ret
+}
 
 
 

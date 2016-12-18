@@ -1,0 +1,157 @@
+// prog.flx
+// Copyright (c) 2014 - 2016, zhiayang@gmail.com
+// Licensed under the Apache License Version 2.0.
+
+import Foundation
+
+/*
+	// general formula
+	Disc X has K positions; at time=0, it is at position Y
+	Disc X has K positions; at time=N, it is at position (N + Y) % K
+
+
+	Disc #1 has 5 positions; at time=N+1, it is at position (N) % 5.
+	Disc #2 has 2 positions; at time=N+2, it is at position (N + 1) % 2.
+
+
+	in the general case, we know that Y is strictly less than K
+	Y < K for all Y and K
+
+	in the expanded case where we take into account ball falling time, Y can possibly
+	be > K -- but can be reduced.
+
+	eg. for Disc #1, at t=N+1, P=([N + 1] + 4) % 5  ===  (N+5) % 5  ===  N % 5
+	eg. for Disc #2, at t=N+2, P=([N + 2] + 1) % 2  ===  (N+3) % 2  ===  (N+1) % 2
+
+	note: (A+B) % C  ===  (A + [B % C]) % C
+	ie. we can reduce the + term by doing a modulo as well.
+
+
+	ok. Now, given the two equations:
+	P1 = N % 5
+	P2 = (N + 1) % 2
+
+	P1 = P2 = 0
+
+
+	iteratively, we can easily solve this now -- simply try all N from 0 to infinity
+	until we get a value of N where everything is 0.
+
+
+
+
+
+
+
+
+
+
+	Disc #1 has 17 positions; at time=0, it is at position 5.
+	Disc #2 has 19 positions; at time=0, it is at position 8.
+	Disc #3 has 7 positions; at time=0, it is at position 1.
+	Disc #4 has 13 positions; at time=0, it is at position 7.
+	Disc #5 has 5 positions; at time=0, it is at position 1.
+	Disc #6 has 3 positions; at time=0, it is at position 0.
+
+
+
+	P1 = (N + 6) % 17
+	P2 = (N + 10) % 19
+	P3 = (N + 4) % 7
+	P4 = (N + 11) % 13
+	P5 = (N + 1) % 5
+	P6 = (N) % 3
+*/
+
+
+
+// lmao time for some OOP goodness
+struct Disc
+{
+	var offset: int
+	var positions: int
+}
+
+func getPosition(d: Disc, n: int) -> int
+{
+	return (n + d.offset) % d.positions
+}
+
+public func main()
+{
+	// note: iterative solution... ):
+
+	// format: (NUM_POSITIONS, START_POSITION)
+
+	let input = [
+		(17, 5)
+		(19, 8)
+		(7, 1)
+		(13, 7)
+		(5, 1)
+		(3, 0)
+
+		// part 2
+		(11, 0)
+	]
+
+	var discs: Disc[]
+
+	var k = 0
+	while k < input.length
+	{
+		// offset -- k + 1 accounts for travel time, input[k].1 is the actual starting position
+		let ofs = (k + 1) + input[k].1
+		let dsc = Disc(ofs, input[k].0)
+
+		discs += dsc
+		k += 1
+	}
+
+
+
+	// loop through all discs
+	var n = 0
+	loop {
+		var k = 0
+		var found = true
+
+		while k < discs.length
+		{
+			if getPosition(discs[k], n) != 0
+			{
+				found = false
+				break
+			}
+
+			// printf("disc %d is at position 0 at t=%d\n", k, n)
+			k += 1
+		}
+
+		if found
+		{
+			// all zeroes -- terminate
+			break
+		}
+
+		n += 1
+	}
+
+	printf("solution: %d\n", n)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,112 @@
+// prog.flx
+// Copyright (c) 2014 - 2016, zhiayang@gmail.com
+// Licensed under the Apache License Version 2.0.
+
+import Foundation
+
+
+enum Direction
+{
+	case Up
+	case Down
+	case Left
+	case Right
+}
+
+// enters a room with the direction
+func enterRoom(code: string, path: string, curSln: string, pos: (int, int), findShortest: bool) -> string
+{
+	if pos == (3, 3)
+	{
+		return path
+	}
+
+
+	// hash the code + path
+	let hash = MD5.stringHashOfString(code + path)
+	var best = curSln
+
+
+	// up:
+	if pos.1 > 0 && hash[0] >= char("b") && hash[0] <= char("f")
+	{
+		// open
+		// note: not checking for solution here,
+		// since we can never enter the bottom right corner by going up
+
+		let s = enterRoom(code, path + "U", best, (pos.0, pos.1 - 1), findShortest)
+
+		if (findShortest && ((s.length < best.length && s != "") || best == "")) || (!findShortest && (s.length > best.length))
+		{
+			best = s
+		}
+	}
+
+	// down:
+	if pos.1 < 3 && hash[1] >= char("b") && hash[1] <= char("f")
+	{
+		let s = enterRoom(code, path + "D", best, (pos.0, pos.1 + 1), findShortest)
+		if (findShortest && ((s.length < best.length && s != "") || best == "")) || (!findShortest && (s.length > best.length))
+		{
+			best = s
+		}
+	}
+
+	// left:
+	if pos.0 > 0 && hash[2] >= char("b") && hash[2] <= char("f")
+	{
+		// open
+		// same deal, cannot enter corner by going left
+		let s = enterRoom(code, path + "L", best, (pos.0 - 1, pos.1), findShortest)
+		if (findShortest && ((s.length < best.length && s != "") || best == "")) || (!findShortest && (s.length > best.length))
+		{
+			best = s
+		}
+	}
+
+
+	// right:
+	if pos.0 < 3 && hash[3] >= char("b") && hash[3] <= char("f")
+	{
+		// open
+		let s = enterRoom(code, path + "R", best, (pos.0 + 1, pos.1), findShortest)
+		if (findShortest && ((s.length < best.length && s != "") || best == "")) || (!findShortest && (s.length > best.length))
+		{
+			best = s
+		}
+	}
+
+
+	if best == curSln
+	{
+		// there was no solution
+		return ""
+	}
+	else
+	{
+		return best
+	}
+}
+
+
+public func main()
+{
+	let input = "qtetzkpl"
+	let part = 1
+
+
+	// depth first search
+	let shortsln = enterRoom(input, "", "", (0, 0), true)
+	let longsln = enterRoom(input, "", "", (0, 0), false)
+	printf("shortest (%d):\t%s\n", shortsln.length, shortsln)
+	printf("longest (%d):\t%s\n", longsln.length, longsln)
+}
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,105 @@
+// prog.flx
+// Copyright (c) 2014 - 2016, zhiayang@gmail.com
+// Licensed under the Apache License Version 2.0.
+
+import Foundation
+
+
+
+func trap(left: char, centre: char, right: char) -> bool
+{
+	let t = char("^")
+	let s = char(".")
+
+	return left != right
+
+	// return (left == t && centre == t && right == s) || (left == s && centre == t && right == t)
+	// 	|| (left == t && centre == s && right == s) || (left == s && centre == s && right == t)
+}
+
+public func main()
+{
+	let input = "^^^^......^...^..^....^^^.^^^.^.^^^^^^..^...^^...^^^.^^....^..^^^.^.^^...^.^...^^.^^^.^^^^.^^.^..^.^"
+
+	// part 1: 40
+	let rowcount = 400000
+
+	var rows: string[]
+	rows += input
+
+	// start computing the second row
+	var k = 1
+	while k < rowcount
+	{
+		var row = ""
+		var j = 0
+
+		while j < input.length
+		{
+			var left: char
+			if j == 0 { left = char(".") }
+			else { left = rows[k - 1][j - 1] }
+
+			var right: char
+			if j == input.length - 1 { right = char(".") }
+			else { right = rows[k - 1][j + 1] }
+
+			var centre = rows[k - 1][j]
+
+			if trap(left, centre, right)
+			{
+				row += "^"
+			}
+			else
+			{
+				row += "."
+			}
+
+			j += 1
+		}
+
+		rows += row
+		printf("row %d\r", k)
+		k += 1
+	}
+
+
+	var y = 0
+	var safes = 0
+	while y < rowcount
+	{
+		safes += rows[y].count(char("."))
+		y += 1
+	}
+
+	printf("safe tiles: %d\n", safes)
+}
+
+
+
+
+
+
+extension string
+{
+	func count(c: char) -> int
+	{
+		var k = 0
+		var cnt = 0
+		while k < self.length
+		{
+			if (#self)[k] == c
+			{
+				cnt += 1
+			}
+			k += 1
+		}
+
+		return cnt
+	}
+}
+
+
+
+
+

@@ -1,0 +1,363 @@
+// prog.flx
+// Copyright (c) 2014 - 2016, zhiayang@gmail.com
+// Licensed under the Apache License Version 2.0.
+
+import Foundation
+
+// puzzle input(s)
+let input = 1364
+let dest = (31, 39)
+
+// let input = 10
+// let dest = (7, 4)
+
+
+func countBits(n: int) -> int
+{
+	var count = 0
+	var num = n
+
+	while num != 0
+	{
+		num &= (num - 1)
+		count += 1
+	}
+
+	return count
+}
+
+func isWall(pos: (int, int)) -> bool
+{
+	let x = pos.0
+	let y = pos.1
+
+	if x < 0 || y < 0
+	{
+		return true
+	}
+
+	let f = input + (x * x) + (3 * x) + (2 * x * y) + (y) + (y * y)
+
+	// count number of bits
+	let cnt = countBits(f)
+	return cnt % 2 == 1
+}
+
+func drawMaze(width: int, height: int)
+{
+	// draw some shit
+	var y = 0
+	while y < height
+	{
+		var x = 0
+		while x < width
+		{
+			if isWall((x, y))
+			{
+				// draw a wall
+				printf("#")
+			}
+			else if (x, y) == dest
+			{
+				printf("X")
+			}
+			else
+			{
+				printf(" ")
+			}
+
+			x += 1
+		}
+		printf("\n")
+
+		y += 1
+	}
+}
+
+
+// graph structures
+class Node
+{
+	var pos: (int, int)
+	init(x: int, y: int)
+	{
+		self.pos = (x, y)
+	}
+
+	operator == (n: Node) -> bool
+	{
+		return self.pos == n.pos
+	}
+
+	func getNeighbours() -> Node[]
+	{
+		// get the (traversable) neighbours
+		// check NSEW
+
+		var ret: Node[]
+
+		// up
+		if !isWall((self.pos.0, self.pos.1 - 1))
+		{
+			ret += Node(self.pos.0, self.pos.1 - 1)
+		}
+
+		// down
+		if !isWall((self.pos.0, self.pos.1 + 1))
+		{
+			ret += Node(self.pos.0, self.pos.1 + 1)
+		}
+
+		// left
+		if !isWall((self.pos.0 - 1, self.pos.1))
+		{
+			ret += Node(self.pos.0 - 1, self.pos.1)
+		}
+
+		// right
+		if !isWall((self.pos.0 + 1, self.pos.1))
+		{
+			ret += Node(self.pos.0 + 1, self.pos.1)
+		}
+
+		return ret
+	}
+}
+
+class Path
+{
+	var weight: int
+	var nodes: Node[]
+
+	init(w: int, n: Node)
+	{
+		self.weight = w
+		self.nodes += n
+	}
+
+	init(w: int, ns: Node[])
+	{
+		self.weight = w
+		self.nodes = ns
+	}
+}
+
+// straight line distance to destination
+func getSLDist(pos: (int, int)) -> int
+{
+	return Math.√(Math.square(pos.0 - dest.0) + Math.square(pos.1 - dest.1)) as int
+}
+
+func sortByWeight(a: Path, b: Path) -> bool
+{
+	return a.weight < b.weight
+}
+
+func didAlreadyVisit(v: Node[], n: Node) -> bool
+{
+	var k = 0
+	while k < v.length
+	{
+		if v[k] == n { return true }
+		k += 1
+	}
+
+	return false
+}
+
+func aStarSearch(start: Node, part2: bool) -> Path
+{
+	var queue: Path[]
+	var visited: Node[]
+
+
+	// initial path
+	// weight is current length (0) + straight line distance
+	queue += Path(getSLDist((1, 1)), Node(1, 1))
+	visited += Node(1, 1)
+
+
+	var possibleUnder50 = 0
+
+	while queue.length > 0
+	{
+		let path = queue.popBack()
+		assert(path.nodes.length > 0)
+
+		// ok, get the last node -- this is the one we check for neighbours
+		let n = path.nodes.back()
+		let nodes = n.getNeighbours()
+
+		var k = 0
+		while k < nodes.length
+		{
+			// see if the node *is* the solution
+			let nd = nodes[k]
+
+			if !didAlreadyVisit(visited, nd)
+			{
+				visited += nd
+
+				// printf("node: (%d, %d)\n", nd.pos.0, nd.pos.1)
+
+				// the "length" of a path is simply the number of nodes, since
+				// we're operating on a grid system
+				var newp = Path(path.nodes.length + getSLDist(nd.pos), path.nodes + nd)
+
+				if newp.nodes.length - 1 <= 50
+				{
+					possibleUnder50 += 1
+				}
+
+
+				if nd.pos == dest && !part2
+				{
+					// great, exit here
+					// build a path
+					return newp
+				}
+
+				// guess not.
+				// add the paths back into the queue
+				queue += newp
+			}
+
+			k += 1
+		}
+
+		// sort the queue
+		queue = mergeSort(queue, sortByWeight)
+	}
+
+	if part2
+	{
+		return Path(possibleUnder50, Node())
+	}
+
+
+	// did not return -- queue became empty at some point
+	printf("fail\n")
+	abort()
+
+	// unreachable anyway
+	return Path()
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+public func main()
+{
+	// first node does not count
+	let dist = aStarSearch(Node(1, 1), false).nodes.length - 1
+	printf("shortest distance: %d\n", dist)
+
+	// conversely, count the first node
+	let p = aStarSearch(Node(1, 1), true).weight + 1
+	printf("possible: %d\n", p)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+// merge sort
+
+
+func split<T>(s: T[]) -> (T[], T[])
+{
+	let div = s.length / 2
+
+	var a: T[]
+	var b: T[]
+	var i = 0
+
+	while i < div
+	{
+		a += s[i]
+		i += 1
+	}
+
+	while i < s.length
+	{
+		b += s[i]
+		i += 1
+	}
+
+	return (a, b)
+}
+
+func _merge<T>(a: T[], b: T[], cmp: [(T, T) -> bool]) -> T[]
+{
+	var ret: T[]
+
+	var al = a.length
+	var bl = b.length
+
+	while al > 0 && bl > 0
+	{
+		let ai = a.length - al
+		let bi = b.length - bl
+
+		if(cmp(a[ai], b[bi]))
+		{
+			ret += a[ai]
+			al -= 1
+		}
+		else
+		{
+			ret += b[bi]
+			bl -= 1
+		}
+	}
+
+	while al > 0
+	{
+		ret += a[a.length - al]
+		al -= 1
+	}
+
+	while bl > 0
+	{
+		ret += b[b.length - bl]
+		bl -= 1
+	}
+
+	return ret
+}
+
+func mergeSort<T>(arr: T[], cmp: [(T, T) -> bool]) -> T[]
+{
+	if arr.length <= 1
+	{
+		return arr
+	}
+	else
+	{
+		let a = split(arr)
+		let a0 = mergeSort(a.0, cmp)
+		let a1 = mergeSort(a.1, cmp)
+		return _merge(a0, a1, cmp)
+	}
+}
+
+
+
+

@@ -1,0 +1,147 @@
+// prog.flx
+// Copyright (c) 2014 - 2016, zhiayang@gmail.com
+// Licensed under the Apache License Version 2.0.
+
+import Foundation
+
+// 0 to 1, 1 to 0
+func invertString(s: string) -> string
+{
+	var ret = ""
+	var k = 0
+
+	while k < s.length
+	{
+		if s[k] == char("0")
+		{
+			ret += "1"
+		}
+		else
+		{
+			ret += "0"
+		}
+
+		k += 1
+	}
+
+	return ret
+}
+
+func reverse(s: string) -> string
+{
+	var ret = ""
+	var i = s.length - 1
+
+	while i >= 0
+	{
+		ret += s[i]
+
+		i -= 1
+	}
+
+	return ret
+}
+
+
+
+
+public func main()
+{
+	let input = "10111100110001111"
+
+	// part 1 length: 272
+	// let required = 272
+	let required = 35651584
+
+	// allocate a "metric fuckton" of memory
+	// it is more than likely the final step exceeds the required length, so we have to make some allowances
+	var data = alloc[required * 2] char
+
+	var k = 0
+	while k < input.length
+	{
+		data[k] = input[k]
+		k += 1
+	}
+
+	var generated = input.length
+	while generated < required
+	{
+		printf("[%d]\n", generated)
+		data[generated] = char("0")
+
+		// do this shit more efficiently
+		var k = generated - 1
+		while k >= 0
+		{
+			if data[k] == char("0")
+			{
+				data[generated + 0 + generated - k] = char("1")
+			}
+			else
+			{
+				data[generated + 0 + generated - k] = char("0")
+			}
+
+			k -= 1
+		}
+
+		generated = 2 * generated + 1
+	}
+
+	// make checksum
+	data[required] = char(0 as i8)
+
+	printf("checksumming...\n")
+
+	var sumlen = required
+	var chk = alloc[sumlen] char
+	memcpy(chk.pointer as i8*, data.pointer as i8*, sumlen as u64)
+
+	while sumlen % 2 == 0
+	{
+		// get pairs
+		var newck = alloc[sumlen / 2] char
+
+		var k = 0
+		while k < sumlen
+		{
+			if chk[k] == chk[k + 1]
+			{
+				// add a '1' -- same
+				newck[k / 2] = char("1")
+			}
+			else
+			{
+				newck[k / 2] = char("0")
+			}
+
+			k += 2
+		}
+
+		// update and repeat
+		dealloc chk
+		chk = newck
+
+		sumlen /= 2
+	}
+
+	printf("checksum = [%.*s]\n", sumlen, chk.pointer)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
