@@ -96,6 +96,7 @@ public func main()
 
 	// first, precompute all the lengths
 	var list: ((int, int), (int, int), int)[]
+	printf("precomputing inter-node distances...\n")
 	do {
 
 		// do from 0 to the thing
@@ -109,7 +110,7 @@ public func main()
 
 			list += (Q.start.pos, (gl.1, gl.2), dist)
 
-			printf("(%s -> %c) [(%d, %d), (%d, %d)]: %d\n", "0", gl.0, Q.start.pos.0, Q.start.pos.1, gl.1, gl.2, dist)
+			// printf("(%s -> %c) [(%d, %d), (%d, %d)]: %d\n", "0", gl.0, Q.start.pos.0, Q.start.pos.1, gl.1, gl.2, dist)
 			g += 1
 		}
 	}
@@ -132,7 +133,7 @@ public func main()
 				dealloc p.nodes
 
 				list += ((gk.1, gk.2), (gv.1, gv.2), dist)
-				printf("(%c -> %c) [(%d, %d), (%d, %d)]: %d\n", gk.0, gv.0, gk.1, gk.2, gv.1, gv.2, dist)
+				// printf("(%c -> %c) [(%d, %d), (%d, %d)]: %d\n", gk.0, gv.0, gk.1, gk.2, gv.1, gv.2, dist)
 			}
 
 			v += 1
@@ -156,8 +157,6 @@ public func main()
 
 		var length = 0
 
-		// printf("%s\n", path)
-
 		var v = 0
 		var prev = Q.start
 		while v < path.length - 1
@@ -172,18 +171,10 @@ public func main()
 			let d = getDistance(prev.pos, n.pos, list)
 			if d == -1
 			{
-				let p = aStarSearch(prev, n)
-				length += p.nodes.length - 1
-
-				list += (prev.pos, n.pos, p.nodes.length - 1)
-
-				dealloc p.nodes
-				printf("(generate) (%c -> %c) [(%d, %d), (%d, %d)]\n", Q.input[prev.pos.1][prev.pos.0], path[v + 1],
-					prev.pos.0, prev.pos.1, g.0, g.1)
+				abort()
 			}
 			else
 			{
-				// printf("(cached)\n")
 				length += d
 			}
 
@@ -199,7 +190,7 @@ public func main()
 		k += 1
 	}
 
-	printf("best: %d -- %s\n", best.0, best.1)
+	printf("best: %d  /  %s\n", best.0, best.1)
 }
 
 func getGoal(c: char) -> (int, int)
@@ -408,9 +399,9 @@ func aStarSearch(start: Node, dest: Node) -> Path
 		dealloc path.nodes
 
 		// sort the queue
-		queue = mergeSort(queue, sortByWeight)
-		// dealloc queue
-		// queue = q
+		let q = mergeSort(queue, sortByWeight)
+		dealloc queue
+		queue = q
 	}
 
 	// did not return -- queue became empty at some point
