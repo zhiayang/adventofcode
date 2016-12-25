@@ -444,6 +444,7 @@ public func main()
 	}
 
 	// note: output is just the number that it hangs on
+	// because i'm lazy as fuck. 96 / 82 ain't bad #worthit
 }
 
 
