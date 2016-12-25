@@ -1,6 +1,6 @@
 #!/usr/local/bin/fish
 
-set SYSROOT "$HOME/Desktop/Stuff/Orion\ Industries/flax/build/sysroot"
+set SYSROOT "$HOME/Desktop/Stuff/Code/flax/build/sysroot"
 set FLAXC "$SYSROOT/usr/local/bin/flaxc"
 
 # usage:

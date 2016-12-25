@@ -1,0 +1,789 @@
+// prog.flx
+// Copyright (c) 2014 - 2016, zhiayang@gmail.com
+// Licensed under the Apache License Version 2.0.
+
+import Foundation
+
+func tostr(c: char[]) -> string
+{
+	var ret: string
+	var k = 0
+	while k < c.length
+	{
+		ret += c[k]
+		k += 1
+	}
+
+	return ret
+}
+
+func rotateLeft(str: char[], i: int) -> char[]
+{
+	var r = i % str.length
+
+	// make a new array
+	var left: char[]
+	var right: char[]
+
+	var j = r
+	while j < str.length
+	{
+		left += str[j]
+		j += 1
+	}
+
+	j = 0
+	while j < r
+	{
+		right += str[j]
+		j += 1
+	}
+
+	dealloc str
+	return left + right
+}
+
+
+func rotateRight(str: char[], r: int) -> char[]
+{
+	return rotateLeft(str, str.length - r)
+}
+
+func scramble(s: string) -> string
+{
+	let input = [
+		"move position 0 to position 3",
+		"rotate right 0 steps",
+		"rotate right 1 step",
+		"move position 1 to position 5",
+		"swap letter h with letter b",
+		"reverse positions 1 through 3",
+		"swap letter a with letter g",
+		"swap letter b with letter h",
+		"rotate based on position of letter c",
+		"swap letter d with letter c",
+		"rotate based on position of letter c",
+		"swap position 6 with position 5",
+		"rotate right 7 steps",
+		"swap letter b with letter h",
+		"move position 4 to position 3",
+		"swap position 1 with position 0",
+		"swap position 7 with position 5",
+		"move position 7 to position 1",
+		"swap letter c with letter a",
+		"move position 7 to position 5",
+		"rotate right 4 steps",
+		"swap position 0 with position 5",
+		"move position 3 to position 1",
+		"swap letter c with letter h",
+		"rotate based on position of letter d",
+		"reverse positions 0 through 2",
+		"rotate based on position of letter g",
+		"move position 6 to position 7",
+		"move position 2 to position 5",
+		"swap position 1 with position 0",
+		"swap letter f with letter c",
+		"rotate right 1 step",
+		"reverse positions 2 through 4",
+		"rotate left 1 step",
+		"rotate based on position of letter h",
+		"rotate right 1 step",
+		"rotate right 5 steps",
+		"swap position 6 with position 3",
+		"move position 0 to position 5",
+		"swap letter g with letter f",
+		"reverse positions 2 through 7",
+		"reverse positions 4 through 6",
+		"swap position 4 with position 1",
+		"move position 2 to position 1",
+		"move position 3 to position 1",
+		"swap letter b with letter a",
+		"rotate based on position of letter b",
+		"reverse positions 3 through 5",
+		"move position 0 to position 2",
+		"rotate based on position of letter b",
+		"reverse positions 4 through 5",
+		"rotate based on position of letter g",
+		"reverse positions 0 through 5",
+		"swap letter h with letter c",
+		"reverse positions 2 through 5",
+		"swap position 7 with position 5",
+		"swap letter g with letter d",
+		"swap letter d with letter e",
+		"move position 1 to position 2",
+		"move position 3 to position 2",
+		"swap letter d with letter g",
+		"swap position 3 with position 7",
+		"swap letter b with letter f",
+		"rotate right 3 steps",
+		"move position 5 to position 3",
+		"move position 1 to position 2",
+		"rotate based on position of letter b",
+		"rotate based on position of letter c",
+		"reverse positions 2 through 3",
+		"move position 2 to position 3",
+		"rotate right 1 step",
+		"move position 7 to position 0",
+		"rotate right 3 steps",
+		"move position 6 to position 3",
+		"rotate based on position of letter e",
+		"swap letter c with letter b",
+		"swap letter f with letter d",
+		"swap position 2 with position 5",
+		"swap letter f with letter g",
+		"rotate based on position of letter a",
+		"reverse positions 3 through 4",
+		"rotate left 7 steps",
+		"rotate left 6 steps",
+		"swap letter g with letter b",
+		"reverse positions 3 through 6",
+		"rotate right 6 steps",
+		"rotate based on position of letter c",
+		"rotate based on position of letter b",
+		"rotate left 1 step",
+		"reverse positions 3 through 7",
+		"swap letter f with letter g",
+		"swap position 4 with position 1",
+		"rotate based on position of letter d",
+		"move position 0 to position 4",
+		"swap position 7 with position 6",
+		"rotate right 6 steps",
+		"rotate based on position of letter e",
+		"move position 7 to position 3",
+		"rotate right 3 steps",
+		"swap position 1 with position 2",
+	]
+
+	var str: char[]
+
+	// this is stupid, but easier to work with than strings
+	str += s[0]
+	str += s[1]
+	str += s[2]
+	str += s[3]
+	str += s[4]
+	str += s[5]
+	str += s[6]
+	str += s[7]
+
+	var k = 0
+	while k < input.length
+	{
+		let i = input[k]
+
+		if i.find("swap position") == 0
+		{
+			// swap position X with position Y
+
+			let x = parseNum(i.substring(14, 1))
+			let y = parseNum(i.substring(30, 1))
+
+			let tmp = str[x]
+			str[x] = str[y]
+			str[y] = tmp
+		}
+		else if i.find("swap letter") == 0
+		{
+			// swap letter X with letter Y
+			let x = i.substring(12, 1)[0]
+			let y = i.substring(26, 1)[0]
+
+			// there's really only 1 of each char in the string
+			var ix = 0
+			var iy = 0
+
+			var j = 0
+			while j < str.length
+			{
+				if str[j] == x { ix = j }
+				if str[j] == y { iy = j }
+				j += 1
+			}
+
+			let tmp = str[ix]
+			str[ix] = str[iy]
+			str[iy] = tmp
+		}
+		else if i.find("move position") == 0
+		{
+			// move position X to position Y
+
+			let x = parseNum(i.substring(14, 1))
+			let y = parseNum(i.substring(28, 1))
+
+			let c = str[x]
+
+			// move...
+			// build a new string
+			var new: char[]
+			var j = 0
+			while j < str.length
+			{
+				if j != x
+				{
+					new += str[j]
+				}
+
+				j += 1
+			}
+
+			let l = str.length
+			str.clear()
+
+			// insert.
+			j = 0
+			while j < new.length
+			{
+				if j == y
+				{
+					str += c
+				}
+
+				str += new[j]
+				j += 1
+			}
+
+			if y == l - 1
+			{
+				// edge case
+				str += c
+			}
+
+
+			dealloc new
+
+		}
+		else if i.find("rotate left") == 0
+		{
+			let r = parseNum(i.substring(12, 1))
+			str = rotateLeft(str, r)
+		}
+		else if i.find("rotate right") == 0
+		{
+			let r = parseNum(i.substring(13, 1))
+			str = rotateRight(str, r)
+		}
+		else if i.find("reverse") == 0
+		{
+			// reverse positions 2 through 5
+
+			let x = parseNum(i.substring(18, 1))
+			let y = parseNum(i.substring(28, 1))
+
+			var tmp: char[]
+			var j = x
+			while j <= y
+			{
+				tmp += str[j]
+				j += 1
+			}
+
+			var left: char[]
+			var right: char[]
+
+
+			j = 0
+			while j < x
+			{
+				left += str[j]
+				j += 1
+			}
+
+
+			j = y + 1
+			while j < str.length
+			{
+				right += str[j]
+				j += 1
+			}
+
+
+			// reverse it
+			str.clear()
+			str += left
+
+			j = tmp.length - 1
+			while j >= 0
+			{
+				str += tmp[j]
+				j -= 1
+			}
+
+			str += right
+		}
+		else if i.find("rotate based on") == 0
+		{
+			// rotate based on position of letter c
+			// find the letter
+
+			let c = i.substring(35, 1)[0]
+
+			var idx = 0
+			while idx < str.length
+			{
+				if str[idx] == c { break }
+				idx += 1
+			}
+
+			var r = 1 + idx
+			if idx > 3 { r += 1}
+
+			r %= str.length
+			r = str.length - r
+
+			// rot right
+			str = rotateRight(str, r)
+		}
+
+		k += 1
+	}
+
+	return tostr(str)
+}
+
+
+
+
+
+public func main()
+{
+	var str: char[]
+
+	let part = 2
+
+	if part == 1
+	{
+		printf("%s\n", scramble("abcdefgh"))
+	}
+	else
+	{
+		let input = [
+			"move position 0 to position 3",
+			"rotate right 0 steps",
+			"rotate right 1 step",
+			"move position 1 to position 5",
+			"swap letter h with letter b",
+			"reverse positions 1 through 3",
+			"swap letter a with letter g",
+			"swap letter b with letter h",
+			"rotate based on position of letter c",
+			"swap letter d with letter c",
+			"rotate based on position of letter c",
+			"swap position 6 with position 5",
+			"rotate right 7 steps",
+			"swap letter b with letter h",
+			"move position 4 to position 3",
+			"swap position 1 with position 0",
+			"swap position 7 with position 5",
+			"move position 7 to position 1",
+			"swap letter c with letter a",
+			"move position 7 to position 5",
+			"rotate right 4 steps",
+			"swap position 0 with position 5",
+			"move position 3 to position 1",
+			"swap letter c with letter h",
+			"rotate based on position of letter d",
+			"reverse positions 0 through 2",
+			"rotate based on position of letter g",
+			"move position 6 to position 7",
+			"move position 2 to position 5",
+			"swap position 1 with position 0",
+			"swap letter f with letter c",
+			"rotate right 1 step",
+			"reverse positions 2 through 4",
+			"rotate left 1 step",
+			"rotate based on position of letter h",
+			"rotate right 1 step",
+			"rotate right 5 steps",
+			"swap position 6 with position 3",
+			"move position 0 to position 5",
+			"swap letter g with letter f",
+			"reverse positions 2 through 7",
+			"reverse positions 4 through 6",
+			"swap position 4 with position 1",
+			"move position 2 to position 1",
+			"move position 3 to position 1",
+			"swap letter b with letter a",
+			"rotate based on position of letter b",
+			"reverse positions 3 through 5",
+			"move position 0 to position 2",
+			"rotate based on position of letter b",
+			"reverse positions 4 through 5",
+			"rotate based on position of letter g",
+			"reverse positions 0 through 5",
+			"swap letter h with letter c",
+			"reverse positions 2 through 5",
+			"swap position 7 with position 5",
+			"swap letter g with letter d",
+			"swap letter d with letter e",
+			"move position 1 to position 2",
+			"move position 3 to position 2",
+			"swap letter d with letter g",
+			"swap position 3 with position 7",
+			"swap letter b with letter f",
+			"rotate right 3 steps",
+			"move position 5 to position 3",
+			"move position 1 to position 2",
+			"rotate based on position of letter b",
+			"rotate based on position of letter c",
+			"reverse positions 2 through 3",
+			"move position 2 to position 3",
+			"rotate right 1 step",
+			"move position 7 to position 0",
+			"rotate right 3 steps",
+			"move position 6 to position 3",
+			"rotate based on position of letter e",
+			"swap letter c with letter b",
+			"swap letter f with letter d",
+			"swap position 2 with position 5",
+			"swap letter f with letter g",
+			"rotate based on position of letter a",
+			"reverse positions 3 through 4",
+			"rotate left 7 steps",
+			"rotate left 6 steps",
+			"swap letter g with letter b",
+			"reverse positions 3 through 6",
+			"rotate right 6 steps",
+			"rotate based on position of letter c",
+			"rotate based on position of letter b",
+			"rotate left 1 step",
+			"reverse positions 3 through 7",
+			"swap letter f with letter g",
+			"swap position 4 with position 1",
+			"rotate based on position of letter d",
+			"move position 0 to position 4",
+			"swap position 7 with position 6",
+			"rotate right 6 steps",
+			"rotate based on position of letter e",
+			"move position 7 to position 3",
+			"rotate right 3 steps",
+			"swap position 1 with position 2",
+		]
+
+		// fbgdceah
+		str += char("f")
+		str += char("b")
+		str += char("g")
+		str += char("d")
+		str += char("c")
+		str += char("e")
+		str += char("a")
+		str += char("h")
+
+		var k = input.length - 1
+		while k >= 0
+		{
+			let i = input[k]
+
+			if i.find("swap position") == 0
+			{
+				// swap position X with position Y
+
+				let x = parseNum(i.substring(14, 1))
+				let y = parseNum(i.substring(30, 1))
+
+				let tmp = str[x]
+				str[x] = str[y]
+				str[y] = tmp
+			}
+			else if i.find("swap letter") == 0
+			{
+				// swap letter X with letter Y
+				let x = i.substring(12, 1)[0]
+				let y = i.substring(26, 1)[0]
+
+				// there's really only 1 of each char in the string
+				var ix = 0
+				var iy = 0
+
+				var j = 0
+				while j < str.length
+				{
+					if str[j] == x { ix = j }
+					if str[j] == y { iy = j }
+					j += 1
+				}
+
+				let tmp = str[ix]
+				str[ix] = str[iy]
+				str[iy] = tmp
+			}
+			else if i.find("move position") == 0
+			{
+				// move position X to position Y
+
+				let x = parseNum(i.substring(14, 1))
+				let y = parseNum(i.substring(28, 1))
+
+				let c = str[x]
+
+				// move...
+				// build a new string
+				var new: char[]
+				var j = 0
+				while j < str.length
+				{
+					if j != x
+					{
+						new += str[j]
+					}
+
+					j += 1
+				}
+
+				let l = str.length
+				str.clear()
+
+				// insert.
+				j = 0
+				while j < new.length
+				{
+					if j == y
+					{
+						str += c
+					}
+
+					str += new[j]
+					j += 1
+				}
+
+				if y == l - 1
+				{
+					// edge case
+					str += c
+				}
+
+
+				dealloc new
+			}
+			else if i.find("rotate left") == 0
+			{
+				let r = parseNum(i.substring(12, 1))
+				str = rotateRight(str, r)
+			}
+			else if i.find("rotate right") == 0
+			{
+				let r = parseNum(i.substring(13, 1))
+				str = rotateLeft(str, r)
+			}
+			else if i.find("reverse") == 0
+			{
+				// reverse positions 2 through 5
+
+				let x = parseNum(i.substring(18, 1))
+				let y = parseNum(i.substring(28, 1))
+
+				var tmp: char[]
+				var j = x
+				while j <= y
+				{
+					tmp += str[j]
+					j += 1
+				}
+
+				var left: char[]
+				var right: char[]
+
+
+				j = 0
+				while j < x
+				{
+					left += str[j]
+					j += 1
+				}
+
+
+				j = y + 1
+				while j < str.length
+				{
+					right += str[j]
+					j += 1
+				}
+
+				// reverse it
+				str.clear()
+				str += left
+
+				j = tmp.length - 1
+				while j >= 0
+				{
+					str += tmp[j]
+					j -= 1
+				}
+
+				str += right
+			}
+			else if i.find("rotate based on") == 0
+			{
+				// rotate based on position of letter c
+				// find the letter
+
+				let c = i.substring(35, 1)[0]
+
+
+				// var tmp = str.clone()
+				// while true
+				// {
+				// 	tmp = rotateRight(tmp, 1)
+				// 	var new = tmp.clone()
+
+				// 	do {
+				// 		var idx = 0
+				// 		while idx < new.length
+				// 		{
+				// 			if new[idx] == c { break }
+				// 			idx += 1
+				// 		}
+
+				// 		var r = 1 + idx
+				// 		if idx > 3 { r += 1}
+
+				// 		r %= new.length
+				// 		r = new.length - r
+
+				// 		// rot right
+				// 		new = rotateRight(new, r)
+				// 	}
+
+
+				// 	var p = 0
+				// 	while p < new.length
+				// 	{
+				// 		printf("%c", new[p])
+				// 		p += 1
+				// 	}
+
+				// 	printf("\n")
+
+
+				// 	p = 0
+				// 	while p < str.length
+				// 	{
+				// 		printf("%c", str[p])
+				// 		p += 1
+				// 	}
+
+				// 	printf("\n--------------\n")
+
+
+
+				// 	if new == str
+				// 	{
+				// 		str = tmp
+				// 		break
+				// 	}
+				// }
+
+				var idx = 0
+				while idx < str.length
+				{
+					if str[idx] == c { break }
+					idx += 1
+				}
+
+				var r = [ 1, 1, 6, 2, 7, 3, 0, 4 ][idx]
+				str = rotateLeft(str, r)
+			}
+
+			k -= 1
+		}
+
+		// afhdbegc
+		// abcdfegh
+
+		// i give up.
+	}
+
+
+	var k = 0
+	while k < str.length
+	{
+		printf("%c", str[k])
+		k += 1
+	}
+
+	printf("\n")
+}
+
+func cmp(a: char[], b: char[]) -> bool
+{
+	if a.length != b.length { return false }
+
+	var k = 0
+	while k < a.length
+	{
+		if a[k] != b[k] { return false }
+		k += 1
+	}
+
+	return true
+}
+
+
+func swp(a: char*, b: char*)
+{
+	let tmp = #a
+	#a = #b
+	#b = tmp
+}
+
+func _permute(x: char[], i: int, n: int, out: char[][]*)
+{
+	if i == n
+	{
+		#out += x
+	}
+	else
+	{
+		var j = i
+		while j <= n
+		{
+			swp(x.pointer + i, x.pointer + j)
+			_permute(x, i + 1, n, out)
+			swp(x.pointer + i, x.pointer + j)
+
+			j += 1
+		}
+	}
+}
+
+func permute(a: char[]) -> char[][]
+{
+	var ret: char[][]
+	_permute(a, 0, a.length - 1, &ret)
+	return ret
+}
+
+
+
+
+
+
+
+
+
+func parseNum(s: string) -> int
+{
+	if s.length == 0 { return 0 }
+	else if s.length == 1 { return s[0] as int - 48 }
+
+	var ret = 0
+	var i = s.length - 1
+	var pos = 1
+
+	while i >= 0
+	{
+		ret = pos * (s[i] as int - 48) + ret
+
+		i -= 1
+		pos *= 10
+	}
+
+	return ret
+}
+
+
+
+
+
+

@@ -1,0 +1,136 @@
+// prog.flx
+// Copyright (c) 2014 - 2016, zhiayang@gmail.com
+// Licensed under the Apache License Version 2.0.
+
+import Foundation
+
+public func main()
+{
+	// lmao:
+	// https://www.youtube.com/watch?v=uCsD3ZGzMgE
+	// ^ this is the exact problem
+
+	/*
+		let N be the number of elves
+		rewrite N = 2^a + L
+
+		after L steps, whoever starts is the winner
+		=> winning elf is 2L + 1
+	*/
+
+	let input = 3018458
+
+	do {
+		let pow2 = pow(2, floor(log(input) / log(2))) as int
+
+		let L = input - pow2
+		printf("part 1: %d\n", 2 * L + 1)
+	}
+
+
+	// part 2...
+	/*
+		N	|	W(N)
+		------------
+		1	|	1
+		2	|	1
+		3	|	3
+		4	|	1
+		5	|	2
+		6	|	3
+		7	|	5
+		8	|	7
+		9	|	9
+		10	|	1
+		11	|	2
+		12	|	3
+		13	|	4
+		14	|	5
+		15	|	6
+		16	|	7
+		17	|	8
+		18	|	9
+		19	|	11
+		20	|	13
+		21	|	15
+		22	|	17
+		23	|	19
+		24	|	21
+		25	|	23
+		26	|	25
+		27	|	27
+
+		proposed pattern:
+		ignoring N=1 and N=2,
+
+		if N = 3^k -- ie. N is a power of 3,
+		W(N) = N
+
+		in the range N...3*N,
+		(ie. between 3^k and 3^(k+1))
+
+		the winner for W(N) where N = 3^k:
+		W(n) where n < N:
+
+		W(n) = W(n-1) + 1, where [3^(k-1)] < n < [2 * 3^(k-1)]
+		W(n) = W(n-1) + 2, where [2 * 3^(k-1)] < n < 3^k
+
+		W(n+1) where (n = 3^k) = 1
+
+		english:
+		W(N) = N if N is a power of 3
+		between successive powers of 3,
+
+		W(N) increases by 1 from the previous W(N) if half of N is less than or equal to the previous power of 3
+		eg, looking at the pattern from N=3 to N=9:
+
+		W(3) = 3	-- N = 3^k, so W(N) = N
+		W(4) = 1	-- N = 3^k + 1, so W(N) 'resets' to 1
+		W(5) = 2	-- half N (2.5) is <= 3, so W(N) = W(N-1) + 1
+		W(6) = 3	-- half N (3.0) is <= 3, so W(N) = W(N-1) + 1
+		W(7) = 5	-- half N (3.5) is > 3, so W(N) = W(N-1) + 2
+
+
+
+
+
+		SOLUTION:
+
+		similar to above, find the smallest power of 3 that fits:
+		S = 3^(floor(log(X) / log(3)))
+
+		iterate from N=S to N=X using the rule above
+	*/
+
+	do {
+		let pow3 = pow(3, floor(log(input) / log(3))) as int
+
+		// W(S+1) = 1
+		var win = 1
+
+		// start at N = S+2
+		var n = pow3 + 2
+		while n <= input
+		{
+			if n <= 2 * pow3
+			{
+				win += 1
+			}
+			else
+			{
+				win += 2
+			}
+
+			n += 1
+		}
+
+		printf("part 2: %d\n", win)
+	}
+}
+
+
+
+
+
+
+
