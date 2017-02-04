@@ -151,7 +151,7 @@ func scramble(s: string) -> string
 		"rotate based on position of letter e",
 		"move position 7 to position 3",
 		"rotate right 3 steps",
-		"swap position 1 with position 2",
+		"swap position 1 with position 2"
 	]
 
 	var str: char[]
@@ -457,7 +457,7 @@ public func main()
 			"rotate based on position of letter e",
 			"move position 7 to position 3",
 			"rotate right 3 steps",
-			"swap position 1 with position 2",
+			"swap position 1 with position 2"
 		]
 
 		// fbgdceah
@@ -720,18 +720,22 @@ func cmp(a: char[], b: char[]) -> bool
 }
 
 
-func swp(a: char*, b: char*)
+func swp(_a: char*, _b: char*)
 {
-	let tmp = #a
-	#a = #b
-	#b = tmp
+	var a = _a
+	var b = _b
+
+	let tmp = *a
+	*a = *b
+	*b = tmp
 }
 
-func _permute(x: char[], i: int, n: int, out: char[][]*)
+func _permute(x: char[], i: int, n: int, _out: char[][]*)
 {
 	if i == n
 	{
-		#out += x
+		var out = _out
+		*out += x
 	}
 	else
 	{
@@ -739,7 +743,7 @@ func _permute(x: char[], i: int, n: int, out: char[][]*)
 		while j <= n
 		{
 			swp(x.pointer + i, x.pointer + j)
-			_permute(x, i + 1, n, out)
+			_permute(x, i + 1, n, _out)
 			swp(x.pointer + i, x.pointer + j)
 
 			j += 1

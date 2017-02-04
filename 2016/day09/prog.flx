@@ -64,11 +64,11 @@ public func main()
 		// try and be clever.
 		// unlikely we can have a 10 GB string
 
-		// let count = getDecompressedLengthRecursively(input)
-		// printf("length = %zd\n", count)
+		let count = getDecompressedLengthRecursively(input)
+		printf("length = %zd\n", count)
 
-		let str = getDecompressedStringRecursively(input)
-		printf("str = %s\n", str)
+		// let str = getDecompressedStringRecursively(input)
+		// printf("str = %s\n", str)
 	}
 }
 
@@ -137,7 +137,7 @@ func getDecompressedStringRecursively(input: string) -> string
 			while i < rep
 			{
 				let s = getDecompressedStringRecursively(torep)
-				printf("recurse: %s\n", s)
+				// printf("recurse: %s\n", s)
 				ret += s
 				i += 1
 			}

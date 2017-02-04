@@ -200,7 +200,7 @@ public func main()
 		"rotate column x=5 by 1",
 		"rotate column x=3 by 5",
 		"rotate column x=2 by 5",
-		"rotate column x=1 by 5",
+		"rotate column x=1 by 5"
 	]
 
 
@@ -265,31 +265,35 @@ public func main()
 
 
 
-func makeRect(scr: bool[50][6]*, x: int, y: int)
+func makeRect(_scr: bool[50][6]*, x: int, y: int)
 {
+	var scr = _scr
+
 	var i = 0	// y
 	while i < y
 	{
 		var j = 0	// x
 		while j < x
 		{
-			(#scr)[i][j] = true
+			(*scr)[i][j] = true
 			j += 1
 		}
 		i += 1
 	}
 }
 
-func shiftCol(scr: bool[50][6]*, col: int, amt: int)
+func shiftCol(_scr: bool[50][6]*, col: int, amt: int)
 {
 	// do it the normal (iterative) way
 	var tmp: bool[]
+
+	var scr = _scr
 
 	// save the bottom "amt" of pixels
 	var i = 6 - amt
 	while i < 6
 	{
-		tmp.append((#scr)[i][col])
+		tmp.append((*scr)[i][col])
 		i += 1
 	}
 
@@ -298,7 +302,7 @@ func shiftCol(scr: bool[50][6]*, col: int, amt: int)
 	i = 5
 	while i >= 0
 	{
-		(#scr)[i][col] = (#scr)[i - amt][col]
+		(*scr)[i][col] = (*scr)[i - amt][col]
 		i -= 1
 	}
 
@@ -306,20 +310,20 @@ func shiftCol(scr: bool[50][6]*, col: int, amt: int)
 	i = 0
 	while i < tmp.length
 	{
-		(#scr)[i][col] = tmp[i]
+		(*scr)[i][col] = tmp[i]
 		i += 1
 	}
 }
 
 func shiftRow(scr: bool[50][6]*, row: int, amt: int)
 {
-	var row = &((#scr)[row])
+	var row = &((*scr)[row])
 	var rowi: u64 = 0
 
 	var i = 0
 	while i < 50
 	{
-		rowi |= (#row)[i] as u64
+		rowi |= (*row)[i] as u64
 		rowi <<= 1
 		i += 1
 	}
@@ -331,7 +335,7 @@ func shiftRow(scr: bool[50][6]*, row: int, amt: int)
 	i = 49
 	while i >= 0
 	{
-		(#row)[i] = (rowi & 1) as bool
+		(*row)[i] = (rowi & 1) as bool
 		rowi >>= 1
 		i -= 1
 	}

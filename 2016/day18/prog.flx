@@ -88,7 +88,7 @@ extension string
 		var cnt = 0
 		while k < self.length
 		{
-			if (#self)[k] == c
+			if (*self)[k] == c
 			{
 				cnt += 1
 			}
