@@ -1,0 +1,10 @@
+// prog.flx
+// Copyright (c) 2017, zhiayang@gmail.com
+// Licensed under the Apache License Version 2.0.
+
+import "stdio" as _
+
+@entry fn main()
+{
+	println("hello, world!")
+}

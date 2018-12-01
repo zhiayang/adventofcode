@@ -1,2 +1,5 @@
 *.sublime-*
 prog.dYSM/*
+*.exe
+*.obj
+
