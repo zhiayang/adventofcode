@@ -2,4 +2,4 @@
 prog.dYSM/*
 *.exe
 *.obj
-
+.vscode

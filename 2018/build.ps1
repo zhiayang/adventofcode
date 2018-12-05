@@ -22,7 +22,7 @@ if ($prog_lang -ne "cpp" -and $prog_lang -ne "flax") {
     exit
 }
 
-echo "Building AoC 2018 day$prog_day ($prog_lang)"
+echo "building AoC 2018 day$prog_day ($prog_lang)"
 
 if ($prog_lang -eq "cpp") {
     $compileFlags = @(
@@ -34,7 +34,7 @@ if ($prog_lang -eq "cpp") {
         "/wd4996",
         "/EHsc",
         "/std:c++17",
-        "/Itinyformat",
+        "/Ilibs",
         "/Feday$prog_day\prog.exe"
     )
 
