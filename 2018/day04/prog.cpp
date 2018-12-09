@@ -1264,7 +1264,7 @@ int main()
 		}
 	}
 
-	tfm::printfln("laziest guard = %d, most asleep on minute %d (* = %d)", laziest_guard, sleepiest_minute[laziest_guard],
+	tfm::printfln("part 1: laziest guard = %d, most asleep on minute %d (* = %d)", laziest_guard, sleepiest_minute[laziest_guard],
 		laziest_guard * sleepiest_minute[laziest_guard]);
 
 	{
@@ -1292,7 +1292,7 @@ int main()
 		}
 
 
-		tfm::printfln("most predictable guard = %d, on minute %d (* = %d)", most_predictable_guard, most_predictable_minute,
+		tfm::printfln("part 2: most predictable guard = %d, on minute %d (* = %d)", most_predictable_guard, most_predictable_minute,
 			most_predictable_guard * most_predictable_minute);
 	}
 }

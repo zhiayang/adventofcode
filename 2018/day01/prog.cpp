@@ -31,7 +31,7 @@ int main()
 			if(!found && seen.find(freq) != seen.end())
 			{
 				found = true;
-				tfm::printfln("first repeat: %d", freq);
+				tfm::printfln("part 2: first repeat: %d", freq);
 			}
 			else
 			{
@@ -39,7 +39,7 @@ int main()
 			}
 		}
 
-		if(!printed) tfm::printfln("freq = %d", freq);
+		if(!printed) tfm::printfln("part 1: freq = %d", freq);
 		printed = true;
 	}
 }

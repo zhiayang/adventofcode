@@ -1,0 +1,14 @@
+// prog.flx
+// Copyright (c) 2017, zhiayang@gmail.com
+// Licensed under the Apache License Version 2.0.
+
+import libc
+
+@entry fn main()
+{
+	// var input: &
+	let input = libc::fopen("day08/input.txt", "r")
+	libc::fclose(input)
+
+	libc::printf("done!\n")
+}

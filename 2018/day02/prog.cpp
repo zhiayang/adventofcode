@@ -280,7 +280,7 @@ int main()
 		}
 	}
 
-	tfm::printfln("2s = %d, 3s = %d, check = %d", twos, threes, twos * threes);
+	tfm::printfln("part 1: check = %d", twos * threes);
 
 
 	// part 2
@@ -310,7 +310,7 @@ int main()
 
 			if(found && !fail)
 			{
-				tfm::printfln("%s\n%s", a, b);
+				tfm::printfln("part 2: %s\n%s", a, b);
 			}
 		}
 	}

@@ -1417,7 +1417,7 @@ int main()
 	}
 
 	// count the things.
-	tfm::printfln("overlap area = %d", std::count_if(fabric, fabric + (1000 * 1000), [](uint8_t p) -> bool {
+	tfm::printfln("part 1: overlap area = %d", std::count_if(fabric, fabric + (1000 * 1000), [](uint8_t p) -> bool {
 		return p > 1;
 	}));
 
@@ -1435,7 +1435,7 @@ int main()
 		}
 
 		// if we didn't go to again, we did not overlap!
-		tfm::printfln("claim #%d is safe", claim.id);
+		tfm::printfln("part 2: claim #%d is safe", claim.id);
 
 		again:
 			;

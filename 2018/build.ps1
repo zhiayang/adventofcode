@@ -57,7 +57,7 @@ if ($prog_lang -eq "cpp") {
 
     Remove-Item prog.obj
 
-    echo "running day$prog_day`n`n"
+    echo "running day$prog_day`n"
     & "day$prog_day\prog.exe"
 }
 else {
