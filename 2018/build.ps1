@@ -22,6 +22,7 @@ if ($prog_lang -ne "cpp" -and $prog_lang -ne "flax") {
     exit
 }
 
+cls
 echo "building AoC 2018 day$prog_day ($prog_lang)"
 
 if ($prog_lang -eq "cpp") {

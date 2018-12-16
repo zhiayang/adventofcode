@@ -66,6 +66,17 @@ namespace util
 	}
 
 
+
+	template <typename T, class Predicate>
+	std::vector<T> sort(const std::vector<T>& input, Predicate fn)
+	{
+		std::vector<T> ret = input;
+		std::sort(ret.begin(), ret.end(), fn);
+
+		return ret;
+	}
+
+
 	template <typename T, class UnaryOp, typename K = typename std::result_of<UnaryOp(T, size_t)>::type>
 	std::vector<K> mapidx(const std::vector<T>& input, UnaryOp fn)
 	{
