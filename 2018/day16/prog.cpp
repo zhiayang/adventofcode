@@ -151,6 +151,9 @@ int main()
 	// maps from fake to real!
 	std::map<int, int> real_opcode_map;
 
+	// this one is real to fake
+	std::map<int, int> fake_opcode_map;
+
 
 	while(real_opcode_map.size() < 16)
 	{
@@ -162,6 +165,7 @@ int main()
 			{
 				int fake = *fake_matches.begin();
 				real_opcode_map[fake] = k;
+				fake_opcode_map[k] = fake;
 
 				// erase it from the rest.
 				for(int m = 0; m < 16; m++)
@@ -178,10 +182,7 @@ int main()
 		registers_t state = { 0, 0, 0, 0 };
 
 		for(auto instr : program)
-		{
 			state = compute(state, real_opcode_map[instr.opcode], instr.a, instr.b, instr.c);
-			// tfm::printfln("part 2: register 0 has value %d", state[0]);
-		}
 
 		tfm::printfln("part 2: register 0 has value %d", state[0]);
 	}
