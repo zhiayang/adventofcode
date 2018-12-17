@@ -1,4 +1,3 @@
-#if 1
 // prog.cpp
 // Copyright (c) 2014 - 2017, zhiayang@gmail.com
 // Licensed under the Apache License Version 2.0.
@@ -40,20 +39,33 @@ char& get(char* map, int x, int y)
 	return map[x + y*maxx];
 }
 
-std::string print(char* map, int cx, int cy)
+std::string print(char* map, const std::deque<water_t>& waters, int cx, int cy)
 {
 	std::string ret;
-	for(int y = 0; y < maxy; y++)
+	for(int y = std::max(0, cy - 15); y < std::min(maxy, cy + 14); y++)
 	{
-		for(int x = 0; x < maxx; x++)
+		for(int x = std::max(0, cx - 22); x < std::min(maxx, cx + 82); x++)
 		{
 			if(x == cx && y == cy)
 			{
-				ret += tfm::format("%s%s%s", COLOUR_RED, map[x + y*maxx], COLOUR_RESET);
+				ret += tfm::format("%s%s%s", COLOUR_RED_BOLD, map[x + y*maxx], COLOUR_RESET);
 			}
 			else
 			{
-				ret += map[x + y*maxx];
+				if(waters.size() > 0 && waters.front().x == x && waters.front().y == y)
+				{
+					ret += tfm::format("%s%s%s", COLOUR_BLUE_BOLD, map[x + y*maxx], COLOUR_RESET);
+				}
+				else if(std::find_if(waters.begin(), waters.end(), [x, y](const water_t& w) -> bool {
+					return w.x == x && w.y == y;
+				}) != waters.end())
+				{
+					ret += tfm::format("%s%s%s", COLOUR_GREEN_BOLD, map[x + y*maxx], COLOUR_RESET);
+				}
+				else
+				{
+					ret += map[x + y*maxx];
+				}
 			}
 		}
 		ret += "\n";
@@ -63,15 +75,27 @@ std::string print(char* map, int cx, int cy)
 	return ret;
 }
 
+void enqueue(std::deque<water_t>& waters, int x, int y, bool back)
+{
+	auto it = std::find_if(waters.begin(), waters.end(), [x, y](const water_t& w) -> bool {
+		return w.x == x && w.y == y;
+	});
+
+	if(it == waters.end())
+	{
+		if(back) waters.push_back(water_t(x, y, true));
+		else     waters.push_front(water_t(x, y, true));
+	}
+}
+
+
 int main()
 {
-	auto output = std::ofstream("day17/output.txt", std::ios::out);
-
 	std::vector<std::string> lines;
 	{
 		auto input = std::ifstream("day17/input.txt", std::ios::in);
 		for(std::string line; std::getline(input, line); )
-			lines.push_back(line);
+			if(line != "\n") lines.push_back(line);
 	}
 
 	std::vector<std::pair<int, int>> clays;
@@ -123,7 +147,8 @@ int main()
 		map[c.first + (maxx * c.second)] = '#';
 
 	std::deque<water_t> waters;
-	waters.push_back(water_t(500, 0, true));
+	enqueue(waters, 500, 0, true);
+
 	get(map, 500, 0) = '+';
 
 	while(waters.size() > 0)
@@ -135,7 +160,7 @@ int main()
 		int y = water.y;
 
 		// check if we're past the limit.
-		if(!water.flowing) continue;
+		// if(!water.flowing) continue;
 		if(y >= maxy || y + 1 >= maxy) continue;
 
 
@@ -148,132 +173,126 @@ int main()
 		if(down == ' ')
 		{
 			// spread down!
-			down = '|';
-			waters.push_front(water_t(x, y + 1, true));
+			// down = '|';
+			// waters.push_front(water_t(x, y + 1, true));
+
+			for(int k = y + 1; k < maxy; k++)
+			{
+				auto& d = get(map, x, k);
+				if(d == ' ')
+				{
+					d = '|';
+				}
+				else
+				{
+					enqueue(waters, x, k - 1, false);
+					// waters.push_front(water_t(x, k - 1, true));
+					break;
+				}
+			}
 		}
 		else if(down == '#' || down == '~')
 		{
-			// spread sideways.
-			bool lblocked = false;
-			bool rblocked = false;
-
-			if(x > 0)
 			{
-				auto& l = get(map, x - 1, y);
-				if(l == ' ')
-				{
-					assert(l == ' ');
+				auto l = get(map, x - 1, y);
+				auto r = get(map, x + 1, y);
+				auto u = get(map, x, y - 1);
 
-					l = '-';
-					waters.push_front(water_t(x - 1, y, true));
-				}
-				else
-				{
-					lblocked = true;
-				}
-			}
-			if(x < maxx)
-			{
-				auto& r = get(map, x + 1, y);
-				if(r == ' ')
-				{
-					assert(r == ' ');
-
-					r = '-';
-					waters.push_front(water_t(x + 1, y, true));
-				}
-				else
-				{
-					rblocked = true;
-				}
-			}
-
-
-			if(lblocked && rblocked)
-			{
-				auto& l = get(map, x - 1, y);
-				auto& r = get(map, x + 1, y);
-
-				auto& u = get(map, x, y - 1);
-
-				if(l == '#' && r == '#')
+				if((l == '#' || l == '~') && (r == '#' || r == '~'))
 				{
 					cur = '~';
-					water.flowing = false;
+					if(u == '|' || u == '-')
+						enqueue(waters, x, y - 1, false);
+						// waters.push_front(water_t(x, y - 1, true));
+
+					continue;
 				}
-				else
+			}
+
+			// spread left, then right.
+			bool lsupported = false;
+			bool rsupported = false;
+
+			int lbound = 0;
+			int rbound = 0;
+
+			for(int k = x - 1; k > 0; k--)
+			{
+				lbound = k;
+
+				auto& c = get(map, k, y);
+				auto& d = get(map, k, y + 1);
+
+				if((c == '#' || c == '~') && (d == '#' || d == '~'))
 				{
-					bool leftwall = false;
-					bool supported = false;
-
-					// see which side is a wall
-					if(l == '#' || l == '~')
+					lsupported = true;
+					break;
+				}
+				else if(c == ' ' || c == '|')
+				{
+					c = '-';
+					if(d != '#' && d != '~')
 					{
-						leftwall = true;
-
-						// scan right
-						for(int k = x; k < maxx; k++)
-						{
-							auto c = get(map, k, y);
-							auto d = get(map, k, y + 1);
-
-							if((c == '-' || c == '|') && (d == '~' || d == '#'))
-								continue;
-
-							if((c == '#' || c == '~') && (d == '~' || d == '#'))
-							{
-								supported = true;
-								break;
-							}
-
-							break;
-						}
-
-					}
-					else if(r == '#' || r == '~')
-					{
-						// scan left
-						for(int k = x; k > 0; k--)
-						{
-							auto c = get(map, k, y);
-							auto d = get(map, k, y + 1);
-
-							if((c == '-' || c == '|') && (d == '~' || d == '#'))
-								continue;
-
-							if((c == '#' || c == '~') && (d == '~' || d == '#'))
-							{
-								supported = true;
-								break;
-							}
-
-							break;
-						}
-					}
-
-
-					if(supported)
-					{
-						cur = '~';
-						water.flowing = false;
-
-						if(leftwall && (get(map, x + 1, y) == '-' || get(map, x + 1, y) == '|'))
-							waters.push_back(water_t(x + 1, y, true));
-
-						else if(get(map, x - 1, y) == '-' || get(map, x - 1, y) == '|')
-							waters.push_back(water_t(x - 1, y, true));
-
-						if(get(map, x, y - 1) == '|')
-							waters.push_back(water_t(x, y - 1, true));
+						// waters.push_front(water_t(k, y, true));
+						enqueue(waters, k, y, false);
+						lsupported = false;
+						break;
 					}
 				}
+				if(d == '|' || d == ' ')
+				{
+					rsupported = false;
+					break;
+				}
+			}
+
+
+			for(int k = x + 1; k < maxx; k++)
+			{
+				rbound = k;
+
+				auto& c = get(map, k, y);
+				auto& d = get(map, k, y + 1);
+
+				if((c == '#' || c == '~') && (d == '#' || d == '~'))
+				{
+					rsupported = true;
+					break;
+				}
+				else if(c == ' ' || c == '|')
+				{
+					c = '-';
+					if(d != '#' && d != '~')
+					{
+						// waters.push_front(water_t(k, y, true));
+						enqueue(waters, k, y, false);
+						rsupported = false;
+						break;
+					}
+				}
+				if(d == '|')
+				{
+					rsupported = false;
+					break;
+				}
+			}
+
+
+			for(int k = lbound + 1; k < rbound; k++)
+			{
+				if(lsupported && rsupported)
+					get(map, k, y) = '~';
+
+				if(get(map, k, y - 1) == '|' || get(map, k, y - 1) == '-')
+					enqueue(waters, k, y - 1, true);
+					// waters.push_back(water_t(k, y - 1, true));
 			}
 		}
 		else if(down == '|' || down == '-')
 		{
 			// if we're still flowing down onto flowing water, then that flowing water becomes still water.
-			down = '~';
-			waters.push_front(water_t(x, y + 1, false));
+			// down = '~';
+			// waters.push_front(water_t(x, y + 1, false));
 		}
 		else
 		{
@@ -282,194 +301,44 @@ int main()
 		}
 
 
-		// tfm::printfln("%s\n", print(map, x, y));
-		auto l = print(map, x, y);
-		std::replace(l.begin(), l.end(), ' ', '.');
-		output << l;
+		// auto l = print(map, waters, x, y);
+		// tfm::printfln("%s\n", l);
 	}
-
-	output.close();
 
 
 	// count the waters?!
 	int water_count = 0;
-	for(int y = 0; y < maxy; y++)
+	int real_water_count = 0;
+	for(int y = miny; y < maxy; y++)
 	{
 		for(int x = 0; x < maxx; x++)
 		{
 			auto c = get(map, x, y);
 			if(util::match(c, '~', '|', '-'))
 				water_count++;
+
+			if(c == '~')
+				real_water_count++;
 		}
 	}
 
+	for(auto [ x, y ] : clays)
+	{
+		if(get(map, x, y) != '#')
+			tfm::printfln("(%d, %d) got replaced by '%c'!", x, y, get(map, x, y));
+	}
+
 	tfm::printfln("part 1: %d tiles reachable by water", water_count);
+	tfm::printfln("part 2: %d tiles of collected water", real_water_count);
 }
 
 
 
 
-#else
 
 
 
-#include <stdio.h>
-#define SIZE 2000
 
-int main()
-{
-  char First, Second, Line[100], Area[SIZE][SIZE];
-  int Steady, RangeMin, RangeMax, XMin, XMax, YMin, YMax, Count, InnerCount;
-  int SideCount, LeftBound, RightBound, TotalArea;
-  bool Changed, LeftBounded, RightBounded;
-  for (Count=0;Count<SIZE;Count++)
-    for (InnerCount=0;InnerCount<SIZE;InnerCount++)
-      Area[Count][InnerCount] = '.';
-  XMin=XMax=464;
-  YMin=YMax=310;
-  while (fgets(Line, 90, stdin))
-    {
-      sscanf(Line, "%c=%d, %c=%d..%d\n", &First, &Steady, &Second, &RangeMin, &RangeMax);
-      if (Second=='x')
-    {
-      for (Count=RangeMin;Count<=RangeMax;Count++)
-        Area[Steady][Count] = '#';
-      if (RangeMin<XMin)
-        XMin=RangeMin;
-      if (RangeMin>XMax)
-        XMax=RangeMin;
-      if (RangeMax<XMin)
-        XMin=RangeMin;
-      if (RangeMax>XMax)
-        XMax=RangeMin;
-      if (Steady<YMin)
-        YMin=Steady;
-      if (Steady>YMax)
-        YMax=Steady;
-    }
-      else
-    {
-      for (Count=RangeMin;Count<=RangeMax;Count++)
-        Area[Count][Steady] = '#';
-      if (RangeMin<YMin)
-        YMin=RangeMin;
-      if (RangeMin>YMax)
-        YMax=RangeMin;
-      if (RangeMax<YMin)
-        YMin=RangeMin;
-      if (RangeMax>YMax)
-        YMax=RangeMin;
-      if (Steady<XMin)
-        XMin=Steady;
-      if (Steady>XMax)
-        XMax=Steady;
-    }
-    }
-  printf("X: %d %d Y: %d %d\n", XMin, XMax, YMin, YMax);
-  Changed = true;
-  Area[0][500] = '|';
-  printf("%c\n", Area[0][500]);
-  for (Count=0;Count<=YMax;Count++)
-    {
-      for (InnerCount=(XMin-2);InnerCount<=(XMax+2);InnerCount++)
-    printf("%c", Area[Count][InnerCount]);
-      printf("\n");
-    }
-  while (Changed)
-    {
-      Changed = false;
-      for (Count=0;Count<=YMax;Count++)
-    for (InnerCount=(XMin-2);InnerCount<=(XMax+2);InnerCount++)
-      {
-        if (Area[Count][InnerCount]=='|')
-          {
-        if (Area[Count+1][InnerCount] == '.')
-          {
-            Area[Count+1][InnerCount] = '|';
-            Changed=true;
-          }
-        else if ((Area[Count+1][InnerCount] == '#') || (Area[Count+1][InnerCount] == '~'))
-          {
-            LeftBounded = RightBounded = false;
-            SideCount=1;
-            while ((Area[Count][InnerCount-SideCount] != '#') && ((Area[Count+1][InnerCount-SideCount] == '#') || (Area[Count+1][InnerCount-SideCount] == '~')))
-              {
-            if (Area[Count][InnerCount-SideCount]=='.')
-              {
-                Area[Count][InnerCount-SideCount]='|';
-                Changed=true;
-              }
-            SideCount++;
-              }
-            if (Area[Count][InnerCount-SideCount] == '#')
-              {
-            LeftBounded = true;
-            LeftBound = -SideCount;
-              }
-            else
-              {
-            if (Area[Count][InnerCount-SideCount]=='.')
-              {
-                Area[Count][InnerCount-SideCount]='|';
-                Changed=true;
-              }
-              }
-            SideCount=1;
-            while ((Area[Count][InnerCount+SideCount] != '#') && ((Area[Count+1][InnerCount+SideCount] == '#') || (Area[Count+1][InnerCount+SideCount] == '~')))
-              {
-            if (Area[Count][InnerCount+SideCount]=='.')
-              {
-                Area[Count][InnerCount+SideCount]='|';
-                Changed=true;
-              }
-            SideCount++;
-              }
-            if (Area[Count][InnerCount+SideCount] == '#')
-              {
-            RightBounded = true;
-            RightBound = SideCount;
-              }
-            else
-              {
-            if (Area[Count][InnerCount+SideCount]=='.')
-              {
-                Area[Count][InnerCount+SideCount]='|';
-                Changed=true;
-              }
-              }
-            if (LeftBounded && RightBounded)
-              {
-            for (SideCount = LeftBound+1;SideCount < RightBound; SideCount++)
-              {
-                if (Area[Count][InnerCount+SideCount]!='~')
-                  {
-                Area[Count][InnerCount+SideCount]='~';
-                Changed=true;
-                  }
-              }
-              }
-          }
-          }
-      }
-    }
-  printf("Final:\n");
-  for (Count=0;Count<=YMax;Count++)
-    {
-      for (InnerCount=(XMin-2);InnerCount<=(XMax+2);InnerCount++)
-    printf("%c", Area[Count][InnerCount]);
-      printf("\n");
-    }
-  TotalArea=0;
-  for (Count=YMin;Count<=YMax;Count++)
-    for (InnerCount=(XMin-2);InnerCount<=(XMax+2);InnerCount++)
-      if ((Area[Count][InnerCount] == '|') || (Area[Count][InnerCount] == '~'))
-    {
-      TotalArea++;
-    }
-  printf("Total:, %d", TotalArea);
-}
-
-#endif
 
 
 
