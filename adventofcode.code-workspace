@@ -11,7 +11,8 @@
 		"files.associations": {
 			"*.sty": "latex",
 			"array": "cpp",
-			"set": "cpp"
+			"set": "cpp",
+			"xutility": "cpp"
 		}
 	}
 }
