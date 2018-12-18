@@ -23,12 +23,10 @@
 
 struct water_t
 {
-	water_t(int x, int y, bool f) : x(x), y(y), flowing(f) { }
+	water_t(int x, int y) : x(x), y(y) { }
 
 	int x;
 	int y;
-
-	bool flowing;
 };
 
 int maxx = 0;
@@ -75,17 +73,24 @@ std::string print(char* map, const std::deque<water_t>& waters, int cx, int cy)
 	return ret;
 }
 
-void enqueue(std::deque<water_t>& waters, int x, int y, bool back)
+void enqueue_front(std::deque<water_t>& waters, int x, int y)
 {
 	auto it = std::find_if(waters.begin(), waters.end(), [x, y](const water_t& w) -> bool {
 		return w.x == x && w.y == y;
 	});
 
 	if(it == waters.end())
-	{
-		if(back) waters.push_back(water_t(x, y, true));
-		else     waters.push_front(water_t(x, y, true));
-	}
+		waters.push_front(water_t(x, y));
+}
+
+void enqueue_back(std::deque<water_t>& waters, int x, int y)
+{
+	auto it = std::find_if(waters.begin(), waters.end(), [x, y](const water_t& w) -> bool {
+		return w.x == x && w.y == y;
+	});
+
+	if(it == waters.end())
+		waters.push_back(water_t(x, y));
 }
 
 
@@ -147,7 +152,7 @@ int main()
 		map[c.first + (maxx * c.second)] = '#';
 
 	std::deque<water_t> waters;
-	enqueue(waters, 500, 0, true);
+	enqueue_back(waters, 500, 0);
 
 	get(map, 500, 0) = '+';
 
@@ -160,22 +165,16 @@ int main()
 		int y = water.y;
 
 		// check if we're past the limit.
-		// if(!water.flowing) continue;
 		if(y >= maxy || y + 1 >= maxy) continue;
-
 
 		// ok we're not. see if there's something below.
 		auto& cur = get(map, x, y);
 		auto& down = get(map, x, y + 1);
 		if(down == '|') continue;
 
-
 		if(down == ' ')
 		{
 			// spread down!
-			// down = '|';
-			// waters.push_front(water_t(x, y + 1, true));
-
 			for(int k = y + 1; k < maxy; k++)
 			{
 				auto& d = get(map, x, k);
@@ -185,8 +184,7 @@ int main()
 				}
 				else
 				{
-					enqueue(waters, x, k - 1, false);
-					// waters.push_front(water_t(x, k - 1, true));
+					enqueue_front(waters, x, k - 1);
 					break;
 				}
 			}
@@ -202,81 +200,49 @@ int main()
 				{
 					cur = '~';
 					if(u == '|' || u == '-')
-						enqueue(waters, x, y - 1, false);
-						// waters.push_front(water_t(x, y - 1, true));
+						enqueue_front(waters, x, y - 1);
 
 					continue;
 				}
 			}
 
-			// spread left, then right.
-			bool lsupported = false;
-			bool rsupported = false;
+			auto check_side = [&map, &waters](int* bound, int y, int start, int end, int dir) ->bool {
 
+				for(int k = start; k != end; k += (1 * dir))
+				{
+					*bound = k;
+
+					auto& c = get(map, k, y);
+					auto& d = get(map, k, y + 1);
+
+					if((c == '#' || c == '~') && (d == '#' || d == '~'))
+					{
+						return true;
+					}
+					else if(c == ' ' || c == '|')
+					{
+						c = '-';
+						if(d != '#' && d != '~')
+						{
+							enqueue_front(waters, k, y);
+							return false;
+						}
+					}
+					if(d == '|' || d == ' ')
+					{
+						return false;
+					}
+				}
+
+				return false;
+			};
+
+			// spread to the sides
 			int lbound = 0;
 			int rbound = 0;
 
-			for(int k = x - 1; k > 0; k--)
-			{
-				lbound = k;
-
-				auto& c = get(map, k, y);
-				auto& d = get(map, k, y + 1);
-
-				if((c == '#' || c == '~') && (d == '#' || d == '~'))
-				{
-					lsupported = true;
-					break;
-				}
-				else if(c == ' ' || c == '|')
-				{
-					c = '-';
-					if(d != '#' && d != '~')
-					{
-						// waters.push_front(water_t(k, y, true));
-						enqueue(waters, k, y, false);
-						lsupported = false;
-						break;
-					}
-				}
-				if(d == '|' || d == ' ')
-				{
-					rsupported = false;
-					break;
-				}
-			}
-
-
-			for(int k = x + 1; k < maxx; k++)
-			{
-				rbound = k;
-
-				auto& c = get(map, k, y);
-				auto& d = get(map, k, y + 1);
-
-				if((c == '#' || c == '~') && (d == '#' || d == '~'))
-				{
-					rsupported = true;
-					break;
-				}
-				else if(c == ' ' || c == '|')
-				{
-					c = '-';
-					if(d != '#' && d != '~')
-					{
-						// waters.push_front(water_t(k, y, true));
-						enqueue(waters, k, y, false);
-						rsupported = false;
-						break;
-					}
-				}
-				if(d == '|')
-				{
-					rsupported = false;
-					break;
-				}
-			}
-
+			bool lsupported = check_side(&lbound, y, x - 1, 0, -1);
+			bool rsupported = check_side(&rbound, y, x + 1, maxx, 1);
 
 			for(int k = lbound + 1; k < rbound; k++)
 			{
@@ -284,25 +250,18 @@ int main()
 					get(map, k, y) = '~';
 
 				if(get(map, k, y - 1) == '|' || get(map, k, y - 1) == '-')
-					enqueue(waters, k, y - 1, true);
-					// waters.push_back(water_t(k, y - 1, true));
+					enqueue_back(waters, k, y - 1);
 			}
 		}
 		else if(down == '|' || down == '-')
 		{
-			// if we're still flowing down onto flowing water, then that flowing water becomes still water.
-			// down = '~';
-			// waters.push_front(water_t(x, y + 1, false));
+			// do nothing
 		}
 		else
 		{
 			tfm::printfln("down = '%c'!", down);
 			assert(!"should not happen!");
 		}
-
-
-		// auto l = print(map, waters, x, y);
-		// tfm::printfln("%s\n", l);
 	}
 
 
