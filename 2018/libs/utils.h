@@ -34,6 +34,23 @@ std::vector<T> operator + (const std::vector<T>& a, const std::vector<T>& b)
 	return ret;
 }
 
+struct v2
+{
+	v2() : x(0), y(0) { }
+	v2(int x, int y) : x(x), y(y) { }
+
+	int x;
+	int y;
+};
+
+bool operator == (const v2& a, const v2& b) { return a.x == b.x && a.y == b.y; }
+bool operator < (const v2& a, const v2& b) { return a.x < b.x ? true : (b.x < a.x ? false : (a.y < b.y ? true : false)); }
+
+bool operator > (const v2& a, const v2& b) { return b < a; }
+bool operator != (const v2& a, const v2& b) { return !(a == b); }
+bool operator <= (const v2& a, const v2& b) { return !(b < a); }
+bool operator >= (const v2& a, const v2& b) { return !(a < b); }
+
 
 namespace util
 {
@@ -206,6 +223,55 @@ namespace util
 	{
 		auto ret = std::vector<std::pair<K, V>>(map.begin(), map.end());
 		return ret;
+	}
+
+
+	struct path_t
+	{
+		path_t(int w, const std::vector<v2>& ns) : weight(w), nodes(ns) { }
+
+		int weight;
+		std::vector<v2> nodes;
+	};
+
+	int linedist(const v2& a, const v2& b)
+	{
+		return (int) std::sqrt(std::pow(a.x - b.x, 2) + std::pow(a.y - b.y, 2));
+	}
+
+	path_t pathfind(const std::map<v2, std::set<v2>>& edges, const v2& from, const v2& dest)
+	{
+		std::set<v2> seen;
+		std::deque<path_t> queue = { path_t(linedist(from, dest), { from }) };
+
+		while(queue.size() > 0)
+		{
+			auto [ w, ns ] = queue.front();
+			queue.pop_front();
+
+			auto neighs = edges.at(ns.back());
+			for(const v2& n : neighs)
+			{
+				if(seen.find(n) != seen.end())
+					continue;
+
+				seen.insert(n);
+
+				auto newpath = path_t(ns.size() + linedist(n, dest), ns + n);
+
+				if(n == dest)
+					return newpath;
+
+				else
+					queue.push_back(newpath);
+			}
+
+			std::sort(queue.begin(), queue.end(), [](const path_t& p1, const path_t& p2) -> bool {
+				return p1.weight < p2.weight;
+			});
+		}
+
+		return path_t(0, { });
 	}
 }
 

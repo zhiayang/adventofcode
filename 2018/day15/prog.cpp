@@ -32,7 +32,6 @@ struct entity
 };
 
 using map_t = std::map<std::pair<int, int>, entity*>;
-using v2 = std::pair<int, int>;
 
 #define START_HEALTH 200
 
@@ -100,12 +99,12 @@ int distance(entity* a, entity* b)
 
 int distance2(v2 a, v2 b)
 {
-	return std::abs(a.first - b.first) + std::abs(a.second - b.second);
+	return std::abs(a.x - b.x) + std::abs(a.y - b.y);
 }
 
 int linedist(const v2& a, const v2& b)
 {
-	return (int) std::sqrt(std::pow(a.first - b.first, 2) + std::pow(a.second - b.second, 2));
+	return (int) std::sqrt(std::pow(a.x - b.x, 2) + std::pow(a.y - b.y, 2));
 }
 
 bool inreadingorder(entity* a, entity* b)
@@ -117,9 +116,9 @@ bool inreadingorder(entity* a, entity* b)
 
 bool inreadingorder2(const v2& a, const v2& b)
 {
-	if(a.second > b.second)         return false;
-	else if(a.second == b.second)   return a.first < b.first;
-	else                            return true;
+	if(a.y > b.y)       return false;
+	else if(a.y == b.y) return a.x < b.x;
+	else                return true;
 }
 
 
@@ -185,7 +184,7 @@ std::pair<std::vector<v2>, int> findallpaths(map_t& map, const v2& from, const s
 			feasible_targets.push_back(n);
 		}
 
-		auto neighbours = surroundings(map, n.first, n.second, /* require empty */ true);
+		auto neighbours = surroundings(map, n.x, n.y, /* require empty */ true);
 
 		for(auto neigh : neighbours)
 			queue.push_back({ v2(neigh->x, neigh->y), dist + 1 });
@@ -247,7 +246,7 @@ bool move(map_t& map, entity* self, std::vector<entity*>& enemies)
 		}
 	}
 
-	moveto(map, self, final_move.first, final_move.second);
+	moveto(map, self, final_move.x, final_move.y);
 	return true;
 }
 

@@ -12,7 +12,8 @@
 			"*.sty": "latex",
 			"array": "cpp",
 			"set": "cpp",
-			"xutility": "cpp"
+			"xutility": "cpp",
+			"map": "cpp"
 		}
 	}
 }
