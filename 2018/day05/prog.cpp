@@ -34,32 +34,9 @@ std::string collapse(std::string poly)
 	return poly;
 }
 
-std::string readFile(const std::string& path)
-{
-	FILE* f = fopen(path.c_str(), "r");
-	std::string input;
-	{
-		fseek(f, 0, SEEK_END);
-
-		long fsize = ftell(f);
-		fseek(f, 0, SEEK_SET);  //same as rewind(f);
-
-		char* s = new char[fsize + 1];
-		fread(s, fsize, 1, f);
-		fclose(f);
-		s[fsize] = 0;
-
-		input = std::string(s);
-		while(input.back() == '\n')
-			input.pop_back();
-	}
-
-	return input;
-}
-
 int main()
 {
-	auto input = readFile("day05/input.txt");
+	auto input = util::readFile("input.txt");
 
 	tfm::printfln("part 1: len = %d", collapse(input).length());
 

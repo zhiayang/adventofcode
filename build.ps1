@@ -1,11 +1,17 @@
 # meant to be executed from aoc/2018
 
-$prog_day   = $args[0]
-$prog_lang  = $args[1]
+$prog_year  = $args[0]
+$prog_day   = $args[1]
+$prog_lang  = $args[2]
 
 $flax_compiler  = "D:\Projects\flax\build\meson-rel\flaxc.exe"
 $flax_sysroot   = "D:\Projects\flax\build\sysroot"
 
+
+if ([String]::IsNullOrWhiteSpace($prog_year)) {
+	echo "year required"
+	exit
+}
 
 if ([String]::IsNullOrWhiteSpace($prog_day)) {
 	echo "day required"
@@ -23,7 +29,7 @@ if ($prog_lang -ne "cpp" -and $prog_lang -ne "flax") {
 }
 
 cls
-echo "building AoC 2018 day$prog_day ($prog_lang)"
+echo "building AoC $prog_year day$prog_day ($prog_lang)"
 
 if ($prog_lang -eq "cpp") {
     $compileFlags = @(
@@ -36,7 +42,7 @@ if ($prog_lang -eq "cpp") {
         "/EHsc",
         "/std:c++17",
         "/Ilibs",
-        "/Feday$prog_day\prog.exe"
+        "/Fe$prog_year\day$prog_day\prog.exe"
     )
 
     $optimisationFlags = @(
@@ -50,7 +56,7 @@ if ($prog_lang -eq "cpp") {
         "/NODEFAULTLIB:LIBCMT.lib"
     )
 
-    cl.exe "day$prog_day/prog.cpp" @compileFlags $optimisationFlags /link $linkerFlags
+    cl.exe "$prog_year\day$prog_day\prog.cpp" @compileFlags $optimisationFlags /link $linkerFlags
     if ($LastExitCode -ne 0) {
         echo "compilation failed"
         exit
@@ -58,14 +64,19 @@ if ($prog_lang -eq "cpp") {
 
     Remove-Item prog.obj
 
-    echo "running day$prog_day`n"
-    & "day$prog_day\prog.exe"
+    echo "running $prog_year/day$prog_day`n"
+
+    cd $prog_year\day$prog_day
+        & ".\prog.exe"
+    cd ..\..
 }
 else {
     # flax
     # note: we don't yet have EXE output, so use the jit.
 
-    & $flax_compiler -sysroot $flax_sysroot -O3 -run "day$prog_day\prog.flx"
+    cd $prog_year\day$prog_day
+        & $flax_compiler -sysroot $flax_sysroot -O3 -run "prog.flx"
+    cd ..\..
 }
 
 

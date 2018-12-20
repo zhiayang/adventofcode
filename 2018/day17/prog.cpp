@@ -96,12 +96,7 @@ void enqueue_back(std::deque<water_t>& waters, int x, int y)
 
 int main()
 {
-	std::vector<std::string> lines;
-	{
-		auto input = std::ifstream("day17/input.txt", std::ios::in);
-		for(std::string line; std::getline(input, line); )
-			if(line != "\n") lines.push_back(line);
-	}
+	auto lines = util::readFileLines("input.txt");
 
 	std::vector<std::pair<int, int>> clays;
 

@@ -19,29 +19,6 @@
 #include "utils.h"
 #include "tinyformat.h"
 
-std::string readFile(const std::string& path)
-{
-	FILE* f = fopen(path.c_str(), "r");
-	std::string input;
-	{
-		fseek(f, 0, SEEK_END);
-
-		long fsize = ftell(f);
-		fseek(f, 0, SEEK_SET);  //same as rewind(f);
-
-		char* s = new char[fsize + 1];
-		fread(s, fsize, 1, f);
-		fclose(f);
-		s[fsize] = 0;
-
-		input = std::string(s);
-		while(input.back() == '\n')
-			input.pop_back();
-	}
-
-	return input;
-}
-
 
 v2 explore(std::map<v2, std::set<v2>>& rooms, const v2& cur, char dir)
 {
@@ -157,7 +134,7 @@ std::vector<v2> search(const v2& from, const std::map<v2, std::set<v2>>& edges, 
 
 int main()
 {
-	std::string input = readFile("day20/input.txt");
+	std::string input = util::readFile("input.txt");
 	assert(input[0] == '^');
 	assert(input.back() == '$');
 

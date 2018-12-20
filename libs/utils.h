@@ -3,9 +3,14 @@
 // Licensed under the Apache License Version 2.0.
 
 #pragma once
+#include <map>
+#include <deque>
 #include <string>
 #include <vector>
+#include <fstream>
 #include <unordered_map>
+
+#include <stdio.h>
 
 template <typename T>
 std::vector<T> operator + (const std::vector<T>& vec, const T& elm)
@@ -272,6 +277,42 @@ namespace util
 		}
 
 		return path_t(0, { });
+	}
+
+
+	std::string readFile(const std::string& path)
+	{
+		FILE* f = fopen(path.c_str(), "r");
+		std::string input;
+		{
+			fseek(f, 0, SEEK_END);
+
+			long fsize = ftell(f);
+			fseek(f, 0, SEEK_SET);  //same as rewind(f);
+
+			char* s = new char[fsize + 1];
+			fread(s, fsize, 1, f);
+			fclose(f);
+			s[fsize] = 0;
+
+			input = std::string(s);
+			while(input.back() == '\n')
+				input.pop_back();
+		}
+
+		return input;
+	}
+
+	std::vector<std::string> readFileLines(const std::string& path)
+	{
+		std::vector<std::string> lines;
+		{
+			auto input = std::ifstream(path, std::ios::in);
+			for(std::string line; std::getline(input, line); )
+				lines.push_back(line);
+		}
+
+		return lines;
 	}
 }
 

@@ -71,7 +71,7 @@ int main()
 {
 	std::deque<int> input;// = { 2, 3, 0, 3, 10, 11, 12, 1, 1, 0, 1, 99, 2, 1, 1, 2 };
 	{
-		auto stream = std::ifstream("day08/input.txt", std::ios::in);
+		auto stream = std::ifstream("input.txt", std::ios::in);
 
 		int x = 0;
 		while(stream >> x)

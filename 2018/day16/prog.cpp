@@ -81,12 +81,7 @@ int main()
 	std::vector<instruction> program;
 	std::vector<observation> observations;
 	{
-		std::vector<std::string> lines;
-		{
-			auto input = std::ifstream("day16/input.txt", std::ios::in);
-			for(std::string line; std::getline(input, line); )
-				lines.push_back(line);
-		}
+		auto lines = util::readFileLines("input.txt");
 
 		for(size_t i = 0; i < lines.size(); i++)
 		{

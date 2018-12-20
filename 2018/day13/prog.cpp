@@ -51,12 +51,7 @@ struct cart
 
 int main()
 {
-	std::vector<std::string> lines;
-	{
-		auto input = std::ifstream("day13/input.txt", std::ios::in);
-		for(std::string line; std::getline(input, line); )
-			lines.push_back(line);
-	}
+	auto lines = util::readFileLines("input.txt");
 
 	std::vector<cart> carts;
 
