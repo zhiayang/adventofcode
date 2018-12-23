@@ -57,6 +57,30 @@ bool operator <= (const v2& a, const v2& b) { return !(b < a); }
 bool operator >= (const v2& a, const v2& b) { return !(a < b); }
 
 
+struct v3
+{
+	v3() : x(0), y(0), z(0) { }
+	v3(int x, int y, int z) : x(x), y(y), z(z) { }
+
+	int x;
+	int y;
+	int z;
+};
+
+bool operator == (const v3& a, const v3& b) { return a.x == b.x && a.y == b.y && a.z == b.z; }
+bool operator < (const v3& a, const v3& b) { return a.x < b.x ? true : (b.x < a.x ? false : (a.y < b.y ? true : (b.y < a.y ? false : (a.z < b.z ? true : false)))); }
+
+bool operator > (const v3& a, const v3& b) { return b < a; }
+bool operator != (const v3& a, const v3& b) { return !(a == b); }
+bool operator <= (const v3& a, const v3& b) { return !(b < a); }
+bool operator >= (const v3& a, const v3& b) { return !(a < b); }
+
+v3 operator + (const v3& a, const v3& b) { return v3(a.x + b.x, a.y + b.y, a.z + b.z); }
+
+
+
+
+
 namespace util
 {
 	template <typename T>
@@ -230,6 +254,12 @@ namespace util
 		return ret;
 	}
 
+	template <typename K, typename V>
+	std::vector<std::pair<K, V>> pairs(const std::map<K, V>& map)
+	{
+		auto ret = std::vector<std::pair<K, V>>(map.begin(), map.end());
+		return ret;
+	}
 
 
 	std::string readFile(const std::string& path)
