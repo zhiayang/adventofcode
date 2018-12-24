@@ -102,6 +102,8 @@ namespace util
 	}
 
 
+
+
 	template <typename T, class UnaryOp, typename K = typename std::result_of<UnaryOp(T)>::type>
 	std::vector<K> map(const std::vector<T>& input, UnaryOp fn)
 	{
@@ -112,6 +114,11 @@ namespace util
 		return ret;
 	}
 
+	template <typename T>
+	bool contains(const std::vector<T>& input, const T& elm)
+	{
+		return std::find(input.begin(), input.end(), elm) != input.end();
+	}
 
 
 	template <typename T, class Predicate>
