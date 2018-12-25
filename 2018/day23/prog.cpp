@@ -34,9 +34,6 @@ int64_t dist(const v3& a, const v3& b)
 	return std::abs((int64_t) a.x - (int64_t) b.x) + std::abs((int64_t) a.y - (int64_t) b.y) + std::abs((int64_t) a.z - (int64_t) b.z);
 }
 
-
-
-
 int main()
 {
 	std::vector<bot_t> bots;
@@ -110,11 +107,171 @@ int main()
 		}
 
 		int maxdiff = std::max({ maxx - minx, maxy - miny, maxz - minz });
+
+		// new, supposedly more robust attempt
+		// DOES NOT WORK, I GIVE UP
+		# if 0
+		struct box_t
+		{
+			box_t(const v3& a, const v3& b) : p0(a), p1(b) { }
+
+			v3 p0;
+			v3 p1;
+			int count = 0;
+		};
+
+		// this way the box will always be a cube.
+		// makes my life easier.
+
+		// 47141479 / 980
+		std::deque<box_t> queue = { box_t(v3(minx, miny, minz), v3(minx + maxdiff, miny + maxdiff, minz + maxdiff)) };
+
+		while(queue.size() > 0)
+		{
+			auto bb = queue.front();
+			queue.pop_front();
+
+			int64_t x0 = bb.p0.x;
+			int64_t y0 = bb.p0.y;
+			int64_t z0 = bb.p0.z;
+
+			int64_t dx = std::abs(bb.p0.x - bb.p1.x);
+			int64_t dy = std::abs(bb.p0.y - bb.p1.y);
+			int64_t dz = std::abs(bb.p0.z - bb.p1.z);
+
+			if(dx > 0)
+			{
+				tfm::printfln("\nbig box: (%d, %d, %d) - (%d, %d, %d)  /  d(%d, %d, %d)", bb.p0.x, bb.p0.y, bb.p0.z, bb.p1.x, bb.p1.y, bb.p1.z, dx, dy, dz);
+
+				// split the bigbox into 8 smaller boxes.
+				// looking at a box straight on, with left-x/right+x, up+y/down-y, in+z/out-z
+				std::vector<box_t> boxes = {
+					// bottom layer, left side, closer to viewer
+					box_t(
+						v3(x0,                  y0,                 z0),
+						v3(x0 + (dx / 2),       y0 + (dy / 2),      z0 + (dz / 2))
+					),
+
+					// bottom layer, left side, further from viewer
+					box_t(
+						v3(x0,                  y0,                 z0 + 0 + (dz / 2)),
+						v3(x0 + (dx / 2),       y0 + (dy / 2),      z0 + dz)
+					),
+
+					// bottom layer, right side, closer to viewer
+					box_t(
+						v3(x0 + 0 + (dx / 2),   y0,                 z0),
+						v3(x0 + dx,             y0 + (dy / 2),      z0 + (dz / 2))
+					),
+
+					// bottom layer, right side, further
+					box_t(
+						v3(x0 + 0 + (dx / 2),   y0,                 z0 + 0 + (dz / 2)),
+						v3(x0 + dx,             y0 + (dy / 2),      z0 + dz)
+					),
+
+
+					// top layer, left side, closer to viewer
+					box_t(
+						v3(x0,                  y0 + 0 + (dy / 2),  z0),
+						v3(x0 + (dx / 2),       y0 + dy,            z0 + (dz / 2))
+					),
+
+					// top layer, left side, further from viewer
+					box_t(
+						v3(x0,                  y0 + 0 + (dy / 2),  z0 + 0 + (dz / 2)),
+						v3(x0 + (dx / 2),       y0 + dy,            z0 + dz)
+					),
+
+					// top layer, right side, closer to viewer
+					box_t(
+						v3(x0 + 0 + (dx / 2),   y0 + 0 + (dy / 2),  z0),
+						v3(x0 + dx,             y0 + dy,            z0 + (dz / 2))
+					),
+
+					// top layer, right side, further
+					box_t(
+						v3(x0 + 0 + (dx / 2),   y0 + 0 + (dy / 2),  z0 + 0 + (dz / 2)),
+						v3(x0 + dx,             y0 + dy,            z0 + dz)
+					),
+				};
+
+
+				for(auto& box : boxes)
+				{
+					// get how many bots are in range of this box.
+					int bot_count = 0;
+					for(const auto& bot : bots)
+					{
+						// for each bot, get its min and max of each coord.
+						int64_t bx0 = bot.pos.x - bot.range;
+						int64_t by0 = bot.pos.y - bot.range;
+						int64_t bz0 = bot.pos.z - bot.range;
+
+						int64_t bx1 = bot.pos.x + bot.range;
+						int64_t by1 = bot.pos.y + bot.range;
+						int64_t bz1 = bot.pos.z + bot.range;
+
+						// check if either b0 or b1 are within range, but for all coords.
+						bool conx = (bx0 < box.p0.x && box.p0.x < bx1) || (bx0 < box.p1.x && box.p1.x < bx1);
+						bool cony = (by0 < box.p0.y && box.p0.y < by1) || (by0 < box.p1.y && box.p1.y < by1);
+						bool conz = (bz0 < box.p0.z && box.p0.z < bz1) || (bz0 < box.p1.z && box.p1.z < bz1);
+
+						if(conx && cony && conz)
+						{
+							bot_count++;
+						}
+					}
+
+					// tfm::printfln("count = %d", bot_count);
+					box.count = bot_count;
+				}
+
+
+				// insert the new boxes into the queue.
+				for(auto b : boxes)
+				{
+					tfm::printfln("box: (%d, %d, %d) - (%d, %d, %d)", b.p0.x, b.p0.y, b.p0.z, b.p1.x, b.p1.y, b.p1.z);
+					queue.push_back(b);
+				}
+
+				std::sort(queue.begin(), queue.end(), [](const box_t& a, const box_t& b) -> bool {
+					// sort by (1. largest bot count), then (2. smallest dist to origin)
+					if(b.count < a.count)
+					{
+						return true;
+					}
+					else if(b.count == a.count)
+					{
+						return dist(a.p0, v3()) < dist(b.p0, v3());
+					}
+					else
+					{
+						return false;
+					}
+				});
+			}
+
+
+			if(dx == 1 || dy == 1 || dz == 1)
+			{
+				// print and quit. we already sorted it
+				auto best = queue[0];
+				tfm::printfln("part 2: best spot = (%d, %d, %d), %d from origin, %d bots in range",
+					best.p0.x, best.p0.y, best.p0.z, dist(best.p0, v3()), best.count);
+
+				break;
+			}
+		}
+
+		#else
+
 		int64_t searchRadius = 1;
 
 		// we could just set it to be = maxdiff, but why not just stick with powers of 2 eh
 		while(searchRadius < maxdiff)
 			searchRadius *= 2;
+
 
 		int best_count = 0;
 		v3 best_pos = v3();
@@ -149,6 +306,8 @@ int main()
 
 		tfm::printfln("part 2: best spot = (%d, %d, %d), %d from origin, %d bots in range",
 			best_pos.x, best_pos.y, best_pos.z, dist(best_pos, v3()), best_count);
+
+		#endif
 	}
 }
 

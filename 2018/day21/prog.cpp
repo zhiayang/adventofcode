@@ -85,7 +85,7 @@ int main()
 
 	std::vector<instruction> program;
 	{
-		auto lines = util::readFileLines("input.txt");
+		auto lines = util::readFileLines("input2.txt");
 		for(size_t i = 0; i < lines.size(); i++)
 		{
 			auto line = lines[i];

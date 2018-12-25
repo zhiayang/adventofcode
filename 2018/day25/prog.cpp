@@ -64,7 +64,7 @@ void include(std::vector<v4>& constel, v4* pt)
 
 int main()
 {
-	std::vector<std::string> input = util::readFileLines("input.txt");
+	std::vector<std::string> input = util::readFileLines("input2.txt");
 	std::vector<v4> coords;
 
 	std::vector<std::vector<v4>> constellations;

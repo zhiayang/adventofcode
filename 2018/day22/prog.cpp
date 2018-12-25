@@ -264,11 +264,11 @@ state_t search(state_t start, node_t* target)
 #define MARGIN 50
 int main()
 {
-	cave_depth = 4848;
-	auto target = v2(15, 700);
+	// cave_depth = 4848;
+	// auto target = v2(15, 700);
 
-	// cave_depth = 510;
-	// auto target = v2(10, 10);
+	cave_depth = 5355;
+	auto target = v2(14, 796);
 
 	std::map<v2, int> map;
 	std::map<v2, node_t*> nodes;

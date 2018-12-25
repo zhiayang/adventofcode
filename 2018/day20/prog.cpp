@@ -134,7 +134,7 @@ std::vector<v2> search(const v2& from, const std::map<v2, std::set<v2>>& edges, 
 
 int main()
 {
-	std::string input = util::readFile("input.txt");
+	std::string input = util::readFile("input2.txt");
 	assert(input[0] == '^');
 	assert(input.back() == '$');
 

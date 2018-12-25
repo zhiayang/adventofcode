@@ -56,7 +56,7 @@ if ($prog_lang -eq "cpp") {
         "/NODEFAULTLIB:LIBCMT.lib"
     )
 
-    cl.exe "$prog_year\day$prog_day\prog.cpp" @compileFlags $optimisationFlags /link $linkerFlags
+    cl.exe "$prog_year\day$prog_day\prog.cpp" @compileFlags $optimisationFlags /F 8000000 /link $linkerFlags
     if ($LastExitCode -ne 0) {
         echo "compilation failed"
         exit
