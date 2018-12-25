@@ -96,7 +96,7 @@ void enqueue_back(std::deque<water_t>& waters, int x, int y)
 
 int main()
 {
-	auto lines = util::readFileLines("input.txt");
+	auto lines = util::readFileLines("input3.txt");
 
 	std::vector<std::pair<int, int>> clays;
 

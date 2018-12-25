@@ -192,7 +192,7 @@ bool simulate(std::vector<group_t*> groups, std::vector<group_t*> friends, std::
 		// ok.
 		group_t* target = self->attacking;
 		int dmg = get_potential_damage(self, target);
-		// tfm::printf("%s/%d attacks %s/%d: %d damage", self->faction, self->id, target->faction, target->id, dmg);
+		tfm::printf("%s/%d attacks %s/%d: %d damage", self->faction, self->id, target->faction, target->id, dmg);
 
 		int kills = 0;
 		while(true)
@@ -215,7 +215,7 @@ bool simulate(std::vector<group_t*> groups, std::vector<group_t*> friends, std::
 				break;
 		}
 
-		// tfm::printfln(", %d units killed", kills);
+		tfm::printfln(", %d units killed", kills);
 		totalkills += kills;
 	}
 
@@ -237,34 +237,34 @@ std::vector<group_t*> getstartstate()
 {
 	std::vector<group_t*> groups = {
 
-		new group_t("immune system", 1, 8808, 5616, { Atk::COLD     }, { Atk::RADIATION },  5,      Atk::BLUDGEON,  10),
-		new group_t("immune system", 2, 900, 13511, {               }, { Atk::RADIATION },  107,    Atk::RADIATION, 20),
-		new group_t("immune system", 3, 581, 10346, { Atk::SLASHING }, { Atk::RADIATION },  140,    Atk::FIRE,      14),
-		new group_t("immune system", 4, 57, 9991,   { Atk::SLASHING, Atk::RADIATION, Atk::FIRE }, { Atk::BLUDGEON }, 1690, Atk::FIRE, 4),
-		new group_t("immune system", 5, 4074, 6549, {               }, { Atk::FIRE },       15,     Atk::RADIATION, 2),
-		new group_t("immune system", 6, 929, 5404,  { Atk::BLUDGEON, Atk::RADIATION }, { }, 45,     Atk::FIRE, 16),
-		new group_t("immune system", 7, 2196, 3186, { Atk::RADIATION }, { Atk::FIRE }, 10, Atk::FIRE, 11),
-		new group_t("immune system", 8, 4420, 9691, { Atk::FIRE },{ Atk::RADIATION }, 21, Atk::FIRE, 7),
-		new group_t("immune system", 9, 3978, 2306, { }, { Atk::COLD, Atk::RADIATION }, 4, Atk::FIRE, 12),
-		new group_t("immune system", 10, 1284, 4487, { }, { Atk::RADIATION, Atk::BLUDGEON }, 32, Atk::SLASHING, 19),
+		// new group_t("immune system", 1, 8808, 5616, { Atk::COLD     }, { Atk::RADIATION },  5,      Atk::BLUDGEON,  10),
+		// new group_t("immune system", 2, 900, 13511, {               }, { Atk::RADIATION },  107,    Atk::RADIATION, 20),
+		// new group_t("immune system", 3, 581, 10346, { Atk::SLASHING }, { Atk::RADIATION },  140,    Atk::FIRE,      14),
+		// new group_t("immune system", 4, 57, 9991,   { Atk::SLASHING, Atk::RADIATION, Atk::FIRE }, { Atk::BLUDGEON }, 1690, Atk::FIRE, 4),
+		// new group_t("immune system", 5, 4074, 6549, {               }, { Atk::FIRE },       15,     Atk::RADIATION, 2),
+		// new group_t("immune system", 6, 929, 5404,  { Atk::BLUDGEON, Atk::RADIATION }, { }, 45,     Atk::FIRE, 16),
+		// new group_t("immune system", 7, 2196, 3186, { Atk::RADIATION }, { Atk::FIRE }, 10, Atk::FIRE, 11),
+		// new group_t("immune system", 8, 4420, 9691, { Atk::FIRE },{ Atk::RADIATION }, 21, Atk::FIRE, 7),
+		// new group_t("immune system", 9, 3978, 2306, { }, { Atk::COLD, Atk::RADIATION }, 4, Atk::FIRE, 12),
+		// new group_t("immune system", 10, 1284, 4487, { }, { Atk::RADIATION, Atk::BLUDGEON }, 32, Atk::SLASHING, 19),
 
 
-		new group_t("infection", 1, 4262, 23427, { Atk::FIRE }, {Atk::SLASHING }, 9, Atk::SLASHING, 8),
-		new group_t("infection", 2, 217, 9837, { }, {Atk::BLUDGEON}, 73, Atk::BLUDGEON, 1),
-		new group_t("infection", 3, 5497, 33578, { }, { Atk::RADIATION, Atk::COLD }, 11, Atk::SLASHING, 17),
-		new group_t("infection", 4, 866, 41604, { }, { Atk::COLD }, 76, Atk::RADIATION, 15),
-		new group_t("infection", 5, 1823, 19652, { }, { Atk::FIRE, Atk::COLD }, 20, Atk::SLASHING, 13),
-		new group_t("infection", 6, 2044, 23512, { }, { Atk::COLD }, 22, Atk::SLASHING, 9),
-		new group_t("infection", 7, 373, 40861,  {Atk::COLD },  { }, 215, Atk::SLASHING, 18),
-		new group_t("infection", 8, 5427, 43538, {Atk::RADIATION}, {Atk::BLUDGEON}, 15, Atk::SLASHING, 5),
-		new group_t("infection", 9, 3098, 19840, {}, {Atk::BLUDGEON, Atk::COLD}, 12, Atk::RADIATION, 3),
-		new group_t("infection", 10, 785, 14669, {}, {}, 30, Atk::FIRE, 6),
+		// new group_t("infection", 1, 4262, 23427, { Atk::FIRE }, {Atk::SLASHING }, 9, Atk::SLASHING, 8),
+		// new group_t("infection", 2, 217, 9837, { }, {Atk::BLUDGEON}, 73, Atk::BLUDGEON, 1),
+		// new group_t("infection", 3, 5497, 33578, { }, { Atk::RADIATION, Atk::COLD }, 11, Atk::SLASHING, 17),
+		// new group_t("infection", 4, 866, 41604, { }, { Atk::COLD }, 76, Atk::RADIATION, 15),
+		// new group_t("infection", 5, 1823, 19652, { }, { Atk::FIRE, Atk::COLD }, 20, Atk::SLASHING, 13),
+		// new group_t("infection", 6, 2044, 23512, { }, { Atk::COLD }, 22, Atk::SLASHING, 9),
+		// new group_t("infection", 7, 373, 40861,  {Atk::COLD },  { }, 215, Atk::SLASHING, 18),
+		// new group_t("infection", 8, 5427, 43538, {Atk::RADIATION}, {Atk::BLUDGEON}, 15, Atk::SLASHING, 5),
+		// new group_t("infection", 9, 3098, 19840, {}, {Atk::BLUDGEON, Atk::COLD}, 12, Atk::RADIATION, 3),
+		// new group_t("infection", 10, 785, 14669, {}, {}, 30, Atk::FIRE, 6),
 
-		// new group_t("immune system", 1, 17, 5390, { }, { Atk::RADIATION, Atk::BLUDGEON }, 4507, Atk::FIRE, 2),
-		// new group_t("immune system", 2, 989, 1274, { Atk::FIRE }, { Atk::BLUDGEON, Atk::SLASHING }, 25, Atk::SLASHING, 3),
+		new group_t("immune system", 1, 17, 5390, { }, { Atk::RADIATION, Atk::BLUDGEON }, 4507, Atk::FIRE, 2),
+		new group_t("immune system", 2, 989, 1274, { Atk::FIRE }, { Atk::BLUDGEON, Atk::SLASHING }, 25, Atk::SLASHING, 3),
 
-		// new group_t("infection", 1, 801, 4706, { }, { Atk::RADIATION }, 116, Atk::BLUDGEON, 1),
-		// new group_t("infection", 2, 4485, 2961, { Atk::RADIATION }, { Atk::FIRE, Atk::COLD }, 12, Atk::SLASHING, 4),
+		new group_t("infection", 1, 801, 4706, { }, { Atk::RADIATION }, 116, Atk::BLUDGEON, 1),
+		new group_t("infection", 2, 4485, 2961, { Atk::RADIATION }, { Atk::FIRE, Atk::COLD }, 12, Atk::SLASHING, 4),
 	};
 
 	return groups;
@@ -316,6 +316,7 @@ int main()
 		tfm::printfln("part 1: %s won with %d units left", winningteam.front()->faction, sum);
 	}
 
+	return 0;
 
 	// simple brute force.
 	{
