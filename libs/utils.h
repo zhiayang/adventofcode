@@ -6,6 +6,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <type_traits>
 #include <unordered_map>
 
 template <typename T>
@@ -34,49 +35,6 @@ std::vector<T> operator + (const std::vector<T>& a, const std::vector<T>& b)
 
 	return ret;
 }
-
-
-struct v2
-{
-	v2() : x(0), y(0) { }
-	v2(int x, int y) : x(x), y(y) { }
-
-	int x;
-	int y;
-};
-
-bool operator == (const v2& a, const v2& b) { return a.x == b.x && a.y == b.y; }
-bool operator < (const v2& a, const v2& b) { return a.x < b.x ? true : (b.x < a.x ? false : (a.y < b.y ? true : false)); }
-
-bool operator > (const v2& a, const v2& b) { return b < a; }
-bool operator != (const v2& a, const v2& b) { return !(a == b); }
-bool operator <= (const v2& a, const v2& b) { return !(b < a); }
-bool operator >= (const v2& a, const v2& b) { return !(a < b); }
-
-v2 operator + (const v2& a, const v2& b) { return v2(a.x + b.x, a.y + b.y); }
-v2 operator - (const v2& a, const v2& b) { return v2(a.x - b.x, a.y - b.y); }
-
-struct v3
-{
-	v3() : x(0), y(0), z(0) { }
-	v3(int x, int y, int z) : x(x), y(y), z(z) { }
-
-	int x;
-	int y;
-	int z;
-};
-
-bool operator == (const v3& a, const v3& b) { return a.x == b.x && a.y == b.y && a.z == b.z; }
-bool operator < (const v3& a, const v3& b) { return a.x < b.x ? true : (b.x < a.x ? false : (a.y < b.y ? true : (b.y < a.y ? false : (a.z < b.z ? true : false)))); }
-
-bool operator > (const v3& a, const v3& b) { return b < a; }
-bool operator != (const v3& a, const v3& b) { return !(a == b); }
-bool operator <= (const v3& a, const v3& b) { return !(b < a); }
-bool operator >= (const v3& a, const v3& b) { return !(a < b); }
-
-v3 operator + (const v3& a, const v3& b) { return v3(a.x + b.x, a.y + b.y, a.z + b.z); }
-v3 operator - (const v3& a, const v3& b) { return v3(a.x - b.x, a.y - b.y, a.z - b.z); }
-
 
 
 namespace util
@@ -119,8 +77,24 @@ namespace util
 		return x + vectorOf<T>(xs...);
 	}
 
+	template <typename T, typename Predicate, typename UnaryOp>
+	std::vector<T> iterateWhile(const T& seed, Predicate pred, UnaryOp fn)
+	{
+		T x = seed;
+		std::vector<T> ret;
 
-	template <typename T, typename U, class FoldOp>
+		while(pred(x))
+		{
+			ret.push_back(x);
+			x = fn(x);
+		}
+
+		return ret;
+	}
+
+
+
+	template <typename T, typename U, typename FoldOp>
 	U foldl(const U& i, const std::vector<T>& xs, FoldOp fn)
 	{
 		auto ret = i;
@@ -130,9 +104,15 @@ namespace util
 		return ret;
 	}
 
+	template <typename T>
+	T sum(const std::vector<T>& xs)
+	{
+		return foldl(T(), xs, [](const T& a, const T& b) -> T { return a + b; });
+	}
 
 
-	template <typename T, class UnaryOp, typename K = typename std::result_of<UnaryOp(T)>::type>
+
+	template <typename T, typename UnaryOp, typename K = typename std::result_of<UnaryOp(T)>::type>
 	std::vector<K> map(const std::vector<T>& input, UnaryOp fn)
 	{
 		std::vector<K> ret; ret.reserve(input.size());
@@ -142,14 +122,32 @@ namespace util
 		return ret;
 	}
 
-	template <typename T, class UnaryOp>
+	template <typename T, typename UnaryOp, typename K = typename std::result_of_t<UnaryOp(T)>::value_type>
+	std::vector<K> flatmap(const std::vector<T>& input, UnaryOp fn)
+	{
+		std::vector<K> ret; ret.reserve(input.size());
+		for(const auto& i : input)
+		{
+			auto x = fn(i);
+			ret.insert(ret.end(), x.begin(), x.end());
+		}
+
+		return ret;
+	}
+
+
+
+
+
+
+	template <typename T, typename UnaryOp>
 	void foreach(const std::vector<T>& input, UnaryOp fn)
 	{
 		for(const auto& i : input)
 			fn(i);
 	}
 
-	template <typename T, class UnaryOp>
+	template <typename T, typename UnaryOp>
 	void foreachIdx(const std::vector<T>& input, UnaryOp fn)
 	{
 		for(size_t i = 0; i < input.size(); i++)
@@ -157,8 +155,8 @@ namespace util
 	}
 
 
-	template <typename T, class UnaryOp, typename K = typename std::result_of<UnaryOp(T, size_t)>::type>
-	std::vector<K> mapidx(const std::vector<T>& input, UnaryOp fn)
+	template <typename T, typename UnaryOp, typename K = typename std::result_of<UnaryOp(T, size_t)>::type>
+	std::vector<K> mapIdx(const std::vector<T>& input, UnaryOp fn)
 	{
 		std::vector<K> ret; ret.reserve(input.size());
 		for(size_t i = 0; i < input.size(); i++)
@@ -169,7 +167,7 @@ namespace util
 
 
 
-	template <typename T, class UnaryOp, class Predicate, typename K = typename std::result_of<UnaryOp(T)>::type>
+	template <typename T, typename UnaryOp, typename Predicate, typename K = typename std::result_of<UnaryOp(T)>::type>
 	std::vector<K> filterMap(const std::vector<T>& input, Predicate cond, UnaryOp fn)
 	{
 		std::vector<K> ret;
@@ -182,7 +180,7 @@ namespace util
 		return ret;
 	}
 
-	template <typename T, class UnaryOp, class Predicate, typename K = typename std::result_of<UnaryOp(T)>::type>
+	template <typename T, typename UnaryOp, typename Predicate, typename K = typename std::result_of<UnaryOp(T)>::type>
 	std::vector<K> mapFilter(const std::vector<T>& input, UnaryOp fn, Predicate cond)
 	{
 		std::vector<K> ret;
@@ -195,7 +193,7 @@ namespace util
 		return ret;
 	}
 
-	template <typename T, class Predicate>
+	template <typename T, typename Predicate>
 	std::vector<T> filter(const std::vector<T>& input, Predicate cond)
 	{
 		std::vector<T> ret;
@@ -206,20 +204,7 @@ namespace util
 		return ret;
 	}
 
-	template <typename T, class Predicate>
-	std::vector<T> filterUntil(const std::vector<T>& input, Predicate cond)
-	{
-		std::vector<T> ret;
-		for(const auto& i : input)
-		{
-			if(cond(i)) ret.push_back(i);
-			else        break;
-		}
-
-		return ret;
-	}
-
-	template <typename T, class Predicate>
+	template <typename T, typename Predicate>
 	bool matchAny(const std::vector<T>& input, Predicate cond)
 	{
 		for(const auto& x : input)
@@ -228,13 +213,13 @@ namespace util
 		return false;
 	}
 
-	template <typename T, class Predicate>
+	template <typename T, typename Predicate>
 	bool matchNone(const std::vector<T>& input, Predicate cond)
 	{
 		return !matchAny(input, cond);
 	}
 
-	template <typename T, class Predicate>
+	template <typename T, typename Predicate>
 	bool matchAll(const std::vector<T>& input, Predicate cond)
 	{
 		for(const auto& x : input)
@@ -243,7 +228,7 @@ namespace util
 		return true;
 	}
 
-	template <typename T, class Predicate>
+	template <typename T, typename Predicate>
 	size_t indexOf(const std::vector<T>& input, Predicate cond)
 	{
 		for(size_t i = 0; i < input.size(); i++)
@@ -264,11 +249,46 @@ namespace util
 		return std::vector<T>(v.begin(), v.begin() + std::min(num, v.size()));
 	}
 
+	template <typename T, typename Predicate>
+	std::vector<T> takeWhile(const std::vector<T>& input, Predicate cond)
+	{
+		std::vector<T> ret;
+		for(const auto& i : input)
+		{
+			if(cond(i)) ret.push_back(i);
+			else        break;
+		}
+
+		return ret;
+	}
+
 	template <typename T>
 	std::vector<T> drop(const std::vector<T>& v, size_t num)
 	{
 		return std::vector<T>(v.begin() + std::min(num, v.size()), v.end());
 	}
+
+	template <typename T, typename Predicate>
+	std::vector<T> dropWhile(const std::vector<T>& input, Predicate cond)
+	{
+		bool flag = false;
+		std::vector<T> ret;
+
+		for(const auto& i : input)
+		{
+			if(!flag && cond(i))    continue;
+			else                    flag = true;
+
+			ret.push_back(i);
+		}
+
+		return ret;
+	}
+
+
+
+
+
 
 	template <typename T, typename U>
 	std::vector<std::pair<T, U>> cartesian(const std::vector<T>& a, const std::vector<U>& b)
@@ -292,7 +312,7 @@ namespace util
 		return ret;
 	}
 
-	inline std::string join(const std::vector<std::string>& list, const std::string& sep)
+	static inline std::string join(const std::vector<std::string>& list, const std::string& sep)
 	{
 		if(list.empty())            return "";
 		else if(list.size() == 1)   return list[0];
@@ -308,7 +328,7 @@ namespace util
 
 
 
-	inline std::string serialiseScope(const std::vector<std::string>& scope)
+	static inline std::string serialiseScope(const std::vector<std::string>& scope)
 	{
 		if(scope.empty()) return "";
 
@@ -319,12 +339,12 @@ namespace util
 		return ret;
 	}
 
-	inline std::string plural(const std::string& thing, size_t count)
+	static inline std::string plural(const std::string& thing, size_t count)
 	{
 		return thing + (count == 1 ? "" : "s");
 	}
 
-	template <typename T, class UnaryOp>
+	template <typename T, typename UnaryOp>
 	std::string listToString(const std::vector<T>& list, UnaryOp fn)
 	{
 		std::string ret;

@@ -16,7 +16,7 @@
 #include <functional>
 #include <unordered_set>
 
-#include "utils.h"
+#include "aoc.h"
 #include "tinyformat.h"
 
 #define DIM_X 50

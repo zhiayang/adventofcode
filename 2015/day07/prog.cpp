@@ -11,7 +11,7 @@
 #include <unordered_set>
 #include <unordered_map>
 
-#include "utils.h"
+#include "aoc.h"
 #include "tinyformat.h"
 
 

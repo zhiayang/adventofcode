@@ -2,48 +2,37 @@
 // Copyright (c) 2019, zhiayang
 // Licensed under the Apache License Version 2.0.
 
-#include <vector>
-#include <string>
-#include <fstream>
 #include <stdio.h>
+
+#include "aoc.h"
+
+static int calc_fuel(int x)
+{
+	return (x / 3) - 2;
+}
 
 int main()
 {
-	auto f = std::ifstream("input.txt");
-	std::vector<long> mods;
+	auto mods = util::map(util::readFileLines("input.txt"), [](const std::string& s) -> int {
+		return std::stol(s);
+	});
 
-	while(f)
 	{
-		char buf[64] = { 0 };
-		f.getline(buf, 64);
-
-		auto s = std::string(buf);
-		if(s.empty()) continue;
-		mods.push_back(std::stol(s));
+		auto sum = util::sum(util::map(mods, calc_fuel));
+		zpr::println("part 1: %d", sum);
 	}
 
-	long sum = 0;
-	for(long x : mods)
 	{
-		x /= 3;
-		x -= 2;
-		sum += x;
+		auto sum = util::sum(util::flatmap(mods, [](int mass) -> auto {
+			// start with the fuel needed for the mass. then, while the fuel is > 0,
+			// get the amount of fuel needed for that fuel (using that as the mass).
+			return util::iterateWhile(
+				/* seed: */ calc_fuel(mass),
+				/* pred: */ [](int fuel) -> bool { return fuel > 0; },
+				/* iter: */ calc_fuel
+			);
+		}));
+
+		zpr::println("part 2: %d", sum);
 	}
-
-	printf("part 1: %ld\n", sum);
-
-
-
-	sum = 0;
-	for(long x : mods)
-	{
-		long fuel = (x / 3) - 2;
-		while(fuel > 0)
-		{
-			sum += fuel;
-			fuel = (fuel / 3) - 2;
-		}
-	}
-
-	printf("part 2: %ld\n", sum);
 }

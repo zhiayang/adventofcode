@@ -15,7 +15,7 @@
 #include <functional>
 #include <unordered_set>
 
-#include "utils.h"
+#include "aoc.h"
 #include "tinyformat.h"
 
 struct node_t

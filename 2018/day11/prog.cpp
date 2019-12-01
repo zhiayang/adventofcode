@@ -17,7 +17,7 @@
 #include <functional>
 #include <unordered_set>
 
-#include "utils.h"
+#include "aoc.h"
 #include "tinyformat.h"
 
 int power(int grid, int x, int y)

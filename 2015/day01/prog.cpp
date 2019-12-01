@@ -4,7 +4,7 @@
 
 #include "assert.h"
 
-#include "utils.h"
+#include "aoc.h"
 #include "tinyformat.h"
 
 int main()
