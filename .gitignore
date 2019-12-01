@@ -5,3 +5,4 @@ prog.dYSM/*
 .vscode
 prog
 .clang_complete
+*.code-workspace
