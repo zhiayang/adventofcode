@@ -4,3 +4,4 @@ prog.dYSM/*
 *.obj
 .vscode
 prog
+.clang_complete

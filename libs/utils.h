@@ -1,16 +1,12 @@
 // utils.h
-// Copyright (c) 2017, zhiayang@gmail.com
+// Copyright (c) 2017, zhiayang
 // Licensed under the Apache License Version 2.0.
 
 #pragma once
 #include <map>
-#include <deque>
 #include <string>
 #include <vector>
-#include <fstream>
 #include <unordered_map>
-
-#include <stdio.h>
 
 template <typename T>
 std::vector<T> operator + (const std::vector<T>& vec, const T& elm)
@@ -34,10 +30,11 @@ template <typename T>
 std::vector<T> operator + (const std::vector<T>& a, const std::vector<T>& b)
 {
 	auto ret = a;
+	ret.insert(ret.end(), b.begin(), b.end());
 
-	ret.insert(ret.begin(), b.begin(), b.end());
 	return ret;
 }
+
 
 struct v2
 {
@@ -56,6 +53,8 @@ bool operator != (const v2& a, const v2& b) { return !(a == b); }
 bool operator <= (const v2& a, const v2& b) { return !(b < a); }
 bool operator >= (const v2& a, const v2& b) { return !(a < b); }
 
+v2 operator + (const v2& a, const v2& b) { return v2(a.x + b.x, a.y + b.y); }
+v2 operator - (const v2& a, const v2& b) { return v2(a.x - b.x, a.y - b.y); }
 
 struct v3
 {
@@ -76,15 +75,14 @@ bool operator <= (const v3& a, const v3& b) { return !(b < a); }
 bool operator >= (const v3& a, const v3& b) { return !(a < b); }
 
 v3 operator + (const v3& a, const v3& b) { return v3(a.x + b.x, a.y + b.y, a.z + b.z); }
-
-
+v3 operator - (const v3& a, const v3& b) { return v3(a.x - b.x, a.y - b.y, a.z - b.z); }
 
 
 
 namespace util
 {
 	template <typename T>
-	bool match(const T& first)
+	bool match(const T&)
 	{
 		return true;
 	}
@@ -101,40 +99,68 @@ namespace util
 		return (first == second) || match(first, comps...);
 	}
 
+	template <typename T, typename... Args>
+	std::vector<T> merge(const std::vector<T>& x, const Args&... xs)
+	{
+		return (x + ... + xs);
+	}
+
+
+
+	template <typename T>
+	std::vector<T> vectorOf(const T& x)
+	{
+		return std::vector<T>({ x });
+	}
+
+	template <typename T, typename... Args>
+	std::vector<T> vectorOf(const T& x, const Args&... xs)
+	{
+		return x + vectorOf<T>(xs...);
+	}
+
+
+	template <typename T, typename U, class FoldOp>
+	U foldl(const U& i, const std::vector<T>& xs, FoldOp fn)
+	{
+		auto ret = i;
+		for(const auto& x : xs)
+			ret = fn(ret, x);
+
+		return ret;
+	}
 
 
 
 	template <typename T, class UnaryOp, typename K = typename std::result_of<UnaryOp(T)>::type>
 	std::vector<K> map(const std::vector<T>& input, UnaryOp fn)
 	{
-		std::vector<K> ret;
-		for(auto i : input)
+		std::vector<K> ret; ret.reserve(input.size());
+		for(const auto& i : input)
 			ret.push_back(fn(i));
 
 		return ret;
 	}
 
-	template <typename T>
-	bool contains(const std::vector<T>& input, const T& elm)
+	template <typename T, class UnaryOp>
+	void foreach(const std::vector<T>& input, UnaryOp fn)
 	{
-		return std::find(input.begin(), input.end(), elm) != input.end();
+		for(const auto& i : input)
+			fn(i);
 	}
 
-
-	template <typename T, class Predicate>
-	std::vector<T> sort(const std::vector<T>& input, Predicate fn)
+	template <typename T, class UnaryOp>
+	void foreachIdx(const std::vector<T>& input, UnaryOp fn)
 	{
-		std::vector<T> ret = input;
-		std::sort(ret.begin(), ret.end(), fn);
-
-		return ret;
+		for(size_t i = 0; i < input.size(); i++)
+			fn(input[i], i);
 	}
 
 
 	template <typename T, class UnaryOp, typename K = typename std::result_of<UnaryOp(T, size_t)>::type>
 	std::vector<K> mapidx(const std::vector<T>& input, UnaryOp fn)
 	{
-		std::vector<K> ret;
+		std::vector<K> ret; ret.reserve(input.size());
 		for(size_t i = 0; i < input.size(); i++)
 			ret.push_back(fn(input[i], i));
 
@@ -147,7 +173,7 @@ namespace util
 	std::vector<K> filterMap(const std::vector<T>& input, Predicate cond, UnaryOp fn)
 	{
 		std::vector<K> ret;
-		for(auto i : input)
+		for(const auto& i : input)
 		{
 			if(cond(i))
 				ret.push_back(fn(i));
@@ -160,7 +186,7 @@ namespace util
 	std::vector<K> mapFilter(const std::vector<T>& input, UnaryOp fn, Predicate cond)
 	{
 		std::vector<K> ret;
-		for(auto i : input)
+		for(const auto& i : input)
 		{
 			auto k = fn(i);
 			if(cond(k)) ret.push_back(k);
@@ -194,6 +220,30 @@ namespace util
 	}
 
 	template <typename T, class Predicate>
+	bool matchAny(const std::vector<T>& input, Predicate cond)
+	{
+		for(const auto& x : input)
+			if(cond(x)) return true;
+
+		return false;
+	}
+
+	template <typename T, class Predicate>
+	bool matchNone(const std::vector<T>& input, Predicate cond)
+	{
+		return !matchAny(input, cond);
+	}
+
+	template <typename T, class Predicate>
+	bool matchAll(const std::vector<T>& input, Predicate cond)
+	{
+		for(const auto& x : input)
+			if(!cond(x)) return false;
+
+		return true;
+	}
+
+	template <typename T, class Predicate>
 	size_t indexOf(const std::vector<T>& input, Predicate cond)
 	{
 		for(size_t i = 0; i < input.size(); i++)
@@ -203,9 +253,43 @@ namespace util
 	}
 
 	template <typename T>
+	bool contains(const std::vector<T>& input, const T& x)
+	{
+		return std::find(input.begin(), input.end(), x) != input.end();
+	}
+
+	template <typename T>
 	std::vector<T> take(const std::vector<T>& v, size_t num)
 	{
-		return std::vector<T>(v.begin(), v.begin() + num);
+		return std::vector<T>(v.begin(), v.begin() + std::min(num, v.size()));
+	}
+
+	template <typename T>
+	std::vector<T> drop(const std::vector<T>& v, size_t num)
+	{
+		return std::vector<T>(v.begin() + std::min(num, v.size()), v.end());
+	}
+
+	template <typename T, typename U>
+	std::vector<std::pair<T, U>> cartesian(const std::vector<T>& a, const std::vector<U>& b)
+	{
+		std::vector<std::pair<T, U>> ret;
+
+		for(size_t i = 0; i < a.size(); i++)
+			for(size_t k = 0; k < b.size(); k++)
+				ret.push_back({ a[i], b[k] });
+
+		return ret;
+	}
+
+	template <typename T, typename U>
+	std::vector<std::pair<T, U>> zip(const std::vector<T>& a, const std::vector<U>& b)
+	{
+		std::vector<std::pair<T, U>> ret;
+		for(size_t i = 0; i < std::min(a.size(), b.size()); i++)
+			ret.push_back({ a[i], b[i] });
+
+		return ret;
 	}
 
 	inline std::string join(const std::vector<std::string>& list, const std::string& sep)
@@ -267,62 +351,19 @@ namespace util
 		auto ret = std::vector<std::pair<K, V>>(map.begin(), map.end());
 		return ret;
 	}
-
-
-	std::string readFile(const std::string& path)
-	{
-		FILE* f = fopen(path.c_str(), "r");
-		std::string input;
-		{
-			fseek(f, 0, SEEK_END);
-
-			long fsize = ftell(f);
-			fseek(f, 0, SEEK_SET);  //same as rewind(f);
-
-			char* s = new char[fsize + 1];
-			fread(s, fsize, 1, f);
-			fclose(f);
-			s[fsize] = 0;
-
-			input = std::string(s);
-			while(input.back() == '\n')
-				input.pop_back();
-		}
-
-		return input;
-	}
-
-	std::vector<std::string> readFileLines(const std::string& path)
-	{
-		std::vector<std::string> lines;
-		{
-			auto input = std::ifstream(path, std::ios::in);
-			for(std::string line; std::getline(input, line); )
-				lines.push_back(line);
-		}
-
-		return lines;
-	}
 }
 
 
 
-#define COLOUR_RESET			"\033[0m"
-#define COLOUR_BLACK			"\033[30m"			// Black
-#define COLOUR_RED				"\033[31m"			// Red
-#define COLOUR_GREEN			"\033[32m"			// Green
-#define COLOUR_YELLOW			"\033[33m"			// Yellow
-#define COLOUR_BLUE				"\033[34m"			// Blue
-#define COLOUR_MAGENTA			"\033[35m"			// Magenta
-#define COLOUR_CYAN				"\033[36m"			// Cyan
-#define COLOUR_WHITE			"\033[37m"			// White
-#define COLOUR_BLACK_BOLD		"\033[1m"			// Bold Black
-#define COLOUR_RED_BOLD			"\033[1m\033[31m"	// Bold Red
-#define COLOUR_GREEN_BOLD		"\033[1m\033[32m"	// Bold Green
-#define COLOUR_YELLOW_BOLD		"\033[1m\033[33m"	// Bold Yellow
-#define COLOUR_BLUE_BOLD		"\033[1m\033[34m"	// Bold Blue
-#define COLOUR_MAGENTA_BOLD		"\033[1m\033[35m"	// Bold Magenta
-#define COLOUR_CYAN_BOLD		"\033[1m\033[36m"	// Bold Cyan
-#define COLOUR_WHITE_BOLD		"\033[1m\033[37m"	// Bold White
-#define COLOUR_GREY_BOLD		"\033[30;1m"		// Bold Grey
+
+
+
+
+
+
+
+
+
+
+
 
