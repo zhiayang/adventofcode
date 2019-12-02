@@ -34,12 +34,12 @@ namespace util
 		return input;
 	}
 
-	static inline std::vector<std::string> readFileLines(const std::string& path, bool skipEmpty = true)
+	static inline std::vector<std::string> readFileLines(const std::string& path, char delim = '\n', bool skipEmpty = true)
 	{
 		std::vector<std::string> lines;
 		{
 			auto input = std::ifstream(path, std::ios::in);
-			for(std::string line; std::getline(input, line); )
+			for(std::string line; std::getline(input, line, delim); )
 			{
 				if(!skipEmpty || !line.empty())
 					lines.push_back(line);

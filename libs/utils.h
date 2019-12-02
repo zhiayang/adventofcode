@@ -77,6 +77,28 @@ namespace util
 		return x + vectorOf<T>(xs...);
 	}
 
+	template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+	std::vector<T> rangeOpen(const T& begin, const T& end, const T& step = 1)
+	{
+		std::vector<T> ret;
+		ret.reserve((end - begin + 1) / step);
+
+		T x = begin;
+		while(x != end)
+		{
+			ret.push_back(x);
+			x += step;
+		}
+
+		return ret;
+	}
+
+	template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+	std::vector<T> rangeClosed(const T& begin, const T& end, const T& step = 1)
+	{
+		return rangeOpen<T>(begin, end + 1, step);
+	}
+
 	template <typename T, typename Predicate, typename UnaryOp>
 	std::vector<T> iterateWhile(const T& seed, Predicate pred, UnaryOp fn)
 	{
@@ -145,6 +167,14 @@ namespace util
 	{
 		for(const auto& i : input)
 			fn(i);
+	}
+
+
+	template <typename T, typename UnaryOp>
+	void foreachWhile(const std::vector<T>& input, UnaryOp fn)
+	{
+		for(const auto& i : input)
+			if(!fn(i)) break;
 	}
 
 	template <typename T, typename UnaryOp>
