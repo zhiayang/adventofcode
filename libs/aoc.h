@@ -5,6 +5,7 @@
 #pragma once
 
 #include <fstream>
+#include <sstream>
 
 #include "zpr.h"
 #include "utils.h"
@@ -48,6 +49,18 @@ namespace util
 
 		return lines;
 	}
+
+	static inline std::vector<std::string> splitString(const std::string& s, char delim)
+	{
+		std::vector<std::string> lines;
+		{
+			auto input = std::stringstream(s);
+			for(std::string line; std::getline(input, line, delim); )
+				lines.push_back(line);
+		}
+
+		return lines;
+	}
 }
 
 struct v2
@@ -70,6 +83,9 @@ bool operator >= (const v2& a, const v2& b) { return !(a < b); }
 v2 operator + (const v2& a, const v2& b) { return v2(a.x + b.x, a.y + b.y); }
 v2 operator - (const v2& a, const v2& b) { return v2(a.x - b.x, a.y - b.y); }
 
+v2& operator += (v2& a, const v2& b) { a.x += b.x; a.y += b.y; return a; }
+v2& operator -= (v2& a, const v2& b) { a.x -= b.x; a.y -= b.y; return a; }
+
 struct v3
 {
 	v3() : x(0), y(0), z(0) { }
@@ -90,5 +106,9 @@ bool operator >= (const v3& a, const v3& b) { return !(a < b); }
 
 v3 operator + (const v3& a, const v3& b) { return v3(a.x + b.x, a.y + b.y, a.z + b.z); }
 v3 operator - (const v3& a, const v3& b) { return v3(a.x - b.x, a.y - b.y, a.z - b.z); }
+
+v3& operator += (v3& a, const v3& b) { a.x += b.x; a.y += b.y; a.z += b.z; return a; }
+v3& operator -= (v3& a, const v3& b) { a.x -= b.x; a.y -= b.y; a.z -= b.z; return a; }
+
 
 
