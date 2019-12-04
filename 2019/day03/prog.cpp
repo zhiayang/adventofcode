@@ -4,14 +4,29 @@
 
 #include "aoc.h"
 
+#include <chrono>
+struct timer
+{
+	using hrc = std::chrono::high_resolution_clock;
+
+	timer() : out(nullptr)              { start = hrc::now(); }
+	explicit timer(double* t) : out(t)  { start = hrc::now(); }
+	~timer()                            { if(out) *out = static_cast<double>((hrc::now() - start).count()) / 1000000.0; }
+	double measure()                    { return static_cast<double>((hrc::now() - start).count()) / 1000000.0; }
+
+	double* out = 0;
+	std::chrono::time_point<hrc> start;
+};
+
+
 static int magnitude(const v2& v)
 {
 	return std::abs(v.x) + std::abs(v.y);
 }
 
-static void simulate_step(std::map<v2, int>& path, v2& pos, int& steps, const std::string& step)
+static void simulate_step(std::map<v2, int>& path, v2& pos, int& steps, std::string_view step)
 {
-	int dist = std::stoi(step.substr(1));
+	int dist = std::stoi(std::string(step.substr(1)));
 
 	std::map<char, v2> dirs = {
 		{ 'U', v2(0, -1) },
@@ -30,7 +45,7 @@ static void simulate_step(std::map<v2, int>& path, v2& pos, int& steps, const st
 	}
 }
 
-static std::map<v2, int> simulate_wire(const std::vector<std::string>& steps)
+static std::map<v2, int> simulate_wire(const std::vector<std::string_view>& steps)
 {
 	std::map<v2, int> path;
 
@@ -40,9 +55,8 @@ static std::map<v2, int> simulate_wire(const std::vector<std::string>& steps)
 	// setup.
 	path[pos] = step_count;
 
-	util::foreach(steps, [&path, &pos, &step_count](const std::string& s) {
+	for(const auto& s : steps)
 		simulate_step(path, pos, step_count, s);
-	});
 
 	return path;
 }
@@ -51,6 +65,8 @@ static std::map<v2, int> simulate_wire(const std::vector<std::string>& steps)
 int main()
 {
 	auto lines = util::readFileLines("input.txt");
+
+	timer t;
 
 	auto path1 = simulate_wire(util::splitString(lines[0], ','));
 	auto path2 = simulate_wire(util::splitString(lines[1], ','));
@@ -73,8 +89,11 @@ int main()
 		}
 	}
 
+	auto time = t.measure();
+
 	zpr::println("part 1: %d", best_dist);
 	zpr::println("part 2: %d", best_step);
+	zpr::println("time taken: %.1f ms", time);
 }
 
 

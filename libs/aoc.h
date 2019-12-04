@@ -27,39 +27,69 @@ namespace util
 			fclose(f);
 			s[fsize] = 0;
 
-			input = std::string(s);
-			while(input.back() == '\n')
-				input.pop_back();
+			size_t n = fsize - 1;
+			while(n > 0 && s[n] == '\n')
+				n--;
+
+			input = std::string(s, n);
+			delete[] s;
 		}
 
 		return input;
 	}
 
-	static inline std::vector<std::string> readFileLines(const std::string& path, char delim = '\n', bool skipEmpty = true)
+	static inline std::string_view readFileRaw(const std::string& path)
 	{
-		std::vector<std::string> lines;
+		FILE* f = fopen(path.c_str(), "r");
+		std::string input;
 		{
-			auto input = std::ifstream(path, std::ios::in);
-			for(std::string line; std::getline(input, line, delim); )
+			fseek(f, 0, SEEK_END);
+
+			long fsize = ftell(f);
+			fseek(f, 0, SEEK_SET);  //same as rewind(f);
+
+			char* s = new char[fsize + 1];
+			fread(s, fsize, 1, f);
+			fclose(f);
+			s[fsize] = 0;
+
+			size_t n = fsize - 1;
+			while(n > 0 && s[n] == '\n')
+				n--;
+
+			return std::string_view(s, n + 1);
+		}
+	}
+
+	static inline std::vector<std::string_view> splitString(std::string_view view, char delim = '\n')
+	{
+		std::vector<std::string_view> ret;
+
+		while(true)
+		{
+			size_t ln = view.find(delim);
+
+			if(ln != std::string_view::npos)
 			{
-				if(!skipEmpty || !line.empty())
-					lines.push_back(line);
+				ret.emplace_back(view.data(), ln);
+				view.remove_prefix(ln + 1);
+			}
+			else
+			{
+				break;
 			}
 		}
 
-		return lines;
+		// account for the case when there's no trailing newline, and we still have some stuff stuck in the view.
+		if(!view.empty())
+			ret.emplace_back(view.data(), view.length());
+
+		return ret;
 	}
 
-	static inline std::vector<std::string> splitString(const std::string& s, char delim)
+	static inline std::vector<std::string_view> readFileLines(const std::string& path, char delim = '\n')
 	{
-		std::vector<std::string> lines;
-		{
-			auto input = std::stringstream(s);
-			for(std::string line; std::getline(input, line, delim); )
-				lines.push_back(line);
-		}
-
-		return lines;
+		return splitString(readFileRaw(path), delim);
 	}
 }
 
@@ -72,19 +102,19 @@ struct v2
 	int y;
 };
 
-bool operator == (const v2& a, const v2& b) { return a.x == b.x && a.y == b.y; }
-bool operator < (const v2& a, const v2& b) { return a.x < b.x ? true : (b.x < a.x ? false : (a.y < b.y ? true : false)); }
+inline bool operator == (const v2& a, const v2& b) { return a.x == b.x && a.y == b.y; }
+inline bool operator < (const v2& a, const v2& b) { return a.x < b.x ? true : (b.x < a.x ? false : (a.y < b.y ? true : false)); }
 
-bool operator > (const v2& a, const v2& b) { return b < a; }
-bool operator != (const v2& a, const v2& b) { return !(a == b); }
-bool operator <= (const v2& a, const v2& b) { return !(b < a); }
-bool operator >= (const v2& a, const v2& b) { return !(a < b); }
+inline bool operator > (const v2& a, const v2& b) { return b < a; }
+inline bool operator != (const v2& a, const v2& b) { return !(a == b); }
+inline bool operator <= (const v2& a, const v2& b) { return !(b < a); }
+inline bool operator >= (const v2& a, const v2& b) { return !(a < b); }
 
-v2 operator + (const v2& a, const v2& b) { return v2(a.x + b.x, a.y + b.y); }
-v2 operator - (const v2& a, const v2& b) { return v2(a.x - b.x, a.y - b.y); }
+inline v2 operator + (const v2& a, const v2& b) { return v2(a.x + b.x, a.y + b.y); }
+inline v2 operator - (const v2& a, const v2& b) { return v2(a.x - b.x, a.y - b.y); }
 
-v2& operator += (v2& a, const v2& b) { a.x += b.x; a.y += b.y; return a; }
-v2& operator -= (v2& a, const v2& b) { a.x -= b.x; a.y -= b.y; return a; }
+inline v2& operator += (v2& a, const v2& b) { a.x += b.x; a.y += b.y; return a; }
+inline v2& operator -= (v2& a, const v2& b) { a.x -= b.x; a.y -= b.y; return a; }
 
 struct v3
 {
@@ -96,19 +126,19 @@ struct v3
 	int z;
 };
 
-bool operator == (const v3& a, const v3& b) { return a.x == b.x && a.y == b.y && a.z == b.z; }
-bool operator < (const v3& a, const v3& b) { return a.x < b.x ? true : (b.x < a.x ? false : (a.y < b.y ? true : (b.y < a.y ? false : (a.z < b.z ? true : false)))); }
+inline bool operator == (const v3& a, const v3& b) { return a.x == b.x && a.y == b.y && a.z == b.z; }
+inline bool operator < (const v3& a, const v3& b) { return a.x < b.x ? true : (b.x < a.x ? false : (a.y < b.y ? true : (b.y < a.y ? false : (a.z < b.z ? true : false)))); }
 
-bool operator > (const v3& a, const v3& b) { return b < a; }
-bool operator != (const v3& a, const v3& b) { return !(a == b); }
-bool operator <= (const v3& a, const v3& b) { return !(b < a); }
-bool operator >= (const v3& a, const v3& b) { return !(a < b); }
+inline bool operator > (const v3& a, const v3& b) { return b < a; }
+inline bool operator != (const v3& a, const v3& b) { return !(a == b); }
+inline bool operator <= (const v3& a, const v3& b) { return !(b < a); }
+inline bool operator >= (const v3& a, const v3& b) { return !(a < b); }
 
-v3 operator + (const v3& a, const v3& b) { return v3(a.x + b.x, a.y + b.y, a.z + b.z); }
-v3 operator - (const v3& a, const v3& b) { return v3(a.x - b.x, a.y - b.y, a.z - b.z); }
+inline v3 operator + (const v3& a, const v3& b) { return v3(a.x + b.x, a.y + b.y, a.z + b.z); }
+inline v3 operator - (const v3& a, const v3& b) { return v3(a.x - b.x, a.y - b.y, a.z - b.z); }
 
-v3& operator += (v3& a, const v3& b) { a.x += b.x; a.y += b.y; a.z += b.z; return a; }
-v3& operator -= (v3& a, const v3& b) { a.x -= b.x; a.y -= b.y; a.z -= b.z; return a; }
+inline v3& operator += (v3& a, const v3& b) { a.x += b.x; a.y += b.y; a.z += b.z; return a; }
+inline v3& operator -= (v3& a, const v3& b) { a.x -= b.x; a.y -= b.y; a.z -= b.z; return a; }
 
 
 

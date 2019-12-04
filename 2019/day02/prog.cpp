@@ -34,8 +34,8 @@ static int run(std::map<int, int> x, int a, int b)
 
 int main()
 {
-	auto ops = util::map(util::readFileLines("input.txt", ','), [](const std::string& s) -> int {
-		return std::stoi(s);
+	auto ops = util::map(util::readFileLines("input.txt", ','), [](std::string_view s) -> int {
+		return std::stoi(std::string(s));
 	});
 
 	std::map<int, int> prog;

@@ -11,8 +11,8 @@ static int calc_fuel(int x)
 
 int main()
 {
-	auto mods = util::map(util::readFileLines("input.txt"), [](const std::string& s) -> int {
-		return std::stol(s);
+	auto mods = util::map(util::readFileLines("input.txt"), [](std::string_view s) -> int {
+		return std::stoi(std::string(s));
 	});
 
 	{
