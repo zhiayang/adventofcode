@@ -8,8 +8,8 @@
 struct State
 {
 	int ip = 0;
-	int io = 0;
 
+	std::deque<int> io;
 	std::map<int, int> memory;
 };
 
@@ -81,12 +81,15 @@ static void run_instr(State* st)
 
 		case 3: {   // in
 			len = 2;
-			set(get(st->ip + 1), st->io);
+			auto io = st->io.front();
+			st->io.pop_front();
+
+			set(get(st->ip + 1), io);
 		} break;
 
 		case 4: {   // out
 			len = 2;
-			st->io = get_operand(opcode, 0);
+			st->io.push_back(get_operand(opcode, 0));
 		} break;
 
 		case 5: {   // jmp-if-true
@@ -124,7 +127,7 @@ static void run_instr(State* st)
 
 static State run(State st, int input)
 {
-	st.io = input;
+	st.io.push_back(input);
 	while(st.memory[st.ip] != 99)
 		run_instr(&st);
 
@@ -144,12 +147,12 @@ int main()
 
 	{
 		auto res = run(st, 1);
-		zpr::println("part 1: %d", res.io);
+		zpr::println("part 1: %d", res.io.back());
 	}
 
 	{
 		auto res = run(st, 5);
-		zpr::println("part 2: %d", res.io);
+		zpr::println("part 2: %d", res.io.back());
 	}
 }
 

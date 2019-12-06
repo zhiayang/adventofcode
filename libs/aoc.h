@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <set>
+#include <queue>
 #include <fstream>
 #include <sstream>
 
@@ -90,6 +92,58 @@ namespace util
 	static inline std::vector<std::string_view> readFileLines(const std::string& path, char delim = '\n')
 	{
 		return splitString(readFileRaw(path), delim);
+	}
+
+	template <typename T, typename AdjacentFn, typename CostFn>
+	static inline std::vector<T> astarSearch(const T& source, const T& dest, AdjacentFn adjFn, CostFn costFn)
+	{
+		struct wrapper_t
+		{
+			wrapper_t(const T& v, int d) : path({ v }), d(d) { }
+			wrapper_t(const wrapper_t& w, const T& v, int d)
+			{
+				this->path = w.path;
+				this->path.push_back(v);
+
+				this->d = d;
+			}
+
+			std::vector<T> path;
+			int d = 0;
+
+			bool operator > (const wrapper_t& x) const { return this->d > x.d; }
+		};
+
+		auto queue = std::priority_queue<wrapper_t, std::vector<wrapper_t>, std::greater<wrapper_t>>();
+		queue.emplace(source, 0 + costFn(source, dest));
+
+		std::set<T> visited;
+		visited.insert(source);
+
+		while(!queue.empty())
+		{
+			auto path = queue.top();
+			queue.pop();
+
+			const auto& x = path.path.back();
+			auto adjs = adjFn(x);
+
+			for(const auto& n : adjs)
+			{
+				if(visited.find(n) == visited.end())
+				{
+					visited.insert(n);
+
+					auto newpath = wrapper_t(path, n, static_cast<int>(path.path.size()) + costFn(n, dest));
+					if(n == dest)
+						return newpath.path;
+
+					queue.push(newpath);
+				}
+			}
+		}
+
+		return { };
 	}
 }
 
