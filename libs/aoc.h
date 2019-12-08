@@ -8,6 +8,7 @@
 #include <queue>
 #include <fstream>
 #include <sstream>
+#include "assert.h"
 
 #include "zpr.h"
 #include "utils.h"
@@ -145,6 +146,138 @@ namespace util
 
 		return { };
 	}
+
+	template <typename T>
+	class queue : public std::deque<T>
+	{
+		using std::deque<T>::deque;
+
+	public:
+		T pop()
+		{
+			auto x = this->front();
+			this->pop_front();
+			return x;
+		}
+
+		void push(const T& x)
+		{
+			this->push_back(x);
+		}
+	};
+
+
+	template <typename T, size_t W, size_t H>
+	class grid
+	{
+		static_assert(W > 0 && H > 0, "invalid dimensions");
+
+	public:
+		grid()
+		{
+			this->array = new T[W * H];
+		}
+
+		~grid()
+		{
+			delete[] this->array;
+		}
+
+		grid(const grid& g)
+		{
+			this->array = new T[W * H];
+			for(size_t i = 0; i < W * H; i++)
+				this->array[i] = g.array[i];
+		}
+
+		grid& operator = (const grid& g)
+		{
+			if(this != &g)
+			{
+				delete[] this->array;
+
+				this->array = new T[W * H];
+				for(size_t i = 0; i < W * H; i++)
+					this->array[i] = g.array[i];
+			}
+
+			return *this;
+		}
+
+		const T* raw() const
+		{
+			return this->array;
+		}
+
+		T* raw()
+		{
+			return this->array;
+		}
+
+		T operator [] (size_t i) const
+		{
+			return this->array[i];
+		}
+
+		T& operator [] (size_t i)
+		{
+			return this->array[i];
+		}
+
+		size_t width() const
+		{
+			return W;
+		}
+
+		size_t height() const
+		{
+			return H;
+		}
+
+		T& operator() (size_t x, size_t y)
+		{
+			if(x >= W || y >= H)
+				assert(!"out of bounds");
+			return this->array[x + y * W];
+		}
+
+		T operator() (size_t x, size_t y) const
+		{
+			if(x >= W || y >= H)
+				assert(!"out of bounds");
+			return this->array[x + y * W];
+		}
+
+		// helpers
+		size_t count(const T& x) const
+		{
+			size_t cnt = 0;
+			for(size_t i = 0; i < W * H; i++)
+				if(this->array[i] == x) cnt++;
+
+			return cnt;
+		}
+
+		template <typename U, typename Fn>
+		grid<U, W, H> map(Fn f)
+		{
+			auto ret = grid<U, W, H>();
+			for(size_t x = 0; x < W; x++)
+			{
+				for(size_t y = 0; y < H; y++)
+				{
+					ret(x, y) = f(x, y, this->operator()(x, y));
+				}
+			}
+
+			return ret;
+		}
+
+
+
+	private:
+		T* array;
+	};
 }
 
 struct v2

@@ -6,6 +6,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <algorithm>
 #include <type_traits>
 #include <unordered_map>
 
@@ -320,6 +321,7 @@ namespace util
 
 
 
+	// special case for two vectors, because tuples are a major pain in the ass. pairs >>> tuples.
 	template <typename T, typename U>
 	std::vector<std::pair<T, U>> cartesian(const std::vector<T>& a, const std::vector<U>& b)
 	{
@@ -331,6 +333,55 @@ namespace util
 
 		return ret;
 	}
+
+	template <typename F>
+	inline void cross_imp(F f) { f(); }
+
+	template <typename F, typename H, typename... Ts>
+	inline void cross_imp(F f, const std::vector<H>& h, const std::vector<Ts>&... t)
+	{
+		for(const H& hs : h)
+			cross_imp([&](const Ts&... ts) { f(hs, ts...); }, t...);
+	}
+
+	template <typename... Ts>
+	std::vector<std::tuple<Ts...>> cartesian(const std::vector<Ts>&... in)
+	{
+		std::vector<std::tuple<Ts...>> res;
+
+		cross_imp([&](Ts const&... ts) {
+			res.emplace_back(ts...);
+		}, in...);
+
+		return res;
+	}
+
+
+
+	template <typename T>
+	std::vector<std::vector<T>> permutations(std::vector<T> xs)
+	{
+		auto fact = [](size_t x) -> size_t {
+			size_t ret = 1;
+			while(x > 1)
+				ret *= x, x -= 1;
+
+			return ret;
+		};
+
+		std::vector<std::vector<T>> ret;
+		ret.reserve(fact(xs.size()));
+
+		do {
+			ret.push_back(xs);
+		} while(std::next_permutation(xs.begin(), xs.end()));
+
+		return ret;
+	}
+
+
+
+
 
 	template <typename T, typename U>
 	std::vector<std::pair<T, U>> zip(const std::vector<T>& a, const std::vector<U>& b)
