@@ -418,7 +418,18 @@ namespace zpr
 					{ format_args::LENGTH_PTRDIFF_T,    "t"    }
 				};
 
-				auto fmt_str = ("%" + len_specs[args.length] + spec);
+				auto len_spec = len_specs[args.length];
+				if(std::is_same_v<int64_t, std::remove_cv_t<std::decay_t<T>>>)
+					len_spec = "ll";
+
+				if(std::is_same_v<size_t, std::remove_cv_t<std::decay_t<T>>>)
+					len_spec = "z";
+
+				if(std::is_same_v<uint64_t, std::remove_cv_t<std::decay_t<T>>>)
+					len_spec = "ll";
+
+
+				auto fmt_str = ("%" + len_spec + spec);
 
 				digits_len = snprintf(&buf[0], 64, fmt_str.c_str(), x);
 
