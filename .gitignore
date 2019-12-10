@@ -2,6 +2,8 @@
 prog.dYSM/*
 *.exe
 *.obj
+*.o
+*.hi
 .vscode
 prog
 .clang_complete

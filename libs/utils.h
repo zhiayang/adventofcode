@@ -318,8 +318,24 @@ namespace util
 
 
 
+	template <typename T, typename GroupFn, typename R = std::result_of_t<GroupFn(T)>>
+	std::map<R, std::vector<T>> groupBy(const std::vector<T>& xs, GroupFn gfn)
+	{
+		std::map<R, std::vector<T>> groups;
+		for(const T& x : xs)
+			groups[gfn(x)].push_back(x);
 
+		return groups;
+	}
 
+	// special case for one to many. so cartesian(1, { 1, 2, 3, 4 }) gives (1, 1), (1, 2), (1, 3), ...
+	template <typename T, typename U>
+	std::vector<std::pair<T, U>> cartesian(const T& a, const std::vector<U>& xs)
+	{
+		return map(xs, [&a](const U& x) -> auto {
+			return std::make_pair(a, x);
+		});
+	}
 
 	// special case for two vectors, because tuples are a major pain in the ass. pairs >>> tuples.
 	template <typename T, typename U>

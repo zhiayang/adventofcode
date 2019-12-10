@@ -13,6 +13,7 @@
 #include "zpr.h"
 #include "utils.h"
 
+
 namespace util
 {
 	static inline std::string readFile(const std::string& path)
@@ -30,11 +31,11 @@ namespace util
 			fclose(f);
 			s[fsize] = 0;
 
-			size_t n = fsize - 1;
-			while(n > 0 && s[n] == '\n')
-				n--;
+			size_t n = fsize;
+			while(n > 0 && s[--n] == '\n')
+				;
 
-			input = std::string(s, n);
+			input = std::string(s, n + 1);
 			delete[] s;
 		}
 
@@ -326,6 +327,49 @@ inline v3 operator - (const v3& a, const v3& b) { return v3(a.x - b.x, a.y - b.y
 
 inline v3& operator += (v3& a, const v3& b) { a.x += b.x; a.y += b.y; a.z += b.z; return a; }
 inline v3& operator -= (v3& a, const v3& b) { a.x -= b.x; a.y -= b.y; a.z -= b.z; return a; }
+
+namespace zpr
+{
+	template <>
+	struct print_formatter<v2>
+	{
+		std::string print(const v2& v, const format_args& args)
+		{
+			return zpr::sprint("(%d, %d)", v.x, v.y);
+		}
+	};
+
+	template <>
+	struct print_formatter<v3>
+	{
+		std::string print(const v3& v, const format_args& args)
+		{
+			return zpr::sprint("(%d, %d, %d)", v.x, v.y, v.z);
+		}
+	};
+}
+
+namespace util
+{
+	double distance(const v2& a, const v2& b)
+	{
+		return std::sqrt( (b.x - a.x) * (b.x - a.x)
+						+ (b.y - a.y) * (b.y - a.y));
+	}
+
+	double manhattan_dist(const v2& a, const v2& b)
+	{
+		return std::abs(b.x - a.x) + std::abs(b.y - a.y);
+	}
+}
+
+
+
+
+
+
+
+
 
 
 
