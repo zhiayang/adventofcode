@@ -4,15 +4,12 @@
 
 {-# LANGUAGE MultiWayIf #-}
 {-# LANGUAGE UnicodeSyntax #-}
-{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE BlockArguments #-}
-{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 
 import Data.Int
-import Text.Read
-import Debug.Trace
+import Data.Maybe
 import qualified Data.Map.Strict as Map
 
 infixr 9 ∘
@@ -37,7 +34,7 @@ data IntCodeVM = IntCodeVM {
 
 split :: (Eq a) => a -> [a] -> [[a]]
 split _ []      = []
-split delim xs  = front : (split delim rest)
+split delim xs  = front : split delim rest
     where (front, rest) = break (== delim) (dropWhile (== delim) xs)
 
 
@@ -52,7 +49,7 @@ readInput filename
 
 -- we'll just do a full intcode interpreter here.
 setupMemory :: [Int] -> Map.Map Int64 Int64
-setupMemory = (Map.fromAscList) ∘ (zip [0 .. ]) ∘ (map fromIntegral)
+setupMemory = Map.fromAscList ∘ zip [0 .. ] ∘ map fromIntegral
 
 makeVM :: [Int] -> IntCodeVM
 makeVM mem = IntCodeVM {
@@ -75,6 +72,7 @@ getOperandMode :: Int64 -> Int64 -> Int64
 getOperandMode 0 = (`div` 100)   ∘ (`rem` 1000)
 getOperandMode 1 = (`div` 1000)  ∘ (`rem` 10000)
 getOperandMode 2 = (`div` 10000) ∘ (`rem` 100000)
+getOperandMode _ = undefined
 
 
 -- params: addr, vm
@@ -82,7 +80,7 @@ getOperandMode 2 = (`div` 10000) ∘ (`rem` 100000)
 getMem :: Int64 -> IntCodeVM -> Int64
 getMem addr
     -- returns 0 for uninitialised memory.
-    = maybe 0 id ∘ Map.lookup addr ∘ memory
+    = fromMaybe 0 ∘ Map.lookup addr ∘ memory
 
 
 -- params: addr, value, vm
@@ -90,7 +88,7 @@ getMem addr
 setMem :: Int64 -> Int64 -> IntCodeVM -> IntCodeVM
 setMem addr value vm
     = vm { memory = Map.insert addr value mem }
-    where mem = (memory vm)
+    where mem = memory vm
 
 
 -- params: opcode, operand num, vm
@@ -99,7 +97,8 @@ getOperand :: Int64 -> Int64 -> IntCodeVM -> Int64
 getOperand op i vm
     | mode == 0     = getMem (getMem (ip vm + 1 + i) vm) vm
     | mode == 1     = getMem (ip vm + 1 + i) vm
-    | mode == 2     = getMem ((segment vm) + getMem (ip vm + 1 + i) vm) vm
+    | mode == 2     = getMem (segment vm + getMem (ip vm + 1 + i) vm) vm
+    | otherwise     = undefined
     where
         mode = getOperandMode i op
 
@@ -111,6 +110,7 @@ setResult vm op i value
     = case mode of
         0 -> setMem addr value vm
         2 -> setMem (addr + segment vm) value vm
+        _ -> undefined
     where
         mode = getOperandMode i op
         addr = getMem (ip vm + 1 + i) vm
@@ -120,7 +120,7 @@ setResult vm op i value
 -- return: new vm
 incrIp :: Int64 -> IntCodeVM -> IntCodeVM
 incrIp op vm
-    = vm { ip = (ip vm) + (getInstrLen op) }
+    = vm { ip = ip vm + getInstrLen op }
 
 -- params: vm, opcode
 -- return: new vm
@@ -137,6 +137,7 @@ runInstr op vm
         8  -> undefined
         9  -> undefined
         99 -> vm { stopped = True }
+        _  -> undefined
     where
         getOp = getOperand op
 
@@ -170,6 +171,7 @@ part2 :: IntCodeVM -> Int64
 part2 vm
     = fst $ head $ filter ((== 19690720) ∘ snd) [ (100 * n + v, part2' vm n v) | (n, v) <- cartesian [0..99] [0..99] ]
 
+main :: IO ()
 main = do
     mem <- readInput "input.txt"
     let vm  = makeVM mem in
