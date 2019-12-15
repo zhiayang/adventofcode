@@ -19,6 +19,8 @@ namespace util
 	static inline std::string readFile(const std::string& path)
 	{
 		FILE* f = fopen(path.c_str(), "r");
+		if(!f) fprintf(stderr, "failed to open file '%s'\n", path.c_str()), abort();
+
 		std::string input;
 		{
 			fseek(f, 0, SEEK_END);
@@ -45,6 +47,8 @@ namespace util
 	static inline std::string_view readFileRaw(const std::string& path)
 	{
 		FILE* f = fopen(path.c_str(), "r");
+		if(!f) fprintf(stderr, "failed to open file '%s'\n", path.c_str()), abort();
+
 		std::string input;
 		{
 			fseek(f, 0, SEEK_END);
@@ -63,6 +67,26 @@ namespace util
 
 			return std::string_view(s, n + 1);
 		}
+	}
+
+
+	static inline std::string_view trim(std::string_view s)
+	{
+		auto ltrim = [](std::string_view& s) -> std::string_view& {
+			auto i = s.find_first_not_of(" \t\n\r\f\v");
+			if(i != -1) s.remove_prefix(i);
+
+			return s;
+		};
+
+		auto rtrim = [](std::string_view& s) -> std::string_view& {
+			auto i = s.find_last_not_of(" \t\n\r\f\v");
+			if(i != -1) s = s.substr(0, i + 1);
+
+			return s;
+		};
+
+		return ltrim(rtrim(s));
 	}
 
 	static inline std::vector<std::string_view> splitString(std::string_view view, char delim = '\n')
@@ -164,6 +188,12 @@ namespace util
 		void push(const T& x)
 		{
 			this->push_back(x);
+		}
+
+		void push_all(const std::vector<T>& xs)
+		{
+			for(const auto& x : xs)
+				this->push(x);
 		}
 	};
 
