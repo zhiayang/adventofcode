@@ -6,6 +6,7 @@
 
 #include <set>
 #include <queue>
+#include <chrono>
 #include <fstream>
 #include <sstream>
 #include "assert.h"
@@ -16,6 +17,25 @@
 
 namespace util
 {
+	struct timer
+	{
+		using hrc = std::chrono::high_resolution_clock;
+
+		timer() : out(nullptr)              { start = hrc::now(); }
+		explicit timer(double* t) : out(t)  { start = hrc::now(); }
+		~timer()
+		{
+			if(out) *out = std::chrono::duration<double, std::micro>(hrc::now() - start).count();
+		}
+		double measure()
+		{
+			return std::chrono::duration<double, std::micro>(hrc::now() - start).count();
+		}
+
+		double* out = 0;
+		std::chrono::time_point<hrc> start;
+	};
+
 	static inline std::string readFile(const std::string& path)
 	{
 		FILE* f = fopen(path.c_str(), "r");
