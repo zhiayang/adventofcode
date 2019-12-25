@@ -5,8 +5,6 @@
 #include "aoc.h"
 #include "assert.h"
 
-#include <thread>
-
 struct State
 {
 	int64_t ip = 0;
@@ -14,7 +12,7 @@ struct State
 
 	util::queue<int64_t> in;
 	util::queue<int64_t> out;
-	std::map<int64_t, int64_t> memory;
+	std::unordered_map<int64_t, int64_t> memory;
 };
 
 static constexpr int HALT_STOPPED = 1;
@@ -137,72 +135,16 @@ static int run_instr(State* st)
 
 static int run(State* st)
 {
-	auto x = 0;
+	auto x = run_instr(st);
 	while(x == 0)
-		x = run_instr(st);
-
-	return x;
-}
-
-struct Game
-{
-	int score = 0;
-	int blocks = 0;
-
-	v2 paddle_pos;
-
-	v2 ball_pos;
-	v2 prev_ball_pos;
-};
-
-static int run_game(State* st, Game* game, std::map<v2, int>& map, v2* tlCorner, v2* brCorner)
-{
-	int ret = run(st);
-
-	while(st->out.size() > 0)
 	{
-		int a = st->out.pop();
-		int b = st->out.pop();
-		int c = st->out.pop();
+		if(st->out.size() >= 3)
+			return x;
 
-		auto pos = v2(a, b);
-
-		if(a == -1 && b == 0)
-		{
-			game->score = c;
-		}
-		else
-		{
-			if(c == 0)
-			{
-				if(map[pos] == 2)
-					game->blocks--;
-			}
-			else if(c == 2)
-			{
-				if(map[pos] != c)
-					game->blocks++;
-			}
-			else if(c == 3)
-			{
-				game->paddle_pos = pos;
-			}
-			else if(c == 4)
-			{
-				game->prev_ball_pos = game->ball_pos;
-				game->ball_pos = pos;
-			}
-
-			map[pos] = c;
-			tlCorner->x = std::min(pos.x, tlCorner->x);
-			tlCorner->y = std::min(pos.y, tlCorner->y);
-
-			brCorner->x = std::max(pos.x, brCorner->x);
-			brCorner->y = std::max(pos.y, brCorner->y);
-		}
+		x = run_instr(st);
 	}
 
-	return ret;
+	return x;
 }
 
 
@@ -212,73 +154,127 @@ int main()
 		return std::stoll(std::string(s));
 	});
 
-	State st;
-	util::foreachIdx(ops, [&st](int64_t s, size_t i) {
-		st.memory[i] = s;
-	});
-
-	st.memory[0] = 2;
-
-	v2 tlCorner;
-	v2 brCorner;
-
-	Game game;
-	std::map<v2, int> map;
-	int state = run_game(&st, &game, map, &tlCorner, &brCorner);
-
-	int part1 = game.blocks;
-
-	while(state != 0 && game.blocks > 0)
+	struct Nic
 	{
-		int input = 0;
-		if(game.ball_pos.x < game.paddle_pos.x)
-			input = -1;
+		State st;
+		int addr;
 
-		if(game.ball_pos.x > game.paddle_pos.x)
-			input = 1;
+		bool passed = false;
+		bool didPass = false;
+		util::queue<std::pair<int64_t, int64_t>> packets;
+	};
 
-		st.in.push(input);
-		state = run_game(&st, &game, map, &tlCorner, &brCorner);
+	struct Nat
+	{
+		bool first = true;
+		int64_t py;
 
+		int64_t x;
+		int64_t y;
+	};
 
-		#if LIVE_UPDATE
-		{
-			for(int y = tlCorner.y; y <= brCorner.y; y++)
-			{
-				for(int x = tlCorner.x; x <= brCorner.x; x++)
-				{
-					auto pos = v2(x, y);
-					zpr::print("%c", map[pos] == 0
-										? ' '
-									: map[pos] == 1
-										? '@'
-									: map[pos] == 2
-										? '#'
-									: map[pos] == 3
-										? '='
-									: map[pos] == 4
-										? '*'
-										: '?');
-				}
-				zpr::print("\n");
-			}
+	Nat nat;
+	Nic nics[50];
+	for(size_t n = 0; n < 50; n++)
+	{
+		util::foreachIdx(ops, [&nics, &n](int64_t s, size_t i) {
+			nics[n].st.memory[i] = s;
+		});
 
-			zpr::println("score: %d   |   %d blocks left     ", game.score, game.blocks);
-
-			std::this_thread::sleep_for(std::chrono::duration<int, std::milli>(10));
-			zpr::print("\x1b[3J\x1b[1;1H");
-		}
-		#endif
+		nics[n].st.in.push(n);
+		nics[n].addr = n;
 	}
 
-	zpr::println("part 1: %d", part1);
-	zpr::println("part 2: %d", game.score);
+	bool didp1 = false;
+	bool idles[50] = { false };
+
+	size_t n = 0;
+	while(true)
+	{
+		auto nic = &nics[n];
+		auto r = run(&nic->st);
+		if(r == HALT_BLOCKED)
+		{
+			// zpr::println("%d blocked (%s)", n, nic->passed);
+			if(!nic->packets.empty())
+			{
+				auto [ x, y ] = nic->packets.pop();
+				nic->st.in.push(x);
+				nic->st.in.push(y);
+			}
+			else
+			{
+				if(nic->passed && !nic->didPass)
+				{
+					nic->st.in.push(-1);
+					nic->passed = false;
+					nic->didPass = true;
+				}
+				else if(nic->passed && nic->didPass)
+				{
+					idles[n] = true;
+				}
+				else
+				{
+					nic->passed = true;
+				}
+			}
+		}
+		else if(nic->st.out.size() >= 3)
+		{
+			auto addr = nic->st.out.pop();
+			auto x = nic->st.out.pop();
+			auto y = nic->st.out.pop();
+
+			// zpr::println("%d -> %d (%d, %d)", n, addr, x, y);
+
+			if(addr < 50)
+			{
+				nics[addr].packets.push({ x, y });
+			}
+			else if(addr == 255)
+			{
+				if(!didp1)
+				{
+					zpr::println("part 1: %d", y);
+					didp1 = true;
+				}
+
+				nat.x = x;
+				nat.y = y;
+			}
+		}
+
+		++n %= 50;
+
+		{
+			bool allidle = true;
+			for(int k = 0; k < 50; k++)
+				allidle = allidle && idles[k];
+
+			if(allidle)
+			{
+				nics[0].packets.push({ nat.x, nat.y });
+
+				if(didp1 && !nat.first && nat.y == nat.py)
+				{
+					zpr::println("part 2: %d", nat.py);
+					break;
+				}
+
+				nat.first = false;
+				nat.py = nat.y;
+
+				for(int k = 0; k < 50; k++)
+				{
+					idles[k] = false;
+					nics[k].passed = false;
+					nics[k].didPass = false;
+				}
+			}
+		}
+	}
 }
-
-
-
-
-
 
 
 

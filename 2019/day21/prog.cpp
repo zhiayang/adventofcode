@@ -5,8 +5,6 @@
 #include "aoc.h"
 #include "assert.h"
 
-#include <thread>
-
 struct State
 {
 	int64_t ip = 0;
@@ -14,7 +12,7 @@ struct State
 
 	util::queue<int64_t> in;
 	util::queue<int64_t> out;
-	std::map<int64_t, int64_t> memory;
+	std::unordered_map<int64_t, int64_t> memory;
 };
 
 static constexpr int HALT_STOPPED = 1;
@@ -135,70 +133,33 @@ static int run_instr(State* st)
 	return 0;
 }
 
-static int run(State* st)
+static std::map<v2, int> run(State* st)
 {
-	auto x = 0;
-	while(x == 0)
+	auto x = run_instr(st);
+	while(x != HALT_STOPPED)
 		x = run_instr(st);
 
-	return x;
-}
-
-struct Game
-{
-	int score = 0;
-	int blocks = 0;
-
-	v2 paddle_pos;
-
-	v2 ball_pos;
-	v2 prev_ball_pos;
-};
-
-static int run_game(State* st, Game* game, std::map<v2, int>& map, v2* tlCorner, v2* brCorner)
-{
-	int ret = run(st);
-
-	while(st->out.size() > 0)
+	std::map<v2, int> ret;
+	v2 pos;
+	while(!st->out.empty())
 	{
-		int a = st->out.pop();
-		int b = st->out.pop();
-		int c = st->out.pop();
-
-		auto pos = v2(a, b);
-
-		if(a == -1 && b == 0)
+		if(st->out.front() < 127)
 		{
-			game->score = c;
+			auto c = st->out.pop();
+			if(c == 10)
+			{
+				pos.x = 0;
+				pos.y++;
+			}
+			else
+			{
+				ret[pos] = c;
+				pos += v2(1, 0);
+			}
 		}
 		else
 		{
-			if(c == 0)
-			{
-				if(map[pos] == 2)
-					game->blocks--;
-			}
-			else if(c == 2)
-			{
-				if(map[pos] != c)
-					game->blocks++;
-			}
-			else if(c == 3)
-			{
-				game->paddle_pos = pos;
-			}
-			else if(c == 4)
-			{
-				game->prev_ball_pos = game->ball_pos;
-				game->ball_pos = pos;
-			}
-
-			map[pos] = c;
-			tlCorner->x = std::min(pos.x, tlCorner->x);
-			tlCorner->y = std::min(pos.y, tlCorner->y);
-
-			brCorner->x = std::max(pos.x, brCorner->x);
-			brCorner->y = std::max(pos.y, brCorner->y);
+			break;
 		}
 	}
 
@@ -208,6 +169,7 @@ static int run_game(State* st, Game* game, std::map<v2, int>& map, v2* tlCorner,
 
 int main()
 {
+
 	auto ops = util::map(util::readFileLines("input.txt", ','), [](std::string_view s) -> int64_t {
 		return std::stoll(std::string(s));
 	});
@@ -217,70 +179,60 @@ int main()
 		st.memory[i] = s;
 	});
 
-	st.memory[0] = 2;
+	auto push_str = [](State* st, const std::string& s) {
+		for(char c : s)
+			st->in.push(c);
+	};
 
-	v2 tlCorner;
-	v2 brCorner;
 
-	Game game;
-	std::map<v2, int> map;
-	int state = run_game(&st, &game, map, &tlCorner, &brCorner);
 
-	int part1 = game.blocks;
-
-	while(state != 0 && game.blocks > 0)
 	{
-		int input = 0;
-		if(game.ball_pos.x < game.paddle_pos.x)
-			input = -1;
+		auto copy = st;
 
-		if(game.ball_pos.x > game.paddle_pos.x)
-			input = 1;
+		// this is dumb.
 
-		st.in.push(input);
-		state = run_game(&st, &game, map, &tlCorner, &brCorner);
+		std::vector<std::string> instrs = {
+			"NOT C T",
+			"AND D T",
+			"NOT A J",
+			"OR T J",
+			"WALK",
+		};
 
+		for(const auto& s : instrs)
+			push_str(&copy, s + "\n");
 
-		#if LIVE_UPDATE
-		{
-			for(int y = tlCorner.y; y <= brCorner.y; y++)
-			{
-				for(int x = tlCorner.x; x <= brCorner.x; x++)
-				{
-					auto pos = v2(x, y);
-					zpr::print("%c", map[pos] == 0
-										? ' '
-									: map[pos] == 1
-										? '@'
-									: map[pos] == 2
-										? '#'
-									: map[pos] == 3
-										? '='
-									: map[pos] == 4
-										? '*'
-										: '?');
-				}
-				zpr::print("\n");
-			}
-
-			zpr::println("score: %d   |   %d blocks left     ", game.score, game.blocks);
-
-			std::this_thread::sleep_for(std::chrono::duration<int, std::milli>(10));
-			zpr::print("\x1b[3J\x1b[1;1H");
-		}
-		#endif
+		auto map = run(&copy);
+		zpr::println("part 1: %d", copy.out.pop());
 	}
 
-	zpr::println("part 1: %d", part1);
-	zpr::println("part 2: %d", game.score);
+
+
+	{
+		auto copy = st;
+
+		// this is dumb x2.
+
+		std::vector<std::string> instrs = {
+			"NOT H T",
+			"OR  C T",
+			"AND A T",
+			"AND B T",
+			"NOT T T",
+			"AND D T",
+			"OR  T J",
+			"RUN",
+		};
+
+		for(const auto& s : instrs)
+			push_str(&copy, s + "\n");
+
+		auto map = run(&copy);
+
+
+		zpr::println("part 2: %d", copy.out.pop());
+	}
 }
-
-
-
-
-
-
-
 
 
 

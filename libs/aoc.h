@@ -9,7 +9,7 @@
 #include <chrono>
 #include <fstream>
 #include <sstream>
-#include "assert.h"
+#include <assert.h>
 
 #include "zpr.h"
 #include "utils.h"
@@ -218,6 +218,109 @@ namespace util
 	};
 
 
+}
+
+struct v2
+{
+	v2() : x(0), y(0) { }
+	v2(int x, int y) : x(x), y(y) { }
+
+	v2 up() const       { return v2(x, y - 1); }
+	v2 down() const     { return v2(x, y + 1); }
+	v2 left() const     { return v2(x - 1, y); }
+	v2 right() const    { return v2(x + 1, y); }
+
+	int x;
+	int y;
+};
+
+inline bool operator == (const v2& a, const v2& b) { return a.x == b.x && a.y == b.y; }
+inline bool operator < (const v2& a, const v2& b) { return a.x < b.x ? true : (b.x < a.x ? false : (a.y < b.y ? true : false)); }
+
+inline bool operator > (const v2& a, const v2& b) { return b < a; }
+inline bool operator != (const v2& a, const v2& b) { return !(a == b); }
+inline bool operator <= (const v2& a, const v2& b) { return !(b < a); }
+inline bool operator >= (const v2& a, const v2& b) { return !(a < b); }
+
+inline v2 operator + (const v2& a, const v2& b) { return v2(a.x + b.x, a.y + b.y); }
+inline v2 operator - (const v2& a, const v2& b) { return v2(a.x - b.x, a.y - b.y); }
+
+inline v2& operator += (v2& a, const v2& b) { a.x += b.x; a.y += b.y; return a; }
+inline v2& operator -= (v2& a, const v2& b) { a.x -= b.x; a.y -= b.y; return a; }
+
+struct v3
+{
+	v3() : x(0), y(0), z(0) { }
+	v3(v2 xy, int z) : x(xy.x), y(xy.y), z(z) { }
+	v3(int x, int y, int z) : x(x), y(y), z(z) { }
+
+	int x;
+	int y;
+	int z;
+
+	v2 xx() const { return v2(x, x); }
+	v2 yy() const { return v2(y, y); }
+	v2 zz() const { return v2(z, z); }
+
+	v2 xy() const { return v2(x, y); }
+	v2 yx() const { return v2(y, x); }
+
+	v2 xz() const { return v2(x, z); }
+	v2 zx() const { return v2(z, x); }
+
+	v2 zy() const { return v2(z, y); }
+	v2 yz() const { return v2(y, z); }
+};
+
+inline bool operator == (const v3& a, const v3& b) { return a.x == b.x && a.y == b.y && a.z == b.z; }
+inline bool operator < (const v3& a, const v3& b) { return a.x < b.x ? true : (b.x < a.x ? false : (a.y < b.y ? true : (b.y < a.y ? false : (a.z < b.z ? true : false)))); }
+
+inline bool operator > (const v3& a, const v3& b) { return b < a; }
+inline bool operator != (const v3& a, const v3& b) { return !(a == b); }
+inline bool operator <= (const v3& a, const v3& b) { return !(b < a); }
+inline bool operator >= (const v3& a, const v3& b) { return !(a < b); }
+
+inline v3 operator + (const v3& a, const v3& b) { return v3(a.x + b.x, a.y + b.y, a.z + b.z); }
+inline v3 operator - (const v3& a, const v3& b) { return v3(a.x - b.x, a.y - b.y, a.z - b.z); }
+
+inline v3& operator += (v3& a, const v3& b) { a.x += b.x; a.y += b.y; a.z += b.z; return a; }
+inline v3& operator -= (v3& a, const v3& b) { a.x -= b.x; a.y -= b.y; a.z -= b.z; return a; }
+
+namespace zpr
+{
+	template <>
+	struct print_formatter<v2>
+	{
+		std::string print(const v2& v, const format_args& args)
+		{
+			return zpr::sprint("(%d, %d)", v.x, v.y);
+		}
+	};
+
+	template <>
+	struct print_formatter<v3>
+	{
+		std::string print(const v3& v, const format_args& args)
+		{
+			return zpr::sprint("(%d, %d, %d)", v.x, v.y, v.z);
+		}
+	};
+}
+
+namespace util
+{
+	double distance(const v2& a, const v2& b)
+	{
+		return std::sqrt( (b.x - a.x) * (b.x - a.x)
+						+ (b.y - a.y) * (b.y - a.y));
+	}
+
+	double manhattan_dist(const v2& a, const v2& b)
+	{
+		return std::abs(b.x - a.x) + std::abs(b.y - a.y);
+	}
+
+
 	template <typename T, size_t W, size_t H>
 	class grid
 	{
@@ -299,6 +402,11 @@ namespace util
 			return this->array[x + y * W];
 		}
 
+		T& operator [] (const v2& v)
+		{
+			return this->array[v.x + v.y * W];
+		}
+
 		// helpers
 		size_t count(const T& x) const
 		{
@@ -329,88 +437,6 @@ namespace util
 	private:
 		T* array;
 	};
-}
-
-struct v2
-{
-	v2() : x(0), y(0) { }
-	v2(int x, int y) : x(x), y(y) { }
-
-	int x;
-	int y;
-};
-
-inline bool operator == (const v2& a, const v2& b) { return a.x == b.x && a.y == b.y; }
-inline bool operator < (const v2& a, const v2& b) { return a.x < b.x ? true : (b.x < a.x ? false : (a.y < b.y ? true : false)); }
-
-inline bool operator > (const v2& a, const v2& b) { return b < a; }
-inline bool operator != (const v2& a, const v2& b) { return !(a == b); }
-inline bool operator <= (const v2& a, const v2& b) { return !(b < a); }
-inline bool operator >= (const v2& a, const v2& b) { return !(a < b); }
-
-inline v2 operator + (const v2& a, const v2& b) { return v2(a.x + b.x, a.y + b.y); }
-inline v2 operator - (const v2& a, const v2& b) { return v2(a.x - b.x, a.y - b.y); }
-
-inline v2& operator += (v2& a, const v2& b) { a.x += b.x; a.y += b.y; return a; }
-inline v2& operator -= (v2& a, const v2& b) { a.x -= b.x; a.y -= b.y; return a; }
-
-struct v3
-{
-	v3() : x(0), y(0), z(0) { }
-	v3(int x, int y, int z) : x(x), y(y), z(z) { }
-
-	int x;
-	int y;
-	int z;
-};
-
-inline bool operator == (const v3& a, const v3& b) { return a.x == b.x && a.y == b.y && a.z == b.z; }
-inline bool operator < (const v3& a, const v3& b) { return a.x < b.x ? true : (b.x < a.x ? false : (a.y < b.y ? true : (b.y < a.y ? false : (a.z < b.z ? true : false)))); }
-
-inline bool operator > (const v3& a, const v3& b) { return b < a; }
-inline bool operator != (const v3& a, const v3& b) { return !(a == b); }
-inline bool operator <= (const v3& a, const v3& b) { return !(b < a); }
-inline bool operator >= (const v3& a, const v3& b) { return !(a < b); }
-
-inline v3 operator + (const v3& a, const v3& b) { return v3(a.x + b.x, a.y + b.y, a.z + b.z); }
-inline v3 operator - (const v3& a, const v3& b) { return v3(a.x - b.x, a.y - b.y, a.z - b.z); }
-
-inline v3& operator += (v3& a, const v3& b) { a.x += b.x; a.y += b.y; a.z += b.z; return a; }
-inline v3& operator -= (v3& a, const v3& b) { a.x -= b.x; a.y -= b.y; a.z -= b.z; return a; }
-
-namespace zpr
-{
-	template <>
-	struct print_formatter<v2>
-	{
-		std::string print(const v2& v, const format_args& args)
-		{
-			return zpr::sprint("(%d, %d)", v.x, v.y);
-		}
-	};
-
-	template <>
-	struct print_formatter<v3>
-	{
-		std::string print(const v3& v, const format_args& args)
-		{
-			return zpr::sprint("(%d, %d, %d)", v.x, v.y, v.z);
-		}
-	};
-}
-
-namespace util
-{
-	double distance(const v2& a, const v2& b)
-	{
-		return std::sqrt( (b.x - a.x) * (b.x - a.x)
-						+ (b.y - a.y) * (b.y - a.y));
-	}
-
-	double manhattan_dist(const v2& a, const v2& b)
-	{
-		return std::abs(b.x - a.x) + std::abs(b.y - a.y);
-	}
 }
 
 
