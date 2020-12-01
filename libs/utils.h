@@ -135,20 +135,30 @@ namespace util
 
 
 
-	template <typename T, typename UnaryOp, typename K = typename std::result_of<UnaryOp(T)>::type>
-	std::vector<K> map(const std::vector<T>& input, UnaryOp fn)
+	template <typename T, typename UnaryOp>
+	auto map(const std::vector<T>& input, UnaryOp fn) -> std::vector<decltype(fn(input[0]))>
 	{
-		std::vector<K> ret; ret.reserve(input.size());
+		std::vector<decltype(fn(input[0]))> ret; ret.reserve(input.size());
 		for(const auto& i : input)
 			ret.push_back(fn(i));
 
 		return ret;
 	}
 
-	template <typename T, typename UnaryOp, typename K = typename std::result_of_t<UnaryOp(T)>::value_type>
-	std::vector<K> flatmap(const std::vector<T>& input, UnaryOp fn)
+	template <typename T, typename UnaryOp>
+	auto map(std::vector<T>&& input, UnaryOp fn) -> std::vector<decltype(fn(std::move(input[0])))>
 	{
-		std::vector<K> ret; ret.reserve(input.size());
+		std::vector<decltype(fn(std::move(input[0])))> ret; ret.reserve(input.size());
+		for(auto& i : input)
+			ret.push_back(fn(std::move(i)));
+
+		return ret;
+	}
+
+	template <typename T, typename UnaryOp>
+	auto flatmap(const std::vector<T>& input, UnaryOp fn) -> std::vector<decltype(fn(input[0]))>
+	{
+		std::vector<decltype(fn(input[0]))> ret; ret.reserve(input.size());
 		for(const auto& i : input)
 		{
 			auto x = fn(i);
@@ -186,10 +196,10 @@ namespace util
 	}
 
 
-	template <typename T, typename UnaryOp, typename K = typename std::result_of<UnaryOp(T, size_t)>::type>
-	std::vector<K> mapIdx(const std::vector<T>& input, UnaryOp fn)
+	template <typename T, typename UnaryOp>
+	auto mapIdx(const std::vector<T>& input, UnaryOp fn) -> std::vector<decltype(fn(input[0]))>
 	{
-		std::vector<K> ret; ret.reserve(input.size());
+		std::vector<decltype(fn(input[0]))> ret; ret.reserve(input.size());
 		for(size_t i = 0; i < input.size(); i++)
 			ret.push_back(fn(input[i], i));
 
@@ -198,10 +208,10 @@ namespace util
 
 
 
-	template <typename T, typename UnaryOp, typename Predicate, typename K = typename std::result_of<UnaryOp(T)>::type>
-	std::vector<K> filterMap(const std::vector<T>& input, Predicate cond, UnaryOp fn)
+	template <typename T, typename UnaryOp, typename Predicate>
+	auto filterMap(const std::vector<T>& input, Predicate cond, UnaryOp fn) -> std::vector<decltype(fn(input[0]))>
 	{
-		std::vector<K> ret;
+		std::vector<decltype(fn(input[0]))> ret;
 		for(const auto& i : input)
 		{
 			if(cond(i))
@@ -211,10 +221,10 @@ namespace util
 		return ret;
 	}
 
-	template <typename T, typename UnaryOp, typename Predicate, typename K = typename std::result_of<UnaryOp(T)>::type>
-	std::vector<K> mapFilter(const std::vector<T>& input, UnaryOp fn, Predicate cond)
+	template <typename T, typename UnaryOp, typename Predicate>
+	auto mapFilter(const std::vector<T>& input, UnaryOp fn, Predicate cond) -> std::vector<decltype(fn(input[0]))>
 	{
-		std::vector<K> ret;
+		std::vector<decltype(fn(input[0]))> ret;
 		for(const auto& i : input)
 		{
 			auto k = fn(i);
@@ -268,8 +278,8 @@ namespace util
 		return -1;
 	}
 
-	template <typename T>
-	bool contains(const std::vector<T>& input, const T& x)
+	template <typename Container, typename U>
+	bool contains(const Container& input, const U& x)
 	{
 		return std::find(input.begin(), input.end(), x) != input.end();
 	}
@@ -318,7 +328,7 @@ namespace util
 
 
 
-	template <typename T, typename GroupFn, typename R = std::result_of_t<GroupFn(T)>>
+	template <typename T, typename GroupFn, typename R = decltype(std::declval<GroupFn(T)>())>
 	std::map<R, std::vector<T>> groupBy(const std::vector<T>& xs, GroupFn gfn)
 	{
 		std::map<R, std::vector<T>> groups;
@@ -506,8 +516,8 @@ namespace util
 		return thing + (count == 1 ? "" : "s");
 	}
 
-	template <typename T, typename UnaryOp>
-	std::string listToString(const std::vector<T>& list, UnaryOp fn, bool braces = true, const std::string& sep = ", ")
+	template <typename Container, typename UnaryOp>
+	std::string listToString(const Container& list, UnaryOp fn, bool braces = true, const std::string& sep = ", ")
 	{
 		std::string ret;
 		for(size_t i = 0; i < list.size(); i++)
@@ -544,7 +554,29 @@ namespace util
 	struct tostring
 	{
 		template <typename T>
-		std::string operator() (T&& x) { return std::to_string(x); }
+		std::string operator() (const T& x) { return std::to_string(x); }
+	};
+
+	struct pair_first
+	{
+		template <typename T, typename U>
+		T operator() (const std::pair<T, U>& x) { return x.first; }
+	};
+
+	struct pair_second
+	{
+		template <typename T, typename U>
+		U operator() (const std::pair<T, U>& x) { return x.second; }
+	};
+
+	template <typename T>
+	struct equals_to
+	{
+		equals_to(const T& x) : value(x) { }
+		bool operator() (const T& x) { return x == this->value; }
+
+	private:
+		const T& value;
 	};
 }
 

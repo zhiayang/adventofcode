@@ -8,3 +8,4 @@ prog.dYSM/*
 prog
 .clang_complete
 *.code-workspace
+*.dSYM

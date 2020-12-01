@@ -1,4 +1,4 @@
-// aoc.h
+// aoc2.h
 // Copyright (c) 2019, zhiayang
 // Licensed under the Apache License Version 2.0.
 
@@ -11,9 +11,8 @@
 #include <sstream>
 #include <assert.h>
 
-#include "zpr1.h"
+#include "zpr.h"
 #include "utils.h"
-
 
 namespace util
 {
@@ -89,6 +88,10 @@ namespace util
 		}
 	}
 
+	static inline int to_int(std::string_view s)
+	{
+		return std::stoi(std::string(s));
+	}
 
 	static inline std::string_view trim(std::string_view s)
 	{
@@ -291,18 +294,30 @@ namespace zpr
 	template <>
 	struct print_formatter<v2>
 	{
-		std::string print(const v2& v, const format_args& args)
+		template <typename Cb>
+		void print(const v2& v, Cb&& cb, format_args args)
 		{
-			return zpr::sprint("(%d, %d)", v.x, v.y);
+			cb("(");
+			detail::print_one(static_cast<Cb&&>(cb), args, v.x);
+			cb(", ");
+			detail::print_one(static_cast<Cb&&>(cb), args, v.y);
+			cb(")");
 		}
 	};
 
 	template <>
 	struct print_formatter<v3>
 	{
-		std::string print(const v3& v, const format_args& args)
+		template <typename Cb>
+		void print(const v3& v, Cb&& cb, format_args args)
 		{
-			return zpr::sprint("(%d, %d, %d)", v.x, v.y, v.z);
+			cb("(");
+			detail::print_one(static_cast<Cb&&>(cb), args, v.x);
+			cb(", ");
+			detail::print_one(static_cast<Cb&&>(cb), args, v.y);
+			cb(", ");
+			detail::print_one(static_cast<Cb&&>(cb), args, v.z);
+			cb(")");
 		}
 	};
 }
