@@ -3,13 +3,15 @@
 -- Licensed under the Apache License Version 2.0.
 
 import Data.Functor
+import Utils
 
+-- format is: 17-34 a: password
 parse :: String -> (Int, Int, Char, String)
 parse s =
-    ( read $ takeWhile (/= '-') $ takeWhile (/= ' ') s
-    , read $ tail $ dropWhile (/= '-') $ takeWhile (/= ' ') s
-    , head $ tail $ dropWhile (/= ' ') s
-    , tail $ dropWhile (/= ' ') $ tail $ dropWhile (/= ' ') s
+    ( read $ fst $ bisect '-' s
+    , read $ snd $ bisect '-' $ fst $ bisect ' ' s
+    , head $ snd $ bisect ' ' s
+    , snd $ bisect ' ' $ snd $ bisect ' ' s
     )
 
 readInput :: IO [String]
@@ -24,9 +26,7 @@ part2 (a, b, c, s) = (s !! (a - 1) == c) /= (s !! (b - 1) == c)
 
 main :: IO ()
 main = readInput
-    <&> map parse
-    <&> unzip . map (\xs -> (part1 xs, part2 xs))
-    <&> (\(a, b) -> (length $ filter id a, length $ filter id b))
-    <&> (\(a, b) -> [ "part 1 = " ++ show a, "part 2 = " ++ show b ])
-    <&> unlines
-    >>= putStr
+    <&> map (dupe . parse)
+    <&> unzip . mapT1 (part1, part2)
+    <&> (applyT1 $ dupe (length . filter id))
+    >>= showParts
