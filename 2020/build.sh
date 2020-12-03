@@ -8,6 +8,6 @@ if test -z $@; then
 else
 	# echo "Compiling..."
 	pushd "day"$1 > /dev/null
-	clang++ -g -O3 -std=c++17 -o prog -I../../libs prog.cpp && time ./prog
+	clang++ -O3 -std=c++17 -o prog -I../../libs prog.cpp && time ./prog
 	popd > /dev/null
 fi
