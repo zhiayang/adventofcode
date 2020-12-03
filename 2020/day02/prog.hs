@@ -2,7 +2,6 @@
 -- Copyright (c) 2020, zhiayang
 -- Licensed under the Apache License Version 2.0.
 
-import Data.Functor
 import Utils
 
 -- format is: 17-34 a: password
