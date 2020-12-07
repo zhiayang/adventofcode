@@ -9,6 +9,7 @@
 #include <chrono>
 #include <fstream>
 #include <sstream>
+#include <optional>
 #include <assert.h>
 
 #include "zpr.h"
@@ -33,6 +34,49 @@ namespace util
 
 		double* out = 0;
 		std::chrono::time_point<hrc> start;
+	};
+
+	struct str_view : public std::string_view
+	{
+		str_view()                          : std::string_view("") { }
+		str_view(std::string&& s)           : std::string_view(std::move(s)) { }
+		str_view(std::string_view&& s)      : std::string_view(std::move(s)) { }
+		str_view(const std::string& s)      : std::string_view(s) { }
+		str_view(const std::string_view& s) : std::string_view(s) { }
+		str_view(const char* s)             : std::string_view(s) { }
+		str_view(const char* s, size_t l)   : std::string_view(s, l) { }
+
+		std::string_view sv() const   { return *this; }
+		str_view drop(size_t n) const { return (this->size() > n ? this->substr(n) : ""); }
+		str_view take(size_t n) const { return (this->size() > n ? this->substr(0, n) : *this); }
+		str_view take_last(size_t n) const { return (this->size() > n ? this->substr(this->size() - n) : *this); }
+		str_view drop_last(size_t n) const { return (this->size() > n ? this->substr(0, this->size() - n) : *this); }
+		str_view substr(size_t pos = 0, size_t cnt = -1) const { return str_view(std::string_view::substr(pos, cnt)); }
+
+		str_view& remove_prefix(size_t n) { std::string_view::remove_prefix(n); return *this; }
+		str_view& remove_suffix(size_t n) { std::string_view::remove_suffix(n); return *this; }
+
+		str_view trim_front(bool newlines = false) const
+		{
+			auto ret = *this;
+			while(ret.size() > 0 && (ret[0] == ' ' || ret[0] == '\t' || (newlines && (ret[0] == '\r' || ret[0] == '\n'))))
+				ret.remove_prefix(1);
+			return ret;
+		}
+		str_view trim_back(bool newlines = false) const
+		{
+			auto ret = *this;
+			while(ret.size() > 0 && (ret.back() == ' ' || ret.back() == '\t' || (newlines && (ret.back() == '\r' || ret.back() == '\n'))))
+				ret.remove_suffix(1);
+			return ret;
+		}
+
+		str_view trim(bool newlines = false) const
+		{
+			return this->trim_front(newlines).trim_back(newlines);
+		}
+
+		std::string str() const { return std::string(*this); }
 	};
 
 	static inline std::string readFile(const std::string& path)
@@ -93,7 +137,13 @@ namespace util
 		return std::stoi(std::string(s));
 	}
 
-	static inline std::string_view trim(std::string_view s)
+	static inline std::optional<int> try_int(std::string_view s)
+	{
+		try { return std::stoi(std::string(s)); }
+		catch(...) { return { }; }
+	}
+
+	static inline str_view trim(str_view s)
 	{
 		auto ltrim = [](std::string_view& s) -> std::string_view& {
 			auto i = s.find_first_not_of(" \t\n\r\f\v");
@@ -112,11 +162,25 @@ namespace util
 		return ltrim(rtrim(s));
 	}
 
-	static inline std::vector<std::string_view> splitString(std::string_view view, char delim = '\n')
+	static inline std::string replace(std::string input, const std::string& thing, const std::string& with)
 	{
-		std::vector<std::string_view> ret;
-
 		while(true)
+		{
+			if(auto it = input.find(thing); it != std::string::npos)
+				input.replace(it, thing.size(), with);
+
+			else
+				break;
+		}
+
+		return input;
+	}
+
+	static inline std::vector<str_view> splitString(str_view view, char delim = '\n')
+	{
+		std::vector<str_view> ret;
+
+		while(!view.empty())
 		{
 			size_t ln = view.find(delim);
 
@@ -138,7 +202,11 @@ namespace util
 		return ret;
 	}
 
-	static inline std::vector<std::string_view> readFileLines(const std::string& path, char delim = '\n')
+	constexpr auto split = splitString;
+
+
+
+	static inline std::vector<str_view> readFileLines(const std::string& path, char delim = '\n')
 	{
 		return splitString(readFileRaw(path), delim);
 	}

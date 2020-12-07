@@ -16,6 +16,6 @@ main :: IO ()
 main = readFile "input.txt"
     <&> lines
     <&> dupe
-    <&> applyT1 (check 3 1, mapL0 [check 1 1, check 3 1, check 5 1, check 7 1, check 1 2])
-    <&> applyT1 (id, product)
+    <&> applyT2 (check 3 1, mapL0 [check 1 1, check 3 1, check 5 1, check 7 1, check 1 2])
+    <&> applyT2 (id, product)
     >>= showParts
