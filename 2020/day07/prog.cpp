@@ -66,13 +66,12 @@ int main()
 
 	for(auto& line : lines)
 	{
-		// drop the fullstop.
-		line = line.drop_last(1);
+		auto parts = split(line, "bags contain");
 
-		auto split_at = line.find("bags contain");
-		auto outer_bag = get_bag(line.take(split_at).trim());
+		// drop the fullstop also.
+		auto inner_bags = parts[1].trim().drop_last(1);
+		auto outer_bag = get_bag(parts[0].trim());
 
-		auto inner_bags = line.drop(split_at + strlen("bags contain")).trim();
 		if(inner_bags != "no other bags")
 		{
 			auto bag_list = split(inner_bags, ',');
@@ -92,7 +91,6 @@ int main()
 			}
 		}
 	}
-
 
 	zpr::println("part 1 = {}", search_up(get_bag("shiny gold")));
 	zpr::println("part 2 = {}", search_down(get_bag("shiny gold")));

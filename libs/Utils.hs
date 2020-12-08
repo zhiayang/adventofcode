@@ -5,12 +5,16 @@
 module Utils (
     module Utils,
     module Text.Read,
+    module Data.Ord,
     module Data.List,
     module Data.Maybe,
     module Data.Functor,
 ) where
 
 import Text.Read
+
+import Data.Ord
+import Data.Char
 import Data.List
 import Data.Maybe
 import Data.Functor
@@ -73,3 +77,11 @@ replace :: Eq a => a -> a -> [a] -> [a]
 replace _ _ [] = []
 replace x y xs = (if h == x then y else h) : (replace x y $ tail xs)
     where h = head xs
+
+trim :: String -> String
+trim = (dropWhileEnd isSpace) . (dropWhile isSpace)
+
+int :: String -> Int
+int []       = error "empty input"
+int ('+':xs) = int xs
+int xs       = read xs

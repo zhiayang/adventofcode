@@ -202,7 +202,29 @@ namespace util
 		return ret;
 	}
 
-	constexpr auto split = splitString;
+	static inline std::vector<str_view> split(str_view str, str_view delim)
+	{
+		std::vector<str_view> parts;
+		while(str.size() > 0)
+		{
+			auto idx = str.find(delim);
+			if(idx == std::string::npos)
+			{
+				parts.push_back(str);
+				break;
+			}
+
+			parts.push_back(str.take(idx));
+			str = str.drop(idx + delim.size());
+		}
+
+		return parts;
+	}
+
+	static inline std::vector<str_view> split(str_view str, char delim)
+	{
+		return split(str, str_view(&delim, 1));
+	}
 
 
 
