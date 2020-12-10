@@ -133,7 +133,11 @@ namespace util
 		return foldl(T(), xs, [](const T& a, const T& b) -> T { return a + b; });
 	}
 
-
+	template <typename T>
+	T maximum(const std::vector<T>& xs)
+	{
+		return foldl(T(), xs, [](const T& a, const T& b) -> T { return std::max(a, b); });
+	}
 
 	template <typename T, typename UnaryOp>
 	auto map(const std::vector<T>& input, UnaryOp fn) -> std::vector<decltype(fn(input[0]))>

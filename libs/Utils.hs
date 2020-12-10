@@ -85,3 +85,12 @@ int :: String -> Int
 int []       = error "empty input"
 int ('+':xs) = int xs
 int xs       = read xs
+
+uniqueList :: Ord a => [a] -> [a]
+uniqueList = map head . group . sort
+
+windowList :: Int -> [a] -> [[a]]
+windowList k xs = if (k >= length xs) then [xs]
+    else (zip [0..] $ repeat xs)
+        |> map (\(n, l) -> take k $ drop n l)
+        |> takeWhile ((== k) . length)

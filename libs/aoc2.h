@@ -10,6 +10,8 @@
 #include <fstream>
 #include <sstream>
 #include <optional>
+#include <unordered_set>
+
 #include <assert.h>
 
 #include "zpr.h"
@@ -132,14 +134,14 @@ namespace util
 		}
 	}
 
-	static inline int to_int(std::string_view s)
+	static inline int64_t to_int(std::string_view s)
 	{
-		return std::stoi(std::string(s));
+		return std::stoll(std::string(s));
 	}
 
-	static inline std::optional<int> try_int(std::string_view s)
+	static inline std::optional<int64_t> try_int(std::string_view s)
 	{
-		try { return std::stoi(std::string(s)); }
+		try { return std::stoll(std::string(s)); }
 		catch(...) { return { }; }
 	}
 
