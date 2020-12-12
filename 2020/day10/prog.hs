@@ -12,7 +12,7 @@ part1 xs = pairs xs
     |> dupe
     |> applyT2 (length . filter (== 1), length . filter (== 3))
     |> uncurry (*)
-    where pairs xs = zip xs (drop 1 xs)
+    where pairs xs = zip xs (tail xs)
 
 type Memoise = M.Map Int Int
 

@@ -318,15 +318,15 @@ namespace util
 struct v2
 {
 	v2() : x(0), y(0) { }
-	v2(int x, int y) : x(x), y(y) { }
+	v2(int64_t x, int64_t y) : x(x), y(y) { }
 
 	v2 up() const       { return v2(x, y - 1); }
 	v2 down() const     { return v2(x, y + 1); }
 	v2 left() const     { return v2(x - 1, y); }
 	v2 right() const    { return v2(x + 1, y); }
 
-	int x;
-	int y;
+	int64_t x;
+	int64_t y;
 };
 
 inline bool operator == (const v2& a, const v2& b) { return a.x == b.x && a.y == b.y; }
@@ -346,12 +346,12 @@ inline v2& operator -= (v2& a, const v2& b) { a.x -= b.x; a.y -= b.y; return a; 
 struct v3
 {
 	v3() : x(0), y(0), z(0) { }
-	v3(v2 xy, int z) : x(xy.x), y(xy.y), z(z) { }
-	v3(int x, int y, int z) : x(x), y(y), z(z) { }
+	v3(v2 xy, int64_t z) : x(xy.x), y(xy.y), z(z) { }
+	v3(int64_t x, int64_t y, int64_t z) : x(x), y(y), z(z) { }
 
-	int x;
-	int y;
-	int z;
+	int64_t x;
+	int64_t y;
+	int64_t z;
 
 	v2 xx() const { return v2(x, x); }
 	v2 yy() const { return v2(y, y); }
@@ -427,16 +427,21 @@ namespace util
 		return std::abs(b.x - a.x) + std::abs(b.y - a.y);
 	}
 
-
-	template <typename T, size_t W, size_t H>
+	template <typename T>
 	class grid
 	{
-		static_assert(W > 0 && H > 0, "invalid dimensions");
+		int64_t W;
+		int64_t H;
+		T* array;
 
 	public:
-		grid()
+		grid(int64_t w, int64_t h)
 		{
-			this->array = new T[W * H];
+			assert(w > 0 && h > 0);
+
+			this->array = new T[w * h];
+			this->W = w;
+			this->H = h;
 		}
 
 		~grid()
@@ -446,8 +451,11 @@ namespace util
 
 		grid(const grid& g)
 		{
+			W = g.W;
+			H = g.H;
+
 			this->array = new T[W * H];
-			for(size_t i = 0; i < W * H; i++)
+			for(int64_t i = 0; i < W * H; i++)
 				this->array[i] = g.array[i];
 		}
 
@@ -457,8 +465,10 @@ namespace util
 			{
 				delete[] this->array;
 
+				W = g.W;
+				H = g.H;
 				this->array = new T[W * H];
-				for(size_t i = 0; i < W * H; i++)
+				for(int64_t i = 0; i < W * H; i++)
 					this->array[i] = g.array[i];
 			}
 
@@ -474,6 +484,18 @@ namespace util
 		{
 			return this->array;
 		}
+
+		bool operator== (const grid& other) const
+		{
+			return W == other.W && H == other.H
+				&& memcmp(this->array, other.array, sizeof(T) * W * H) == 0;
+		}
+
+		bool operator!= (const grid& other) const
+		{
+			return !(*this == other);
+		}
+
 
 		T operator [] (size_t i) const
 		{
@@ -495,16 +517,16 @@ namespace util
 			return H;
 		}
 
-		T& operator() (size_t x, size_t y)
+		T& operator() (int64_t x, int64_t y)
 		{
-			if(x >= W || y >= H)
+			if(x < 0 || y < 0 || x >= W || y >= H)
 				assert(!"out of bounds");
 			return this->array[x + y * W];
 		}
 
-		T operator() (size_t x, size_t y) const
+		T operator() (int64_t x, int64_t y) const
 		{
-			if(x >= W || y >= H)
+			if(x < 0 || y < 0 || x >= W || y >= H)
 				assert(!"out of bounds");
 			return this->array[x + y * W];
 		}
@@ -514,35 +536,60 @@ namespace util
 			return this->array[v.x + v.y * W];
 		}
 
+		const T& operator [] (const v2& v) const
+		{
+			return this->array[v.x + v.y * W];
+		}
+
+		bool in_bounds(const v2& v) const
+		{
+			return v.x >= 0 && v.y >= 0 && v.x < W && v.y < H;
+		}
+
 		// helpers
 		size_t count(const T& x) const
 		{
 			size_t cnt = 0;
-			for(size_t i = 0; i < W * H; i++)
+			for(int64_t i = 0; i < W * H; i++)
 				if(this->array[i] == x) cnt++;
 
 			return cnt;
 		}
 
 		template <typename U, typename Fn>
-		grid<U, W, H> map(Fn f)
+		grid<U> map(Fn&& f) const
 		{
-			auto ret = grid<U, W, H>();
-			for(size_t x = 0; x < W; x++)
-			{
-				for(size_t y = 0; y < H; y++)
-				{
+			auto ret = grid<U>(W, H);
+			for(int64_t x = 0; x < W; x++)
+				for(int64_t y = 0; y < H; y++)
 					ret(x, y) = f(x, y, this->operator()(x, y));
-				}
-			}
 
 			return ret;
 		}
 
+		template <typename Fn>
+		void iter_xy(Fn&& fn) const
+		{
+			for(int64_t x = 0; x < W; x++)
+				for(int64_t y = 0; y < H; y++)
+					fn(x, y);
+		}
 
 
-	private:
-		T* array;
+
+		static inline grid<char> from_lines(const std::vector<str_view>& lines)
+		{
+			assert(!lines.empty());
+			assert(!lines[0].empty());
+
+			auto ret = grid<char>(lines[0].size(), lines.size());
+
+			for(int64_t y = 0; y < ret.height(); y++)
+				for(int64_t x = 0; x < ret.width(); x++)
+					ret(x, y) = lines[y][x];
+
+			return ret;
+		}
 	};
 }
 

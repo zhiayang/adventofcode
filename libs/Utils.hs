@@ -43,6 +43,16 @@ mapT2 (f, g) = map (\(x, y) -> (f x, g y))
 applyT2 :: (a -> c, b -> d) -> (a, b) -> (c, d)
 applyT2 (f, g) t1 = (f $ fst t1, g $ snd t1)
 
+addT2 :: Num a => Num b => (a, b) -> (a, b) -> (a, b)
+addT2 x y = (fst x + fst y, snd x + snd y)
+
+
+allPairs :: [a] -> [b] -> [(a, b)]
+allPairs as bs = [(a, b) | a <- as, b <- bs]
+
+adjPairs :: [a] -> [(a, a)]
+adjPairs xs = zip xs (tail xs)
+
 showParts :: Show a => Show b => (a, b) -> IO ()
 showParts (a, b) = putStr $ unlines [ "part 1 = " ++ show a, "part 2 = " ++ show b ]
 
