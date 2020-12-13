@@ -3,6 +3,7 @@
 -- Licensed under the Apache License Version 2.0.
 
 import Utils
+import Data.Bool
 
 part1 :: (Int, [Int]) -> Int
 part1 (now, times) = map (\n -> iterate (applyT2 ((+ n), id)) (0, n)) times
@@ -12,11 +13,9 @@ part1 (now, times) = map (\n -> iterate (applyT2 ((+ n), id)) (0, n)) times
 
 -- returns time
 commonTime' :: Int -> Int -> [(Int, Int)] -> Int
-commonTime' t adv bs = map (check1 t) bs
-    |> (\xs -> and xs)
-    |> (\b -> if b then t else commonTime' (t + adv) adv bs)
-    where
-        check1 t (ofs, bus) = (t + ofs) `mod` bus == 0
+commonTime' t adv bs = map (\(ofs, bus) -> (t + ofs) `mod` bus == 0) bs
+    |> foldl (&&) True
+    |> bool (commonTime' (t + adv) adv bs) (t)
 
 -- returns (time, period)
 commonTime :: Int -> Int -> [(Int, Int)] -> (Int, Int)
