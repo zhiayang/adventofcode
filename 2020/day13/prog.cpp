@@ -10,7 +10,7 @@ int main()
 	// fuck you, topaz.
 	// and fuck you, topaz apologists.
 
-	auto lines = readFileLines("sample.txt");
+	auto lines = readFileLines("input.txt");
 	auto busses = split(lines[1], ",");
 
 	std::map<uint64_t, uint64_t> bus_timings;
@@ -19,7 +19,6 @@ int main()
 		if(busses[i] != "x")
 			bus_timings[to_int(busses[i])] = i;
 	}
-
 
 	{
 		std::pair<int, int64_t> best = { 0, INT64_MAX };
@@ -87,6 +86,8 @@ int main()
 				if(last_seen != 0)
 				{
 					adv = t - last_seen;
+					zpr::println("period {} = {} ({}, {})", num_busses, adv, t, last_seen);
+
 					num_busses++;
 					last_seen = 0;
 				}

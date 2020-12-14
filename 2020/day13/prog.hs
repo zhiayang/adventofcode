@@ -6,10 +6,10 @@ import Utils
 import Data.Bool
 
 part1 :: (Int, [Int]) -> Int
-part1 (now, times) = map (\n -> iterate (applyT2 ((+ n), id)) (0, n)) times
-    |> map (head . dropWhile ((< now) . fst))
-    |> (head . sort)
-    |> (\(t, b) -> (t - now) * b)
+part1 (now, times) = map (\n -> ([0, n ..], n)) times   -- generate [0, n, 2n, 3n, ...] for each n
+    |> map (\(l, n) -> (head $ dropWhile (< now) l, n)) -- drop those that are before 'now'
+    |> (head . sortBy (comparing fst))                  -- get the earliest one
+    |> (\(t, b) -> (t - now) * b)                       -- calculate the answer
 
 -- returns time
 commonTime' :: Int -> Int -> [(Int, Int)] -> Int
@@ -29,7 +29,7 @@ part2 times = zip [0..] times
     |> mapT2 (id, int)
     |> sortBy (comparing snd)
     |> (zip [2 .. num_busses] . repeat)
-    |> map (\(nb, bs) -> (take nb bs))
+    |> map (uncurry take)
     |> foldl (\(t, a) bs -> commonTime t a bs) (0, 1)
     |> fst
     where num_busses = length $ filter (/= "x") times

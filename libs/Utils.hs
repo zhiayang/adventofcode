@@ -4,7 +4,7 @@
 
 module Utils (
     module Utils,
-    module Text.Read,
+    -- module Text.Read,
     module Data.Ord,
     module Data.List,
     module Data.Maybe,
