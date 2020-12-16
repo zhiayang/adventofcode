@@ -104,3 +104,6 @@ windowList k xs = if (k >= length xs) then [xs]
     else (zip [0..] $ repeat xs)
         |> map (\(n, l) -> take k $ drop n l)
         |> takeWhile ((== k) . length)
+
+countElem :: Eq a => a -> [a] -> Int
+countElem x = length . (filter (== x))
