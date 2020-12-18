@@ -94,7 +94,6 @@ static int64_t part2(const std::vector<Constraint>& constrs, const std::set<size
 
 			solved_fields.insert(map);
 			field_mapping[ci] = map;
-			zpr::println("ci {} = {}", ci, map);
 		}
 	}
 

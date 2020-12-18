@@ -9,3 +9,4 @@ prog
 .clang_complete
 *.code-workspace
 *.dSYM
+hsprog

@@ -31,3 +31,7 @@ main = readFile "input.txt"
     <&> dupe
     <&> applyT2 (solve 2020, solve 30000000)
     >>= showParts
+
+
+
+

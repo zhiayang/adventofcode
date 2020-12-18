@@ -381,6 +381,38 @@ inline v3 operator - (const v3& a, const v3& b) { return v3(a.x - b.x, a.y - b.y
 inline v3& operator += (v3& a, const v3& b) { a.x += b.x; a.y += b.y; a.z += b.z; return a; }
 inline v3& operator -= (v3& a, const v3& b) { a.x -= b.x; a.y -= b.y; a.z -= b.z; return a; }
 
+
+struct v4
+{
+	v4() : x(0), y(0), z(0), w(0) { }
+	v4(int64_t x, int64_t y, int64_t z, int64_t w) : x(x), y(y), z(z), w(w) { }
+
+	int64_t x;
+	int64_t y;
+	int64_t z;
+	int64_t w;
+};
+
+inline bool operator == (const v4& a, const v4& b) { return a.x == b.x && a.y == b.y && a.z == b.z && a.w == b.w; }
+inline bool operator != (const v4& a, const v4& b) { return !(a == b); }
+
+inline bool operator < (const v4& a, const v4& b)
+{
+	return (std::vector<int64_t> { a.x, a.y, a.z, a.w }) < (std::vector<int64_t> { b.x, b.y, b.z, b.w });
+}
+
+inline bool operator > (const v4& a, const v4& b) { return b < a; }
+inline bool operator <= (const v4& a, const v4& b) { return !(b < a); }
+inline bool operator >= (const v4& a, const v4& b) { return !(a < b); }
+
+inline v4 operator + (const v4& a, const v4& b) { return v4(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w); }
+inline v4 operator - (const v4& a, const v4& b) { return v4(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w); }
+
+inline v4& operator += (v4& a, const v4& b) { a.x += b.x; a.y += b.y; a.z += b.z; a.w += b.w; return a; }
+inline v4& operator -= (v4& a, const v4& b) { a.x -= b.x; a.y -= b.y; a.z -= b.z; a.w -= b.w; return a; }
+
+
+
 namespace zpr
 {
 	template <>
