@@ -4,24 +4,16 @@
 
 import Utils
 
-listify2 :: (a, a) -> [a]
-listify2 (a, b) = [a, b]
-
-listify3 :: (a, a, a) -> [a]
-listify3 (a, b, c) = [a, b, c]
-
 part1 :: [Int] -> Int
-part1 xs = [(a, b) | a <- xs, b <- xs]
-    |> filter ((== 2020) . sum . listify2)
+part1 xs = [[a, b] | a <- xs, b <- xs]
+    |> filter ((== 2020) . sum)
     |> head
-    |> listify2
     |> product
 
 part2 :: [Int] -> Int
-part2 xs = [(a, b, c) | a <- xs, b <- xs, c <- xs]
-    |> filter ((== 2020) . sum . listify3)
+part2 xs = [[a, b, c] | a <- xs, b <- xs, c <- xs]
+    |> filter ((== 2020) . sum)
     |> head
-    |> listify3
     |> product
 
 main :: IO ()

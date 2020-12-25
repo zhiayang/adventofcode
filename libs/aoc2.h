@@ -5,6 +5,7 @@
 #pragma once
 
 #include <set>
+#include <array>
 #include <queue>
 #include <chrono>
 #include <fstream>
@@ -37,6 +38,12 @@ namespace util
 		double* out = 0;
 		std::chrono::time_point<hrc> start;
 	};
+
+	template <typename Container, typename T>
+	bool contains(const Container& container, const T& x)
+	{
+		return container.find(x) != container.end();
+	}
 
 	struct str_view : public std::string_view
 	{
@@ -345,13 +352,15 @@ inline v2& operator -= (v2& a, const v2& b) { a.x -= b.x; a.y -= b.y; return a; 
 
 struct v3
 {
-	v3() : x(0), y(0), z(0) { }
-	v3(v2 xy, int64_t z) : x(xy.x), y(xy.y), z(z) { }
-	v3(int64_t x, int64_t y, int64_t z) : x(x), y(y), z(z) { }
+	using value_type = int64_t;
 
-	int64_t x;
-	int64_t y;
-	int64_t z;
+	v3() : x(0), y(0), z(0) { }
+	v3(v2 xy, value_type z) : x(xy.x), y(xy.y), z(z) { }
+	v3(value_type x, value_type y, value_type z) : x(x), y(y), z(z) { }
+
+	value_type x;
+	value_type y;
+	value_type z;
 
 	v2 xx() const { return v2(x, x); }
 	v2 yy() const { return v2(y, y); }
@@ -384,13 +393,15 @@ inline v3& operator -= (v3& a, const v3& b) { a.x -= b.x; a.y -= b.y; a.z -= b.z
 
 struct v4
 {
-	v4() : x(0), y(0), z(0), w(0) { }
-	v4(int64_t x, int64_t y, int64_t z, int64_t w) : x(x), y(y), z(z), w(w) { }
+	using value_type = int64_t;
 
-	int64_t x;
-	int64_t y;
-	int64_t z;
-	int64_t w;
+	v4() : x(0), y(0), z(0), w(0) { }
+	v4(value_type x, value_type y, value_type z, value_type w) : x(x), y(y), z(z), w(w) { }
+
+	value_type x;
+	value_type y;
+	value_type z;
+	value_type w;
 };
 
 inline bool operator == (const v4& a, const v4& b) { return a.x == b.x && a.y == b.y && a.z == b.z && a.w == b.w; }
@@ -442,6 +453,40 @@ namespace zpr
 			cb(", ");
 			detail::print_one(static_cast<Cb&&>(cb), args, v.z);
 			cb(")");
+		}
+	};
+}
+
+namespace std
+{
+	template <typename T>
+	inline size_t hash_combine(size_t seed, const T& v)
+	{
+		return seed ^ hash<T>()(v) + 0x9E3779B97F4A7C15 + (seed << 6) + (seed >> 2);
+	}
+
+	template <>
+	struct hash<v3>
+	{
+		size_t operator() (const v3& v) const
+		{
+			return hash_combine(hash_combine(
+				(size_t) v.x,
+				(size_t) v.y),
+				(size_t) v.z);
+		}
+	};
+
+	template <>
+	struct hash<v4>
+	{
+		size_t operator() (const v4& v) const
+		{
+			return hash_combine(hash_combine(hash_combine(
+				(size_t) v.x,
+				(size_t) v.y),
+				(size_t) v.z),
+				(size_t) v.w);
 		}
 	};
 }

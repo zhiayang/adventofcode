@@ -23,7 +23,7 @@ solve solns am = am
         then solns
         else head xs
             |> (\(a, [i]) -> (solns ++ [(a, i)], map (\(a, is) -> (a, delete i is)) am))
-            |> (\(s, am) -> solve s am)
+            |> uncurry solve
 
 
 part2 :: AllergenMap -> String

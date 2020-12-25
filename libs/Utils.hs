@@ -72,6 +72,11 @@ indexOf = indexOf' 0 where
         then i
         else indexOf' (1 + i) x (drop 1 xs)
 
+indexOf1 :: Eq a => a -> [a] -> Int
+indexOf1 y [] = -1
+indexOf1 y xs = indexOf1' 0 y xs
+    where indexOf1' i y (x:xs) = (if x == y then i else indexOf1' (i + 1) y xs)
+
 splitByMany :: Eq a => [a] -> [a] -> [[a]]
 splitByMany _ [] = []
 splitByMany [] a = [a]

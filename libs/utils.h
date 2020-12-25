@@ -282,12 +282,6 @@ namespace util
 		return -1;
 	}
 
-	template <typename Container, typename U>
-	bool contains(const Container& input, const U& x)
-	{
-		return std::find(input.begin(), input.end(), x) != input.end();
-	}
-
 	template <typename T>
 	std::vector<T> take(const std::vector<T>& v, size_t num)
 	{
